@@ -15,16 +15,16 @@ export function HeroSection() {
                     <div className="py-24 md:pb-32 lg:pb-36 lg:pt-72">
                         <div className="relative z-10 mx-auto flex max-w-7xl flex-col px-6 lg:block lg:px-12">
                             <div className="mx-auto max-w-lg text-center lg:ml-0 lg:max-w-full lg:text-left">
-                                <h1 className="mt-8 max-w-2xl text-balance text-5xl md:text-6xl lg:mt-16 xl:text-7xl">Build 10x Faster with NS</h1>
-                                <p className="mt-8 max-w-2xl text-balance text-lg">Highly customizable components for building modern websites and applications you mean it.</p>
+                                <h1 className="mt-8 max-w-2xl text-balance text-5xl md:text-6xl lg:mt-16 xl:text-7xl">Engineering the future of collegiate motorsport</h1>
+                                <p className="mt-8 max-w-2xl text-balance text-lg">Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.</p>
 
                                 <div className="mt-12 flex flex-col items-center justify-center gap-2 sm:flex-row lg:justify-start">
                                     <Button
                                         asChild
                                         size="lg"
                                         className="h-12 rounded-full pl-5 pr-3 text-base">
-                                        <Link href="#link">
-                                            <span className="text-nowrap">Start Building</span>
+                                        <Link href="/recruitment/">
+                                            <span className="text-nowrap">Join the team</span>
                                             <ChevronRight className="ml-1" />
                                         </Link>
                                     </Button>
@@ -34,8 +34,8 @@ export function HeroSection() {
                                         size="lg"
                                         variant="ghost"
                                         className="h-12 rounded-full px-5 text-base hover:bg-zinc-950/5 dark:hover:bg-white/5">
-                                        <Link href="#link">
-                                            <span className="text-nowrap">Request a demo</span>
+                                        <Link href="/sponsors/">
+                                            <span className="text-nowrap">Become a Sponsor</span>
                                         </Link>
                                     </Button>
                                 </div>
@@ -45,8 +45,10 @@ export function HeroSection() {
                             <video
                                 autoPlay
                                 loop
-                                className="size-full object-cover opacity-50 invert dark:opacity-35 dark:invert-0 dark:lg:opacity-75"
-                                src="https://ik.imagekit.io/lrigu76hy/tailark/dna-video.mp4?updatedAt=1745736251477"></video>
+                                muted
+                                playsInline
+                                className="size-full object-cover opacity-50 dark:opacity-35 dark:lg:opacity-75"
+                                src="/videos/ucsdxcrs.mp4"></video>
                         </div>
                     </div>
                 </section>

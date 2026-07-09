@@ -124,16 +124,11 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                   ))}
                 </ul>
               </div>
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:ml-4">
                 <Button
                   asChild
-                  variant="outline"
                   size="sm"
-                  className={cn(
-                    "h-11 px-6 text-sm font-medium",
-                    isDark &&
-                      "border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white",
-                  )}
+                  className="h-9 rounded-full bg-black px-6 text-sm font-medium text-white hover:bg-black/90 hover:text-white"
                 >
                   <Link href="/login/">
                     <span>Login</span>
