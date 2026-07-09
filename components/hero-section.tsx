@@ -1,10 +1,36 @@
 'use client'
 import Link from 'next/link'
+import { useState } from 'react'
+import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { SiteHeader } from '@/components/site-header'
 import { ChevronRight } from 'lucide-react'
+
+function SponsorLink() {
+    const [hovered, setHovered] = useState(false)
+
+    return (
+        <Link
+            href="/sponsors/"
+            className="relative inline-flex items-center px-2 py-2 text-base text-white mix-blend-difference"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            <span className="relative inline-block text-nowrap">
+                Become a Sponsor
+                <motion.span
+                    aria-hidden
+                    className="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-current"
+                    initial={false}
+                    animate={{ scaleX: hovered ? 1 : 0 }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                />
+            </span>
+        </Link>
+    )
+}
 
 export function HeroSection() {
     return (
@@ -24,8 +50,9 @@ export function HeroSection() {
 
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-16 pt-28 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-20 lg:pt-36">
                             <div className="mx-auto max-w-lg text-center lg:ml-0 lg:max-w-full lg:text-left">
-                                <h1 className="max-w-2xl text-balance text-5xl font-bold tracking-tight text-white mix-blend-difference md:text-6xl xl:text-7xl">
-                                    Engineering the future of collegiate motorsport
+                                <h1 className="max-w-2xl text-balance text-5xl font-black tracking-tight text-white mix-blend-difference md:text-6xl xl:text-7xl">
+                                    <span className="block">Engineering the future</span>
+                                    <span className="block">of collegiate motorsport</span>
                                 </h1>
                                 <p className="mt-6 max-w-2xl text-balance text-lg text-white mix-blend-difference md:mt-8">
                                     Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
@@ -41,14 +68,7 @@ export function HeroSection() {
                                             <ChevronRight className="ml-1" />
                                         </Link>
                                     </Button>
-                                    <Button
-                                        asChild
-                                        size="lg"
-                                        className="h-12 rounded-full border border-white/80 bg-transparent px-5 text-base text-white shadow-none hover:bg-white/10 hover:text-white">
-                                        <Link href="/sponsors/">
-                                            <span className="text-nowrap">Become a Sponsor</span>
-                                        </Link>
-                                    </Button>
+                                    <SponsorLink />
                                 </div>
                             </div>
                         </div>

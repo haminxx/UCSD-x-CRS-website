@@ -38,7 +38,7 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
       <nav
         data-state={menuState && "active"}
         className={cn(
-          "group fixed z-20 w-full pt-2",
+          "group fixed z-20 w-full pt-6",
           isDark && "text-white",
         )}
       >
@@ -86,7 +86,7 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                           "block duration-150",
                           isDark
                             ? "text-white/65 hover:text-white"
-                            : "text-muted-foreground hover:text-accent-foreground",
+                            : "text-black hover:text-neutral-700",
                         )}
                       >
                         <span>{item.name}</span>
@@ -115,7 +115,7 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                           "block duration-150",
                           isDark
                             ? "text-white/65 hover:text-white"
-                            : "text-muted-foreground hover:text-accent-foreground",
+                            : "text-black hover:text-neutral-700",
                         )}
                       >
                         <span>{item.name}</span>
@@ -128,7 +128,7 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                 <Button
                   asChild
                   size="sm"
-                  className="h-8 rounded-full border-0 bg-black px-5 text-sm font-normal text-white shadow-none ring-0 hover:bg-black/90 hover:text-white focus-visible:ring-0"
+                  className="h-8 rounded-full border-0 border-transparent bg-black px-5 text-sm font-normal text-white shadow-none outline-none ring-0 ring-offset-0 hover:bg-black/90 hover:text-white focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                 >
                   <Link href="/login/">
                     <span>Login</span>
