@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 
 const JOIN_FORM_URL = "https://form.typeform.com/to/hQtOGGHW";
 
@@ -78,6 +79,7 @@ export default function RecruitmentPage() {
           </div>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 
 const EMPTY_SPONSOR_SLOTS = 32;
 
@@ -38,6 +39,7 @@ export default function SponsorsPage() {
           </div>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }

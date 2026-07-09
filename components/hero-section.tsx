@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { SiteHeader } from '@/components/site-header'
+import { SiteFooter } from '@/components/site-footer'
 import { ChevronRight } from 'lucide-react'
 
 function SponsorLink() {
@@ -177,7 +178,41 @@ export function HeroSection() {
                         </div>
                     </div>
                 </section>
+
+                <section
+                    aria-label="Section placeholder 1"
+                    className="flex min-h-dvh items-start bg-[#f7f5f0] px-6 pt-24 md:px-10 lg:px-12"
+                >
+                    <div className="mx-auto w-full max-w-7xl">
+                        <p className="text-sm tracking-wide text-neutral-400">
+                            Section — coming soon
+                        </p>
+                    </div>
+                </section>
+
+                <section
+                    aria-label="Section placeholder 2"
+                    className="flex min-h-dvh items-start bg-[#f7f5f0] px-6 pt-24 md:px-10 lg:px-12"
+                >
+                    <div className="mx-auto w-full max-w-7xl">
+                        <p className="text-sm tracking-wide text-neutral-400">
+                            Section — coming soon
+                        </p>
+                    </div>
+                </section>
+
+                <section
+                    aria-label="Section placeholder 3"
+                    className="flex min-h-dvh items-start bg-[#f7f5f0] px-6 pt-24 md:px-10 lg:px-12"
+                >
+                    <div className="mx-auto w-full max-w-7xl">
+                        <p className="text-sm tracking-wide text-neutral-400">
+                            Section — coming soon
+                        </p>
+                    </div>
+                </section>
             </main>
+            <SiteFooter />
         </>
     )
 }

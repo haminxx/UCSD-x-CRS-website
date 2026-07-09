@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 
 export default function ProgramPage() {
   return (
@@ -15,6 +16,7 @@ export default function ProgramPage() {
           Back to Home
         </Link>
       </main>
+      <SiteFooter />
     </>
   );
 }

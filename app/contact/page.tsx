@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { ArrowUpRight, Paperclip } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/lib/utils";
 
 const SERVICES = ["Brand", "Digital", "Campaign", "Other"] as const;
@@ -293,6 +294,7 @@ export default function ContactPage() {
           </div>
         </form>
       </main>
+      <SiteFooter />
     </>
   );
 }

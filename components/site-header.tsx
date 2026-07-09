@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useScroll, motion } from "motion/react";
@@ -20,7 +20,14 @@ type SiteHeaderProps = {
   theme?: "light" | "dark";
 };
 
+function isHomePath(pathname: string | null) {
+  if (!pathname) return false;
+  return pathname === "/" || pathname === "";
+}
+
 export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
+  const pathname = usePathname();
+  const showLogin = isHomePath(pathname);
   const [menuState, setMenuState] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { scrollYProgress } = useScroll();
@@ -99,7 +106,8 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
 
             <div
               className={cn(
-                "group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none",
+                "group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl md:flex-nowrap lg:m-0 lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none",
+                showLogin ? "lg:flex" : "lg:hidden",
                 isDark
                   ? "border-white/15 bg-zinc-950 shadow-black/40"
                   : "bg-background shadow-zinc-300/20 dark:shadow-none dark:lg:bg-transparent",
@@ -124,17 +132,27 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                   ))}
                 </ul>
               </div>
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:ml-4">
-                <Button
-                  asChild
-                  size="sm"
-                  className="h-8 rounded-full border-0 border-transparent bg-black px-5 text-sm font-normal text-white shadow-none outline-none ring-0 ring-offset-0 hover:bg-black/90 hover:text-white focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                >
-                  <Link href="/login/">
-                    <span>Login</span>
+              {showLogin && (
+                <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:ml-4">
+                  <Link
+                    href="/login/"
+                    className={cn(
+                      "group/login inline-flex items-center text-sm font-medium transition-[font-weight,color,transform] duration-300 ease-out",
+                      isDark
+                        ? "text-white/80 hover:font-bold hover:text-white"
+                        : "text-black hover:font-bold hover:text-neutral-900",
+                    )}
+                  >
+                    <motion.span
+                      className="inline-block"
+                      whileHover={{ scale: 1.04 }}
+                      transition={{ type: "spring", stiffness: 420, damping: 28 }}
+                    >
+                      Login
+                    </motion.span>
                   </Link>
-                </Button>
-              </div>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>

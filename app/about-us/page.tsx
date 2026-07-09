@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import {
   OrbitCardStack,
   type OrbitStackItem,
@@ -273,6 +274,7 @@ export default function AboutUsPage() {
           </div>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }
