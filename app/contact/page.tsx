@@ -7,16 +7,9 @@ import {
   type InputHTMLAttributes,
 } from "react";
 import Link from "next/link";
-import { Instrument_Serif } from "next/font/google";
 import { ArrowUpRight, Paperclip } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { cn } from "@/lib/utils";
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const SERVICES = ["Brand", "Digital", "Campaign", "Other"] as const;
 const BUDGETS = [
@@ -127,12 +120,7 @@ export default function ContactPage() {
         >
           {/* Personal Information */}
           <section>
-            <h1
-              className={cn(
-                instrumentSerif.className,
-                "max-w-xl text-4xl leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-[3.25rem]"
-              )}
-            >
+            <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-[3.25rem]">
               Let&apos;s talk about your next project...
             </h1>
 
@@ -178,12 +166,7 @@ export default function ContactPage() {
 
           {/* Service and Budget */}
           <section>
-            <h2
-              className={cn(
-                instrumentSerif.className,
-                "text-3xl tracking-tight md:text-4xl"
-              )}
-            >
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               What sort of service?
             </h2>
             <p className="mt-3 text-sm text-neutral-600">Select all that apply</p>
@@ -219,12 +202,7 @@ export default function ContactPage() {
 
           {/* Additional Details */}
           <section>
-            <h2
-              className={cn(
-                instrumentSerif.className,
-                "text-3xl tracking-tight md:text-4xl"
-              )}
-            >
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Anything else?
             </h2>
             <p className="mt-6 text-sm text-neutral-800 md:text-base">

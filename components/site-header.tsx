@@ -130,12 +130,12 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                   variant="outline"
                   size="sm"
                   className={cn(
-                    "h-10 px-5 text-sm",
+                    "h-11 px-6 text-sm font-medium",
                     isDark &&
                       "border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white",
                   )}
                 >
-                  <Link href="/login">
+                  <Link href="/login/">
                     <span>Login</span>
                   </Link>
                 </Button>

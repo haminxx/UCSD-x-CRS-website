@@ -30,27 +30,10 @@ function FloralMark({ className }: { className?: string }) {
 export default function RecruitmentPage() {
   return (
     <>
-      <SiteHeader theme="dark" />
-      <main className="relative min-h-dvh overflow-hidden text-white">
+      <SiteHeader />
+      <main className="relative min-h-dvh overflow-hidden bg-[#f7f5f0] text-neutral-900">
         {/* Video-ready full-bleed background — drop a src on <video> when ready */}
         <div className="absolute inset-0" aria-hidden="true">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 90% 70% at 20% 30%, #c5c98a 0%, transparent 55%), radial-gradient(ellipse 80% 60% at 80% 20%, #e8d9a0 0%, transparent 50%), radial-gradient(ellipse 70% 80% at 70% 80%, #8a9a6a 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 15% 85%, #6b7a52 0%, transparent 50%), linear-gradient(145deg, #9aa87a 0%, #b8a86a 35%, #7d8f5c 70%, #5a6b45 100%)",
-            }}
-          />
-          <div className="absolute inset-0 scale-110 blur-2xl opacity-80">
-            <div
-              className="size-full"
-              style={{
-                background:
-                  "radial-gradient(circle at 40% 40%, rgba(232, 217, 160, 0.55), transparent 45%), radial-gradient(circle at 65% 60%, rgba(107, 122, 82, 0.5), transparent 40%)",
-              }}
-            />
-          </div>
-          {/* Placeholder video: add src when asset is available */}
           <video
             className="absolute inset-0 size-full object-cover opacity-0"
             muted
@@ -59,25 +42,23 @@ export default function RecruitmentPage() {
             playsInline
             // src="/videos/recruitment-hero.mp4"
           />
-          <div className="absolute inset-0 bg-black/45" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/35" />
         </div>
 
         <section className="relative z-10 flex min-h-dvh flex-col justify-center px-6 pb-16 pt-28 md:px-10 md:pb-24 md:pt-32 lg:px-16">
           <div className="mx-auto w-full max-w-7xl">
-            <h1 className="flex flex-col items-center gap-4 text-center text-[clamp(2.25rem,6.5vw,5.5rem)] font-light leading-[1.05] tracking-tight text-white md:flex-row md:items-center md:justify-between md:gap-6 md:text-left">
+            <h1 className="flex flex-col items-center gap-4 text-center text-[clamp(2.25rem,6.5vw,5.5rem)] font-light leading-[1.05] tracking-tight md:flex-row md:items-center md:justify-between md:gap-6 md:text-left">
               <span className="md:max-w-[42%] md:flex-1">life is a creative</span>
-              <FloralMark className="size-8 shrink-0 text-white/85 md:size-10 lg:size-12" />
+              <FloralMark className="size-8 shrink-0 text-neutral-800/80 md:size-10 lg:size-12" />
               <span className="md:max-w-[42%] md:flex-1 md:text-right">
                 Join the team
               </span>
             </h1>
 
             <div className="mt-8 flex flex-col gap-8 md:mt-10 md:ml-auto md:max-w-[42%] md:gap-10">
-              <div className="h-px w-16 bg-white/80 md:ml-auto" />
+              <div className="h-px w-16 bg-neutral-900/70 md:ml-auto" />
 
               <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
-                <p className="max-w-sm text-left text-sm leading-relaxed text-white/85 md:text-[0.95rem]">
+                <p className="max-w-sm text-left text-sm leading-relaxed text-neutral-600 md:text-[0.95rem]">
                   Build, race, and grow with UCSD x CRS. Bring your craft to a
                   team that turns late nights into lap times — and purpose into
                   every mile.
@@ -87,7 +68,7 @@ export default function RecruitmentPage() {
                   href={JOIN_FORM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-zinc-950 transition hover:bg-white/90"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-neutral-800"
                 >
                   JOIN US
                   <ArrowRight className="size-4" aria-hidden="true" />

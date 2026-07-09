@@ -231,12 +231,12 @@ export default function AboutUsPage() {
           />
         </section>
 
-        <section className="bg-white px-6 pb-24 pt-10">
+        <section className="bg-[#f7f5f0] px-6 pb-24 pt-10">
           <div className="mx-auto max-w-7xl">
             <div
               role="tablist"
               aria-label="Team filters"
-              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-2 md:gap-3"
+              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-[#ebe8e1]/70 p-2 md:gap-3"
             >
               {teamFilters.map((filter) => {
                 const isActive = activeFilter === filter;
