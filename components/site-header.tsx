@@ -128,7 +128,7 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                 <Button
                   asChild
                   size="sm"
-                  className="h-9 rounded-full bg-black px-6 text-sm font-medium text-white hover:bg-black/90 hover:text-white"
+                  className="h-8 rounded-full border-0 bg-black px-5 text-sm font-normal text-white shadow-none ring-0 hover:bg-black/90 hover:text-white focus-visible:ring-0"
                 >
                   <Link href="/login/">
                     <span>Login</span>
