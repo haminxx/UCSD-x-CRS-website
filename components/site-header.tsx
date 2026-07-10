@@ -85,8 +85,9 @@ function DesktopNav({ light }: { light: boolean }) {
   const pathname = usePathname();
   const [hoveredHref, setHoveredHref] = React.useState<string | null>(null);
 
+  // No fallback to "/" — pages like /login/ should show no active nav item
   const activeHref =
-    menuItems.find((item) => isActivePath(pathname, item.href))?.href ?? "/";
+    menuItems.find((item) => isActivePath(pathname, item.href))?.href ?? null;
   const underlineHref = hoveredHref ?? activeHref;
 
   return (
@@ -112,8 +113,9 @@ function MobileNav({ light }: { light: boolean }) {
   const pathname = usePathname();
   const [hoveredHref, setHoveredHref] = React.useState<string | null>(null);
 
+  // No fallback to "/" — pages like /login/ should show no active nav item
   const activeHref =
-    menuItems.find((item) => isActivePath(pathname, item.href))?.href ?? "/";
+    menuItems.find((item) => isActivePath(pathname, item.href))?.href ?? null;
   const underlineHref = hoveredHref ?? activeHref;
 
   return (

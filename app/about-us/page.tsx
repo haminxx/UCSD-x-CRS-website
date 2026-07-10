@@ -8,8 +8,8 @@ import {
   OrbitCardStack,
   type OrbitStackItem,
 } from "@/components/ui/orbit-card-stack";
-import { Button } from "@/components/ui/button";
 import { PageEnter } from "@/components/page-motion";
+import { springTransition } from "@/components/spring-underline";
 import { cn } from "@/lib/utils";
 
 const orbitLeaders: OrbitStackItem[] = [
@@ -74,94 +74,20 @@ type TeamFilter = (typeof teamFilters)[number];
 type TeamMember = {
   name: string;
   role: string;
-  team: string;
   filter: TeamFilter;
   image?: string;
 };
 
-const teamMembers: TeamMember[] = [
-  {
-    name: "Rhea Sheth",
-    role: "Co-Lead",
-    team: "TR",
-    filter: "Engineer",
-  },
-  {
-    name: "Nika Sabouri",
-    role: "Co-Lead",
-    team: "SEDS",
-    filter: "Operation Team",
-  },
-  {
-    name: "Anusha Rao",
-    role: "Mentor",
-    team: "TR",
-    filter: "Driver",
-  },
-  {
-    name: "Sophie Phung",
-    role: "Mentor",
-    team: "TR",
-    filter: "Engineer",
-  },
-  {
-    name: "Alex Kim",
-    role: "Driver",
-    team: "TR",
-    filter: "Driver",
-  },
-  {
-    name: "Jordan Lee",
-    role: "Systems Engineer",
-    team: "SEDS",
-    filter: "Engineer",
-  },
-  {
-    name: "Casey Nguyen",
-    role: "Pit Specialist",
-    team: "TR",
-    filter: "PIT Crew",
-  },
-  {
-    name: "Morgan Patel",
-    role: "Photographer",
-    team: "Media",
-    filter: "Media Team",
-  },
-  {
-    name: "Riley Chen",
-    role: "Videographer",
-    team: "Media",
-    filter: "Content Creator",
-  },
-  {
-    name: "Sam Ortiz",
-    role: "Ops Lead",
-    team: "Ops",
-    filter: "Operation Team",
-  },
-  {
-    name: "Taylor Brooks",
-    role: "Pit Crew",
-    team: "TR",
-    filter: "PIT Crew",
-  },
-  {
-    name: "Jamie Park",
-    role: "Content Lead",
-    team: "Media",
-    filter: "Content Creator",
-  },
-];
+/** Four placeholder slots per filter until real roster data is ready. */
+const teamMembers: TeamMember[] = teamFilters.flatMap((filter) =>
+  Array.from({ length: 4 }, () => ({
+    name: "N/A",
+    role: "N/A",
+    filter,
+  })),
+);
 
 function MemberPortrait({ member }: { member: TeamMember }) {
-  const initials = member.name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
   if (member.image) {
     return (
       <img
@@ -172,10 +98,12 @@ function MemberPortrait({ member }: { member: TeamMember }) {
     );
   }
 
+  // Minimal blank placeholder — no initials that imply a real person
   return (
-    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#e8ecef] via-[#dfe4e8] to-[#d0d7dc] text-3xl font-semibold tracking-wide text-[#0a1218]/70">
-      {initials}
-    </div>
+    <div
+      aria-hidden
+      className="aspect-square w-full bg-gradient-to-br from-[#e8ecef] via-[#dfe4e8] to-[#d0d7dc]"
+    />
   );
 }
 
@@ -188,9 +116,7 @@ function TeamProfileCard({ member }: { member: TeamMember }) {
       <h3 className="mt-5 text-lg font-bold text-[#0a1218] md:text-xl">
         {member.name}
       </h3>
-      <p className="mt-1.5 text-sm text-black/55 md:text-base">
-        {member.role} ({member.team})
-      </p>
+      <p className="mt-1.5 text-sm text-black/55 md:text-base">{member.role}</p>
     </article>
   );
 }
@@ -228,7 +154,7 @@ export default function AboutUsPage() {
 
           <OrbitCardStack
             items={orbitLeaders}
-            className="mt-2 md:mt-4"
+            className="-mt-6 md:-mt-4"
             onActiveChange={(item) => setHeadline(item.name)}
             onCollapse={() => setHeadline("Meet our team!")}
           />
@@ -239,45 +165,46 @@ export default function AboutUsPage() {
             <div
               role="tablist"
               aria-label="Team filters"
-              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-black/10 bg-[#f4f6f7] p-2.5 md:gap-3"
+              className="flex flex-wrap items-center justify-center gap-1 rounded-2xl border border-black/10 bg-[#f4f6f7] p-1.5 md:gap-1.5"
             >
               {teamFilters.map((filter) => {
                 const isActive = activeFilter === filter;
                 return (
-                  <Button
+                  <button
                     key={filter}
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    variant={isActive ? "default" : "ghost"}
                     onClick={() => setActiveFilter(filter)}
                     className={cn(
-                      "rounded-xl px-4 py-2 text-sm md:px-5",
+                      "relative rounded-lg px-2.5 py-1.5 text-xs font-medium tracking-wide outline-none transition-colors md:px-3 md:py-1.5 md:text-sm",
+                      "focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f6f7]",
                       isActive
-                        ? "bg-[#0a1218] text-white hover:bg-black"
-                        : "text-black/55 hover:bg-black/5 hover:text-black",
+                        ? "text-white"
+                        : "text-black/55 hover:text-black",
                     )}
                   >
-                    {filter}
-                  </Button>
+                    {isActive && (
+                      <motion.span
+                        layoutId="team-filter-pill"
+                        className="absolute inset-0 rounded-lg bg-[#0a1218]"
+                        transition={springTransition}
+                      />
+                    )}
+                    <span className="relative z-10">{filter}</span>
+                  </button>
                 );
               })}
             </div>
 
             <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-              {filteredMembers.map((member) => (
+              {filteredMembers.map((member, index) => (
                 <TeamProfileCard
-                  key={`${member.name}-${member.team}`}
+                  key={`${member.filter}-${index}`}
                   member={member}
                 />
               ))}
             </div>
-
-            {filteredMembers.length === 0 && (
-              <p className="mt-14 text-center text-black/50">
-                No members in this team yet.
-              </p>
-            )}
           </div>
         </section>
         </PageEnter>
