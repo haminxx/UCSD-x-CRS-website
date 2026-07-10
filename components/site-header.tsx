@@ -193,8 +193,16 @@ export function SiteHeader() {
 
   return (
     <header>
-      <nav
+      <motion.nav
         data-state={menuState && "active"}
+        initial={{ opacity: 0, y: -28 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 110,
+          damping: 22,
+          mass: 0.85,
+        }}
         className={cn(
           "group fixed inset-x-0 top-0 z-[100] w-full pt-4 lg:pt-6",
           light ? "text-black" : "text-white",
@@ -279,7 +287,7 @@ export function SiteHeader() {
             </AnimatePresence>
           </motion.div>
         </div>
-      </nav>
+      </motion.nav>
     </header>
   );
 }
