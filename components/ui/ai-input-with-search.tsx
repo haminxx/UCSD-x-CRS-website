@@ -1,13 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUp, Search } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/** ~3 lines of `leading-relaxed` text before the textarea scrolls. */
+const MAX_TEXTAREA_LINES = 3;
 
 type AIInputWithSearchProps = {
   className?: string;
   placeholder?: string;
-  onSubmit?: (value: string, withSearch: boolean) => void;
+  onSubmit?: (value: string) => void;
 };
 
 export function AIInputWithSearch({
@@ -16,14 +19,26 @@ export function AIInputWithSearch({
   onSubmit,
 }: AIInputWithSearchProps) {
   const [value, setValue] = useState("");
-  const [withSearch, setWithSearch] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const resize = useCallback(() => {
     const el = textareaRef.current;
     if (!el) return;
+
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight, 180)}px`;
+
+    const styles = window.getComputedStyle(el);
+    const lineHeight = Number.parseFloat(styles.lineHeight);
+    const fontSize = Number.parseFloat(styles.fontSize);
+    const resolvedLine =
+      Number.isFinite(lineHeight) && lineHeight > 0
+        ? lineHeight
+        : fontSize * 1.625;
+    const maxHeight = resolvedLine * MAX_TEXTAREA_LINES;
+
+    const contentHeight = el.scrollHeight;
+    el.style.height = `${Math.min(contentHeight, maxHeight)}px`;
+    el.style.overflowY = contentHeight > maxHeight ? "auto" : "hidden";
   }, []);
 
   useEffect(() => {
@@ -33,8 +48,7 @@ export function AIInputWithSearch({
   const handleSubmit = () => {
     const trimmed = value.trim();
     if (!trimmed) return;
-    onSubmit?.(trimmed, withSearch);
-    console.log("[recruitment chat]", { value: trimmed, withSearch });
+    onSubmit?.(trimmed);
     setValue("");
   };
 
@@ -58,26 +72,16 @@ export function AIInputWithSearch({
           }
         }}
         placeholder={placeholder}
-        className="block w-full resize-none bg-transparent px-5 pb-3.5 pt-5 text-base leading-relaxed text-[#0a1218] outline-none placeholder:text-black/35 sm:px-6 sm:pt-[1.35rem] sm:text-[1.05rem]"
+        className={cn(
+          "block w-full resize-none overflow-y-hidden bg-transparent",
+          "px-5 pb-3.5 pt-5 text-base leading-relaxed text-[#0a1218]",
+          "outline-none placeholder:text-black/35",
+          "sm:px-6 sm:pt-[1.35rem] sm:text-[1.05rem]",
+        )}
         aria-label="Ask a recruitment question"
       />
 
-      <div className="flex items-center justify-between gap-3 px-3.5 pb-3.5 sm:px-4 sm:pb-4">
-        <button
-          type="button"
-          onClick={() => setWithSearch((v) => !v)}
-          aria-pressed={withSearch}
-          className={cn(
-            "inline-flex touch-manipulation items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium tracking-wide transition sm:text-[0.8125rem]",
-            withSearch
-              ? "bg-[#0a1218] text-white"
-              : "bg-black/[0.04] text-black/55 hover:bg-black/[0.07] hover:text-black/80",
-          )}
-        >
-          <Search className="size-3.5" aria-hidden="true" />
-          Search
-        </button>
-
+      <div className="flex items-center justify-end gap-3 px-3.5 pb-3.5 sm:px-4 sm:pb-4">
         <button
           type="button"
           onClick={handleSubmit}

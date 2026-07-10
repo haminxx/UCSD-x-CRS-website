@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Eye, X } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AIInputWithSearch } from "@/components/ui/ai-input-with-search";
@@ -97,31 +97,50 @@ function TeamRoleCard({
           <img
             src={role.image}
             alt=""
-            className="absolute inset-0 size-full object-cover opacity-85 transition duration-500 group-hover:scale-105 group-hover:opacity-95"
+            className="absolute inset-0 size-full object-cover opacity-85 transition duration-500 group-hover:scale-105 group-hover:opacity-95 group-focus-visible:scale-105 group-focus-visible:opacity-95"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-transparent" />
 
-          <span
+          {/* Title + view more — top-left, hover / focus only */}
+          <div
             className={cn(
-              "absolute bottom-[clamp(0.5rem,1vw,0.75rem)] left-[clamp(0.5rem,1vw,0.75rem)] inline-flex items-center gap-1 overflow-hidden rounded-full",
-              "bg-white/95 text-[#0a1218] shadow-sm backdrop-blur-sm",
-              "max-w-7 transition-[max-width] duration-300 ease-out",
-              "group-hover:max-w-[6.5rem]",
+              "pointer-events-none absolute left-[clamp(0.55rem,1.1vw,0.85rem)] top-[clamp(0.55rem,1.1vw,0.85rem)] z-10",
+              "flex max-w-[calc(100%-1.1rem)] flex-col items-start gap-1",
             )}
           >
-            <span className="flex size-7 shrink-0 items-center justify-center sm:size-8">
-              <Eye className="size-3.5 sm:size-4" aria-hidden="true" />
-            </span>
-            <span className="whitespace-nowrap pr-2.5 text-[10px] font-medium tracking-wide opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:text-xs">
-              View
-            </span>
-          </span>
-        </div>
+            <div className="overflow-hidden">
+              <p
+                className={cn(
+                  "text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-white",
+                  "-translate-x-[110%] opacity-0",
+                  "transition-[transform,opacity] duration-300 ease-out",
+                  "group-hover:translate-x-0 group-hover:opacity-100",
+                  "group-focus-visible:translate-x-0 group-focus-visible:opacity-100",
+                  "group-active:translate-x-0 group-active:opacity-100",
+                )}
+              >
+                {role.title}
+              </p>
+            </div>
 
-        <p className="mt-[clamp(0.4rem,0.9vh,0.65rem)] text-center text-[clamp(0.7rem,1.15vw,0.95rem)] font-medium tracking-wide text-[#0a1218]">
-          {role.title}
-        </p>
+            <span
+              className={cn(
+                "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-white/90",
+                "-translate-x-[110%] opacity-0",
+                "transition-[transform,opacity] duration-300 ease-out delay-75",
+                "group-hover:translate-x-0 group-hover:opacity-100",
+                "group-focus-visible:translate-x-0 group-focus-visible:opacity-100",
+                "group-active:translate-x-0 group-active:opacity-100",
+                "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left",
+                "after:scale-x-0 after:bg-white/90 after:transition-transform after:duration-300 after:ease-out",
+                "group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 group-active:after:scale-x-100",
+              )}
+            >
+              view more
+            </span>
+          </div>
+        </div>
       </button>
     </BlurFade>
   );
@@ -262,7 +281,7 @@ export default function RecruitmentPage() {
           />
         </div>
 
-        {/* Three groups with even vertical rhythm across the viewport */}
+        {/* Three content bands + CTA floating in the headline→chat gap */}
         <div
           className={cn(
             "relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[110rem] flex-col",
@@ -275,7 +294,7 @@ export default function RecruitmentPage() {
             gap: "clamp(1.25rem, 3.5vh, 2.75rem)",
           }}
         >
-          {/* Group 1 — Headline + CTA */}
+          {/* Band 1 — Headline */}
           <section className="flex shrink-0 flex-col items-center text-center">
             <BlurFade delay={0.05}>
               <h1
@@ -288,8 +307,11 @@ export default function RecruitmentPage() {
                 Join the team.
               </h1>
             </BlurFade>
+          </section>
 
-            <BlurFade delay={0.1} className="mt-[clamp(1rem,2.4vh,1.75rem)]">
+          {/* CTA — own flex child so justify-evenly centers it in the headline↔chat gap */}
+          <div className="flex shrink-0 justify-center">
+            <BlurFade delay={0.1}>
               <a
                 href={FALL_2026_APPLICATION_URL}
                 target="_blank"
@@ -308,20 +330,11 @@ export default function RecruitmentPage() {
                 <ArrowUpRight className="size-4 opacity-80" aria-hidden="true" />
               </a>
             </BlurFade>
-          </section>
+          </div>
 
-          {/* Group 2 — Ask line + chatbox */}
+          {/* Band 2 — Chat box */}
           <section className="mx-auto flex w-full max-w-[min(100%,42rem)] shrink-0 flex-col items-center text-center xl:max-w-[min(100%,48rem)]">
-            <BlurFade delay={0.14}>
-              <p className="text-[clamp(0.9rem,1.35vw,1.125rem)] text-black/55">
-                Feel free to ask me any question
-              </p>
-            </BlurFade>
-
-            <BlurFade
-              delay={0.2}
-              className="mt-[clamp(0.75rem,1.8vh,1.25rem)] w-full"
-            >
+            <BlurFade delay={0.2} className="w-full">
               <AIInputWithSearch
                 onSubmit={(value) => {
                   openChat(value);
@@ -330,7 +343,7 @@ export default function RecruitmentPage() {
             </BlurFade>
           </section>
 
-          {/* Group 3 — Role / team cards */}
+          {/* Band 3 — Role / team cards */}
           <section className="w-full shrink-0">
             <div
               className={cn(
