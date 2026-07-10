@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ucsd-x-crs-recruitment-chatbot
+    runtime: node
+    rootDir: chat-server
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.0-flash

@@ -32,7 +32,7 @@ const orbitLeaders: OrbitStackItem[] = [
       "Founded UCSD × CRS and sets the direction for the collegiate racing team.",
     accent: "#f3f1ea",
     initials: "CL",
-    stat: "Founder",
+    stat: "Revelle College",
     image: "/images/team/christian-lee.jpg",
   },
   emptyOrbitCard("#b9a7ff"),

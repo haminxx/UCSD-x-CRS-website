@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion, type Transition } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
@@ -86,18 +85,7 @@ function clampIndex(index: number, length: number) {
   return Math.min(Math.max(index, 0), Math.max(length - 1, 0));
 }
 
-function getInitials(item: OrbitStackItem) {
-  if (item.initials) return item.initials;
-  return item.name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 function Portrait({ item }: { item: OrbitStackItem }) {
-  const initials = getInitials(item);
   const isEmpty = !item.name.trim() && !item.image;
 
   if (item.image) {
@@ -108,11 +96,6 @@ function Portrait({ item }: { item: OrbitStackItem }) {
           alt={item.name || "Team member"}
           className="h-full w-full object-cover"
         />
-        {initials ? (
-          <div className="absolute bottom-4 right-4 rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white">
-            {initials}
-          </div>
-        ) : null}
       </div>
     );
   }
@@ -147,11 +130,6 @@ function Portrait({ item }: { item: OrbitStackItem }) {
           style={{ backgroundColor: item.accent ?? "#f3f1ea" }}
         />
       </div>
-      {initials ? (
-        <div className="absolute bottom-4 right-4 rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white">
-          {initials}
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -300,9 +278,6 @@ export function OrbitCardStack({
             >
               <div className="relative">
                 <Portrait item={item} />
-                <div className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-full bg-zinc-950 text-white shadow-lg shadow-black/20">
-                  <ArrowUpRight className="size-4" />
-                </div>
               </div>
 
               <div className="px-2 pb-2 pt-6">

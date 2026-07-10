@@ -9,6 +9,23 @@ The Gemini API key stays in Render Environment — never in the static site or G
 - Railway free offering is mostly **credits**, not a lasting free web service
 - Render free Web Service works for this hobby chatbot (may sleep when idle; first reply can be slow)
 
+## Blueprint (`render.yaml`)
+
+The repo root includes `render.yaml` so a **Blueprint** deploy uses `chat-server` as the root (not the Next.js site). Prefer **New → Blueprint** and select this repo if you are creating the service from scratch.
+
+## Fix existing service (502 / wrong start command)
+
+If Render logs show `ucsd-x-crs-website@0.1.0 start` → `next start` and *Could not find a production build in the '.next' directory*, the service is pointed at the **repo root** instead of `chat-server`. Fix in the Render Dashboard:
+
+1. Open the service → **Settings**
+2. Set **Root Directory** = `chat-server`
+3. Set **Build Command** = `npm install`
+4. Set **Start Command** = `npm start` (runs `node server.js`, not Next)
+5. Confirm **Environment** has `GEMINI_API_KEY` set (and optionally `GEMINI_MODEL` = `gemini-2.0-flash`)
+6. **Manual Deploy** → **Clear build cache & deploy**
+
+After that redeploy, `/api/recruitment-chat` should respond (cold start on free tier may take 30–60s).
+
 ## Deploy on Render — step by step
 
 ### A. Gemini API key
@@ -20,9 +37,9 @@ The Gemini API key stays in Render Environment — never in the static site or G
 ### B. Create the Render web service
 
 1. Sign up / log in at https://render.com (GitHub login is easiest)
-2. **New** → **Web Service**
+2. Prefer **New** → **Blueprint** (uses root `render.yaml`), **or** **New** → **Web Service**
 3. Connect the repo: `haminxx/UCSD-x-CRS-website` (or your fork)
-4. Settings:
+4. Settings (must match — wrong Root Directory runs Next.js and fails):
    - **Name:** `ucsd-x-crs-recruitment-chatbot` (or any name)
    - **Region:** Oregon (or closest)
    - **Root Directory:** `chat-server`
