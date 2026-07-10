@@ -8,6 +8,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { HomeWhatIsCrs } from '@/components/home-what-is-crs'
 import { BoldHoverText, SpringUnderline } from '@/components/spring-underline'
+import { FALL_2026_APPLICATION_URL } from '@/lib/recruitment'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -351,15 +352,31 @@ export function HeroSection() {
                 <HomeWhatIsCrs />
 
                 <section
-                    aria-label="Home placeholder section 1"
-                    data-home-slot="1"
-                    className="min-h-[50vh] w-full border-t border-black/[0.06] bg-[#F2F0EF]"
-                />
-                <section
-                    aria-label="Home placeholder section 2"
-                    data-home-slot="2"
-                    className="min-h-[50vh] w-full border-t border-white/[0.06] bg-background"
-                />
+                    aria-label="Fall 2026 Application"
+                    className="flex min-h-[40vh] w-full items-center justify-center border-t border-black/[0.06] bg-[#F2F0EF] px-6 py-20 md:min-h-[45vh] md:px-10 md:py-24 lg:px-12"
+                >
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-8% 0px' }}
+                        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                        className="flex w-full max-w-3xl flex-col items-center text-center"
+                    >
+                        <Button
+                            asChild
+                            size="lg"
+                            className="h-14 rounded-full border-0 bg-[#182B49] px-8 text-base font-semibold text-[#F2F0EF] shadow-none hover:bg-[#121F38] hover:text-[#F2F0EF] md:h-16 md:px-10 md:text-lg"
+                        >
+                            <a
+                                href={FALL_2026_APPLICATION_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Fall 2026 Application is now open!
+                            </a>
+                        </Button>
+                    </motion.div>
+                </section>
             </main>
             <SiteFooter />
         </>

@@ -9,7 +9,7 @@ Update this file when recruitment facts change, then copy it to
 - **What we are:** A fully structured, student-led motorsport organization —
   engineering, driving, pit crew, media, and ops working as one race team.
 - **Website:** https://ucsdxcrs.web.app
-- **Instagram:** https://www.instagram.com/crs_ucsd/
+- **Instagram:** https://www.instagram.com/ucsd_crs/
 - **LinkedIn:** https://www.linkedin.com/company/ucsd-crs
 
 ## How joining works (high level)

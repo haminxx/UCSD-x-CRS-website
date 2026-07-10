@@ -1,10 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
+import { SpringUnderline } from "@/components/spring-underline";
+import { HoverPeek } from "@/components/ui/hover-peek";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+const INFO_DOCUMENT_URL = "https://www.instagram.com/ucsd_crs/";
 
 const FEATURES: {
   title: string;
@@ -15,11 +20,13 @@ const FEATURES: {
     body: (
       <>
         Apply, meet the leads, and land in a role:{" "}
-        <strong className="font-semibold text-[#F2F0EF]">driver</strong>,{" "}
-        <strong className="font-semibold text-[#F2F0EF]">engineer</strong>,{" "}
-        <strong className="font-semibold text-[#F2F0EF]">pit</strong>,{" "}
-        <strong className="font-semibold text-[#F2F0EF]">media</strong>, or{" "}
-        <strong className="font-semibold text-[#F2F0EF]">ops</strong>.
+        <strong className="font-semibold text-[#F2F0EF]">Driver</strong>,{" "}
+        <strong className="font-semibold text-[#F2F0EF]">Engineer</strong>,{" "}
+        <strong className="font-semibold text-[#F2F0EF]">PIT Crew</strong>,{" "}
+        <strong className="font-semibold text-[#F2F0EF]">Media Team</strong>,{" "}
+        <strong className="font-semibold text-[#F2F0EF]">Content Creator</strong>
+        , or{" "}
+        <strong className="font-semibold text-[#F2F0EF]">Operation Team</strong>.
       </>
     ),
   },
@@ -43,6 +50,33 @@ const FEATURES: {
         with a full student-run program behind you.
       </>
     ),
+  },
+];
+
+const ROLE_BLURBS: { title: string; body: string }[] = [
+  {
+    title: "Driver",
+    body: "Race craft, consistency, and preparation for Collegiate Racing Series weekends — all levels welcome to start the conversation.",
+  },
+  {
+    title: "Engineer",
+    body: "Chassis, powertrain, aero, and systems on the car — hands-on vehicle engineering and data-driven iteration.",
+  },
+  {
+    title: "PIT Crew",
+    body: "Timed stops: tires, fuel, safety checks, and drilled execution. Prior experience helps; showing up ready to practice matters more.",
+  },
+  {
+    title: "Media Team",
+    body: "Race-weekend storytelling through photography, video, and team presence that captures the program on and off track.",
+  },
+  {
+    title: "Content Creator",
+    body: "Ongoing content that shares the team’s work, culture, and race weekends with the campus and beyond.",
+  },
+  {
+    title: "Operation Team",
+    body: "Logistics, coordination, and keeping race weekends and sponsors moving so the program runs as one unit.",
   },
 ];
 
@@ -72,8 +106,28 @@ export function HomeWhatIsCrs() {
             <strong className="font-semibold text-[#F2F0EF]/85">
               student-led
             </strong>{" "}
-            race team where engineering, driving, pit, media, and ops compete as
-            one.
+            race team where{" "}
+            <strong className="font-semibold text-[#F2F0EF]/85">Driver</strong>,{" "}
+            <strong className="font-semibold text-[#F2F0EF]/85">
+              Engineer
+            </strong>
+            ,{" "}
+            <strong className="font-semibold text-[#F2F0EF]/85">
+              PIT Crew
+            </strong>
+            ,{" "}
+            <strong className="font-semibold text-[#F2F0EF]/85">
+              Media Team
+            </strong>
+            ,{" "}
+            <strong className="font-semibold text-[#F2F0EF]/85">
+              Content Creator
+            </strong>
+            , and{" "}
+            <strong className="font-semibold text-[#F2F0EF]/85">
+              Operation Team
+            </strong>{" "}
+            compete as one.
           </p>
         </motion.div>
 
@@ -139,6 +193,56 @@ export function HomeWhatIsCrs() {
             </ol>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-8% 0px" }}
+          transition={{ duration: 0.75, ease: EASE }}
+          className="mx-auto mt-16 max-w-3xl md:mt-20"
+        >
+          <h3 className="text-center text-[clamp(1.25rem,2.5vw,1.75rem)] font-bold tracking-tight text-[#F2F0EF]">
+            Roles on the team
+          </h3>
+          <ul className="mt-8 space-y-5 md:mt-10 md:space-y-6">
+            {ROLE_BLURBS.map((role, i) => (
+              <motion.li
+                key={role.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-5% 0px" }}
+                transition={{
+                  duration: 0.55,
+                  delay: 0.05 + i * 0.04,
+                  ease: EASE,
+                }}
+              >
+                <p className="text-[0.95rem] leading-relaxed text-[#F2F0EF]/55 md:text-base">
+                  <strong className="font-semibold text-[#F2F0EF]">
+                    {role.title}.
+                  </strong>{" "}
+                  {role.body}
+                </p>
+              </motion.li>
+            ))}
+          </ul>
+          <p className="mt-8 text-center text-[0.95rem] leading-relaxed text-[#F2F0EF]/55 md:mt-10 md:text-base">
+            Check{" "}
+            <HoverPeek url={INFO_DOCUMENT_URL}>
+              <Link
+                href={INFO_DOCUMENT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex text-[#F2F0EF] transition-colors hover:text-white"
+              >
+                <SpringUnderline className="pb-0.5 font-medium">
+                  this Info Document
+                </SpringUnderline>
+              </Link>
+            </HoverPeek>{" "}
+            for more.
+          </p>
+        </motion.div>
       </div>
     </section>
   );

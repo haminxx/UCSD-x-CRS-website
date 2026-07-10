@@ -54,7 +54,7 @@ function LinkedInIcon({ className }: { className?: string }) {
 const socialLinks = [
   {
     name: "Instagram",
-    href: "https://www.instagram.com/crs_ucsd/?utm_source=ig_web_button_share_sheet",
+    href: "https://www.instagram.com/ucsd_crs/",
     icon: InstagramIcon,
   },
   {
