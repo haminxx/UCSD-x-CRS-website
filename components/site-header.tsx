@@ -173,11 +173,33 @@ function LoginButton({
   );
 }
 
+/** Session flag: header spring entrance already played (home first mount only). */
+export const HEADER_ENTERED_STORAGE_KEY = "ucsdxcrs-header-entered";
+
+function hasHeaderEntered(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    return sessionStorage.getItem(HEADER_ENTERED_STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markHeaderEntered(): void {
+  try {
+    sessionStorage.setItem(HEADER_ENTERED_STORAGE_KEY, "1");
+  } catch {
+    /* private mode / blocked storage */
+  }
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
   const light = isLightPage(pathname);
   const [menuState, setMenuState] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  // null = not yet decided (avoid animating on SSR/hydration for inner pages)
+  const [playEntrance, setPlayEntrance] = React.useState<boolean | null>(null);
   const { scrollYProgress } = useScroll();
 
   React.useEffect(() => {
@@ -191,18 +213,41 @@ export function SiteHeader() {
     setMenuState(false);
   }, [pathname]);
 
+  // Animate only on first home mount of the session — never on About/Program/etc.
+  // useLayoutEffect avoids a one-frame hidden flash on inner pages.
+  React.useLayoutEffect(() => {
+    const isHome = normalizePath(pathname) === "/";
+    if (!isHome || hasHeaderEntered()) {
+      setPlayEntrance(false);
+      return;
+    }
+    setPlayEntrance(true);
+    markHeaderEntered();
+  }, [pathname]);
+
+  const entranceReady = playEntrance !== null;
+  const shouldAnimate = playEntrance === true;
+
   return (
     <header>
       <motion.nav
         data-state={menuState && "active"}
-        initial={{ opacity: 0, y: -28 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 110,
-          damping: 22,
-          mass: 0.85,
-        }}
+        initial={shouldAnimate ? { opacity: 0, y: -28 } : false}
+        animate={
+          entranceReady || playEntrance === false
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: -28 }
+        }
+        transition={
+          shouldAnimate
+            ? {
+                type: "spring",
+                stiffness: 110,
+                damping: 22,
+                mass: 0.85,
+              }
+            : { duration: 0 }
+        }
         className={cn(
           "group fixed inset-x-0 top-0 z-[100] w-full pt-4 lg:pt-6",
           light ? "text-black" : "text-white",

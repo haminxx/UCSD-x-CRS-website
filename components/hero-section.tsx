@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
@@ -7,6 +7,7 @@ import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { SpringUnderline } from '@/components/spring-underline'
+import { HomeIntro, shouldSkipHomeIntro, HERO_VIDEO_SRC } from '@/components/home-intro'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -14,6 +15,8 @@ const RESTING_OPACITY = 1
 const IDLE_MS = 2500
 const FADE_OUT_S = 1.6
 const FADE_IN_SPRING = { type: 'spring' as const, stiffness: 260, damping: 30, mass: 0.75 }
+const CHROME_REVEAL = { duration: 1.1, ease: [0.22, 1, 0.36, 1] as const }
+const LOGO_REVEAL = { duration: 1.15, ease: [0.22, 1, 0.36, 1] as const, delay: 0.2 }
 
 function SponsorLink() {
     return (
@@ -32,8 +35,24 @@ export function HeroSection() {
     const heroRef = useRef<HTMLElement>(null)
     const [contentVisible, setContentVisible] = useState(true)
     const [fadingOut, setFadingOut] = useState(false)
+    // null = hydrating / checking sessionStorage; avoid content flash
+    const [introActive, setIntroActive] = useState<boolean | null>(null)
+    const [chromeReady, setChromeReady] = useState(false)
 
     useEffect(() => {
+        const skip = shouldSkipHomeIntro()
+        setIntroActive(!skip)
+        if (skip) setChromeReady(true)
+    }, [])
+
+    const onIntroComplete = useCallback(() => {
+        setIntroActive(false)
+        window.setTimeout(() => setChromeReady(true), 60)
+    }, [])
+
+    useEffect(() => {
+        if (!chromeReady) return
+
         const hero = heroRef.current
         if (!hero) return
 
@@ -102,11 +121,21 @@ export function HeroSection() {
                 window.removeEventListener(event, onActivity)
             }
         }
-    }, [])
+    }, [chromeReady])
+
+    const showIntro = introActive === true
+    const awaitingIntroCheck = introActive === null
 
     return (
         <>
-            <SiteHeader />
+            {awaitingIntroCheck && (
+                <div className="fixed inset-0 z-[90] bg-[#0a1218]" aria-hidden />
+            )}
+
+            {showIntro && <HomeIntro onComplete={onIntroComplete} />}
+
+            {/* Mount header only after intro so its spring entrance is visible */}
+            {chromeReady && <SiteHeader />}
 
             <main className="overflow-x-hidden">
                 <section ref={heroRef} className="relative">
@@ -118,8 +147,8 @@ export function HeroSection() {
                             muted
                             playsInline
                             preload="auto"
-                            className="absolute inset-0 h-full w-full object-cover object-center"
-                            src="/videos/ucsdxcrs-v2.mp4"
+                            className="absolute inset-0 h-full w-full object-cover object-[center_bottom]"
+                            src={HERO_VIDEO_SRC}
                         />
 
                         {/* Blur while UI is visible; clears when idle (synced with text fade) */}
@@ -127,40 +156,51 @@ export function HeroSection() {
                             aria-hidden
                             className="pointer-events-none absolute inset-0 z-[1] bg-black/45 backdrop-blur-[6px]"
                             animate={{
-                                opacity: contentVisible ? 1 : 0,
+                                opacity: chromeReady && contentVisible ? 1 : chromeReady ? 0 : 0.55,
                             }}
                             transition={
                                 fadingOut
                                     ? { duration: FADE_OUT_S, ease: 'easeOut' }
-                                    : FADE_IN_SPRING
+                                    : chromeReady
+                                      ? FADE_IN_SPRING
+                                      : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
                             }
                         />
                         <motion.div
                             aria-hidden
                             className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/35 via-transparent to-black/55"
                             animate={{
-                                opacity: contentVisible ? 1 : 0.35,
+                                opacity: chromeReady && contentVisible ? 1 : chromeReady ? 0.35 : 0.5,
                             }}
                             transition={
                                 fadingOut
                                     ? { duration: FADE_OUT_S, ease: 'easeOut' }
-                                    : FADE_IN_SPRING
+                                    : chromeReady
+                                      ? FADE_IN_SPRING
+                                      : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
                             }
                         />
 
                         <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
                             <motion.div
                                 className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left"
+                                initial={false}
                                 animate={{
-                                    opacity: contentVisible ? RESTING_OPACITY : 0,
+                                    opacity: chromeReady
+                                        ? contentVisible
+                                            ? RESTING_OPACITY
+                                            : 0
+                                        : 0,
                                 }}
                                 transition={
-                                    fadingOut
-                                        ? { duration: FADE_OUT_S, ease: 'easeOut' }
-                                        : FADE_IN_SPRING
+                                    !chromeReady
+                                        ? { ...CHROME_REVEAL, delay: 0.12 }
+                                        : fadingOut
+                                          ? { duration: FADE_OUT_S, ease: 'easeOut' }
+                                          : FADE_IN_SPRING
                                 }
                                 style={{
-                                    pointerEvents: contentVisible ? 'auto' : 'none',
+                                    pointerEvents: contentVisible && chromeReady ? 'auto' : 'none',
                                 }}
                             >
                                 <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
@@ -187,7 +227,15 @@ export function HeroSection() {
                         </div>
                     </div>
                 </section>
-                <section className="bg-background pb-4 pt-2">
+                <motion.section
+                    className="bg-background pb-4 pt-2"
+                    initial={false}
+                    animate={{
+                        opacity: chromeReady ? 1 : 0,
+                        y: chromeReady ? 0 : 18,
+                    }}
+                    transition={LOGO_REVEAL}
+                >
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
                             <div className="md:max-w-44 md:border-r md:border-white/15 md:pr-6">
@@ -294,7 +342,7 @@ export function HeroSection() {
                             </div>
                         </div>
                     </div>
-                </section>
+                </motion.section>
 
                 <section
                     aria-label="Section placeholder 1"
