@@ -11,10 +11,10 @@ export default function SponsorsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-[#f5f6f7] text-[#0a1218]">
+      <main className="min-h-screen bg-[#F5F0E6] text-[#0a1218]">
         <PageEnter>
-          <section className="flex min-h-[calc(100dvh-8rem)] items-center justify-center px-6 py-28 md:px-10 md:py-36 lg:px-16">
-            <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+          <section className="flex min-h-dvh items-center justify-center px-6 pb-24 pt-28 md:px-10 md:pb-28 md:pt-32 lg:px-16">
+            <div className="mx-auto flex max-w-4xl -translate-y-2 flex-col items-center text-center md:-translate-y-4 lg:-translate-y-6">
               <h1
                 className={cn(
                   "text-balance font-bold text-[#0a1218]",
@@ -24,8 +24,8 @@ export default function SponsorsPage() {
               >
                 Join Our Mission
               </h1>
-              <div className="mt-8 max-w-xl space-y-3 text-base leading-relaxed text-black/55 md:mt-10 md:text-lg">
-                <p>
+              <div className="mt-8 max-w-3xl space-y-3 text-base leading-relaxed text-black/55 md:mt-10 md:text-lg">
+                <p className="md:whitespace-nowrap">
                   We are actively looking for sponsors to help elevate our
                   platform.
                 </p>

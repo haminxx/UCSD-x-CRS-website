@@ -1,4 +1,4 @@
-"""Process sponsor logos: remove black bg, lighten dark ink for dark home."""
+"""Process partner logos: transparent bg, keep original brand colors."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -21,45 +21,80 @@ FILES = {
     "jacobs-school.png": "*UCSD_Jacobs*",
 }
 
+CREAM = np.array([245.0, 240.0, 230.0], dtype=np.float32)  # #F5F0E6
+# Soft lift target for near-black navy so it reads on dark home without going white
+NAVY_LIFT = np.array([0.0, 98.0, 155.0], dtype=np.float32)  # toward #00629B
 
-def process_standard(arr: np.ndarray) -> np.ndarray:
+
+def _luma(rgb: np.ndarray) -> np.ndarray:
+    return 0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
+
+
+def process_colored(arr: np.ndarray) -> np.ndarray:
+    """Keep gold/orange/navy; only lift near-black ink; transparent bg."""
     rgb = arr[..., :3].astype(np.float32)
     alpha_in = arr[..., 3].astype(np.float32) / 255.0
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
-    lum = 0.299 * r + 0.587 * g + 0.114 * b
+    lum = _luma(rgb)
     mx = rgb.max(axis=2)
     mn = rgb.min(axis=2)
     sat = np.where(mx > 1e-6, (mx - mn) / np.maximum(mx, 1e-6), 0.0)
 
-    # Gold underline / warm accents
-    is_gold = (r > 80) & (g > 50) & (b < g * 0.9) & (r > b * 1.1) & (sat > 0.22) & (lum > 40)
-    # Orange CRS wordmark
-    is_orange = (r > 120) & (g > 35) & (b < 90) & (r > g * 0.9) & (sat > 0.3) & (lum > 50)
+    is_gold = (r > 70) & (g > 45) & (b < g * 0.95) & (r > b * 1.05) & (sat > 0.18) & (lum > 35)
+    is_orange = (r > 110) & (g > 30) & (b < 100) & (r > g * 0.85) & (sat > 0.28) & (lum > 45)
     is_accent = is_gold | is_orange
 
-    is_bg = (lum < 10) & ~is_accent
-    is_ink = ~is_bg & ~is_accent & (lum >= 6)
+    # Pure / near-black canvas
+    is_bg = (lum < 8) & ~is_accent
+
+    # Remaining mark pixels (navy text, dark subtext, AA edges)
+    is_mark = ~is_bg & ~is_accent & (lum >= 2)
 
     out = np.zeros_like(rgb)
     alpha = np.zeros_like(lum)
 
-    # Solid white ink; alpha from how opaque the original mark is
-    # Interiors of navy logos are solid enough (lum often 40–120) → full alpha
-    if is_ink.any():
-        ink_lum = lum[is_ink]
-        # Map: soft AA edges get partial alpha; solid fills get 1
-        a_ink = np.clip((ink_lum - 6.0) / 28.0, 0.0, 1.0)
-        out[is_ink] = 255.0
-        alpha[is_ink] = a_ink * alpha_in[is_ink]
+    if is_mark.any():
+        mark_rgb = rgb[is_mark]
+        mark_lum = lum[is_mark]
+        mark_sat = sat[is_mark]
+
+        # Near-black / very dark desaturated ink → cream (Mazda-like / CRS subtext)
+        near_black = (mark_lum < 28) & (mark_sat < 0.22)
+        # Dark navy with blue cast → lift toward brand blue, keep hue
+        navy = ~near_black & (mark_lum < 90) & (mark_rgb[..., 2] >= mark_rgb[..., 0] * 0.85)
+        # Mid navy / already-visible blue → keep, slight lift if dim
+        keep = ~near_black & ~navy
+
+        result = mark_rgb.copy()
+        if near_black.any():
+            # Alpha from how much ink exists above floor
+            result[near_black] = CREAM
+        if navy.any():
+            # Blend original toward brand blue based on darkness
+            t = np.clip((55.0 - mark_lum[navy]) / 55.0, 0.15, 0.85)
+            result[navy] = mark_rgb[navy] * (1 - t[..., None]) + NAVY_LIFT * t[..., None]
+            result[navy] = np.clip(result[navy], 0, 255)
+        if keep.any():
+            # Mild lift only when still quite dark
+            dark = keep & (mark_lum < 55)
+            if dark.any():
+                f = np.clip(70.0 / np.maximum(mark_lum[dark], 1), 1.0, 1.55)
+                result[dark] = np.clip(result[dark] * f[..., None], 0, 255)
+
+        a_mark = np.clip((mark_lum - 2.0) / 18.0, 0.15, 1.0)
+        # Near-black marks need stronger alpha from residual signal
+        a_mark = np.where(near_black, np.clip((mark_lum - 1.0) / 12.0, 0.2, 1.0), a_mark)
+
+        out[is_mark] = result
+        alpha[is_mark] = a_mark * alpha_in[is_mark]
 
     if is_accent.any():
         out[is_accent] = rgb[is_accent]
-        # Slight lift for dim gold
-        dark = is_accent & (lum < 75)
+        dark = is_accent & (lum < 70)
         if dark.any():
-            f = np.clip(95 / np.maximum(lum[dark], 1), 1.0, 2.5)
+            f = np.clip(85.0 / np.maximum(lum[dark], 1), 1.0, 1.8)
             out[dark] = np.clip(out[dark] * f[..., None], 0, 255)
-        alpha[is_accent] = alpha_in[is_accent]
+        alpha[is_accent] = np.maximum(alpha_in[is_accent], 0.85)
 
     result = np.zeros_like(arr)
     result[..., :3] = np.round(out).astype(np.uint8)
@@ -68,28 +103,47 @@ def process_standard(arr: np.ndarray) -> np.ndarray:
 
 
 def process_mazda(arr: np.ndarray) -> np.ndarray:
-    """Near-invisible dark-gray text on black → white transparent PNG."""
+    """Black-on-black serif mark → cream ink on transparent bg (quality-preserving)."""
     rgb = arr[..., :3].astype(np.float32)
-    lum = 0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
+    lum = _luma(rgb)
 
-    # Anything above pure black noise floor is content
-    floor = float(np.percentile(lum[lum > 0], 10)) if (lum > 0).any() else 0.5
-    floor = max(floor, 0.8)
-    strength = np.clip((lum - floor) / max(float(np.percentile(lum, 99.5) - floor), 1.0), 0, 1)
+    nonzero = lum[lum > 0.05]
+    if nonzero.size == 0:
+        return np.zeros((*lum.shape, 4), dtype=np.uint8)
 
-    # Build alpha mask, then slightly dilate + blur for readable strokes
-    alpha_u8 = (np.clip(strength * 1.35, 0, 1) * 255).astype(np.uint8)
+    floor = float(np.percentile(nonzero, 5))
+    ceiling = float(np.percentile(nonzero, 99.5))
+    strength = np.clip((lum - floor) / max(ceiling - floor, 0.5), 0, 1)
+
+    alpha_u8 = (np.clip(strength * 1.25, 0, 1) * 255).astype(np.uint8)
     mask = Image.fromarray(alpha_u8, mode="L")
-    mask = mask.filter(ImageFilter.MaxFilter(3))  # thicken thin strokes
-    mask = mask.filter(ImageFilter.GaussianBlur(radius=0.6))
+    # Light thicken only — avoid the harsh MaxFilter+threshold look
+    mask = mask.filter(ImageFilter.MaxFilter(3))
+    mask = mask.filter(ImageFilter.GaussianBlur(radius=0.45))
     alpha = np.asarray(mask).astype(np.float32) / 255.0
-    # Re-threshold soft noise
-    alpha = np.where(alpha < 0.08, 0.0, np.clip(alpha * 1.15, 0, 1))
+    alpha = np.where(alpha < 0.06, 0.0, np.clip(alpha * 1.08, 0, 1))
 
     out = np.zeros((*lum.shape, 4), dtype=np.uint8)
-    out[..., 0:3] = 255
+    out[..., 0] = 245
+    out[..., 1] = 240
+    out[..., 2] = 230
     out[..., 3] = np.round(alpha * 255).astype(np.uint8)
     return out
+
+
+def crop_pad(img: Image.Image, pad: int = 8) -> Image.Image:
+    bbox = img.getbbox()
+    if not bbox:
+        return img
+    l, t, r, b = bbox
+    return img.crop(
+        (
+            max(0, l - pad),
+            max(0, t - pad),
+            min(img.width, r + pad),
+            min(img.height, b + pad),
+        )
+    )
 
 
 def main() -> None:
@@ -98,29 +152,14 @@ def main() -> None:
         src = next(ASSETS.glob(pattern))
         img = Image.open(src).convert("RGBA")
         arr = np.asarray(img)
-        if name.startswith("mazda"):
-            processed = process_mazda(arr)
-        else:
-            processed = process_standard(arr)
-        out_img = Image.fromarray(processed, "RGBA")
-        bbox = out_img.getbbox()
-        if bbox:
-            pad = 6
-            l, t, r, b = bbox
-            out_img = out_img.crop(
-                (
-                    max(0, l - pad),
-                    max(0, t - pad),
-                    min(out_img.width, r + pad),
-                    min(out_img.height, b + pad),
-                )
-            )
+        processed = process_mazda(arr) if name.startswith("mazda") else process_colored(arr)
+        out_img = crop_pad(Image.fromarray(processed, "RGBA"))
         dest = OUT / name
         out_img.save(dest, optimize=True)
         pa = np.asarray(out_img)
-        solid = (pa[..., 3] > 200).sum()
-        any_a = (pa[..., 3] > 20).sum()
-        print(f"{name}: {out_img.size} solid={solid} visible={any_a}")
+        opaque = pa[..., 3] > 128
+        mean = pa[opaque, :3].mean(axis=0) if opaque.any() else (0, 0, 0)
+        print(f"{name}: {out_img.size} opaque={int(opaque.sum())} meanRGB={tuple(round(x,1) for x in mean)}")
 
 
 if __name__ == "__main__":

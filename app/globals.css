@@ -76,47 +76,54 @@
 
 :root {
   --radius: 0.625rem;
+  /* Brand */
+  --brand-cream: #f5f0e6;
+  --brand-blue: #00629b;
+  --brand-blue-hover: #004f7c;
   /* Deep blue-black charcoal — cinematic motorsport canvas */
   --background: #0a1218;
-  --foreground: #eef2f4;
+  --foreground: #f5f0e6;
   --card: #121a20;
-  --card-foreground: #eef2f4;
+  --card-foreground: #f5f0e6;
   --popover: #121a20;
-  --popover-foreground: #eef2f4;
-  --primary: #eef2f4;
+  --popover-foreground: #f5f0e6;
+  --primary: #f5f0e6;
   --primary-foreground: #0a1218;
   --secondary: #1a242c;
-  --secondary-foreground: #eef2f4;
+  --secondary-foreground: #f5f0e6;
   --muted: #1a242c;
   --muted-foreground: #8a9aa3;
   --accent: #1a242c;
-  --accent-foreground: #eef2f4;
+  --accent-foreground: #f5f0e6;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: rgb(255 255 255 / 12%);
+  --border: rgb(245 240 230 / 12%);
   --input: #1a242c;
-  --ring: rgb(255 255 255 / 24%);
+  --ring: rgb(245 240 230 / 24%);
   --font-sans: "Paperlogy", ui-sans-serif, system-ui, sans-serif;
 }
 
 .dark {
+  --brand-cream: #f5f0e6;
+  --brand-blue: #00629b;
+  --brand-blue-hover: #004f7c;
   --background: #0a1218;
-  --foreground: #eef2f4;
+  --foreground: #f5f0e6;
   --card: #121a20;
-  --card-foreground: #eef2f4;
+  --card-foreground: #f5f0e6;
   --popover: #121a20;
-  --popover-foreground: #eef2f4;
-  --primary: #eef2f4;
+  --popover-foreground: #f5f0e6;
+  --primary: #f5f0e6;
   --primary-foreground: #0a1218;
   --secondary: #1a242c;
-  --secondary-foreground: #eef2f4;
+  --secondary-foreground: #f5f0e6;
   --muted: #1a242c;
   --muted-foreground: #8a9aa3;
   --accent: #1a242c;
-  --accent-foreground: #eef2f4;
+  --accent-foreground: #f5f0e6;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: rgb(255 255 255 / 12%);
+  --border: rgb(245 240 230 / 12%);
   --input: #1a242c;
-  --ring: rgb(255 255 255 / 24%);
+  --ring: rgb(245 240 230 / 24%);
 }
 
 @theme inline {
@@ -139,6 +146,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-blue: var(--brand-blue);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -188,29 +197,32 @@ body::before {
   background-size: 180px 180px;
 }
 
-/* Informational pages: soft off-white canvas, dark text, no grain/vignette */
+/* Informational pages: cream-tinted canvas, dark text, no grain/vignette */
 html[data-theme="light"] {
-  --background: #f5f6f7;
+  --brand-cream: #f5f0e6;
+  --brand-blue: #00629b;
+  --brand-blue-hover: #004f7c;
+  --background: #f5f0e6;
   --foreground: #0a1218;
-  --card: #ffffff;
+  --card: #f5f0e6;
   --card-foreground: #0a1218;
-  --popover: #ffffff;
+  --popover: #f5f0e6;
   --popover-foreground: #0a1218;
   --primary: #0a1218;
-  --primary-foreground: #ffffff;
-  --secondary: #eef1f3;
+  --primary-foreground: #f5f0e6;
+  --secondary: #ebe6dc;
   --secondary-foreground: #0a1218;
-  --muted: #eef1f3;
+  --muted: #ebe6dc;
   --muted-foreground: #5a6a73;
-  --accent: #eef1f3;
+  --accent: #ebe6dc;
   --accent-foreground: #0a1218;
   --border: rgb(10 18 24 / 12%);
-  --input: #eef1f3;
+  --input: #ebe6dc;
   --ring: rgb(10 18 24 / 24%);
 }
 
 html[data-theme="light"] body {
-  background-color: #f5f6f7;
+  background-color: #f5f0e6;
   background-image: none;
   color: #0a1218;
 }

@@ -21,7 +21,7 @@ const PARTNER_LOGOS = [
     {
         src: '/images/logos/mazda-motorsports.png',
         alt: 'Mazda Motorsports',
-        className: 'h-10 w-auto max-w-[8.5rem] object-contain md:h-11 md:max-w-[9.5rem]',
+        className: 'h-9 w-auto max-w-[8.5rem] object-contain md:h-10 md:max-w-[9.5rem]',
     },
     {
         src: '/images/logos/uc-san-diego.png',
@@ -70,7 +70,7 @@ function SponsorLink() {
     return (
         <Link
             href="/sponsors/"
-            className="inline-flex items-center px-2 py-2 text-base text-white mix-blend-difference"
+            className="inline-flex items-center px-2 py-2 text-base text-[#F5F0E6] mix-blend-difference"
         >
             <SpringUnderline className="text-nowrap pb-0.5">
                 Become a Sponsor
@@ -87,7 +87,7 @@ function JoinTeamButton() {
         <Button
             asChild
             size="lg"
-            className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base font-medium text-black shadow-none hover:bg-white/90 hover:text-black"
+            className="h-12 rounded-full border-0 bg-[#00629B] pl-5 pr-3 text-base font-medium text-[#F5F0E6] shadow-none hover:bg-[#004F7C] hover:text-[#F5F0E6]"
         >
             <Link
                 href="/recruitment/"
@@ -245,7 +245,7 @@ export function HeroSection() {
                                     initial="hidden"
                                     animate="visible"
                                 >
-                                    <h1 className="mx-auto max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:mx-0 xl:max-w-none xl:text-[clamp(3.35rem,2.15rem+1.15vw,4.5rem)]">
+                                    <h1 className="mx-auto max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-[#F5F0E6] mix-blend-difference md:text-5xl xl:mx-0 xl:max-w-none xl:text-[clamp(3.35rem,2.15rem+1.15vw,4.5rem)]">
                                         <motion.span
                                             variants={staggerItem}
                                             className="block whitespace-nowrap"
@@ -259,7 +259,7 @@ export function HeroSection() {
                                             of collegiate motorsport
                                         </motion.span>
                                     </h1>
-                                    <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]">
+                                    <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#F5F0E6]/70 mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]">
                                         <motion.span
                                             variants={staggerItem}
                                             className="block whitespace-nowrap"
@@ -301,7 +301,7 @@ export function HeroSection() {
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
                             <div className="md:max-w-44 md:border-r md:border-white/15 md:pr-6">
-                                <p className="text-end text-sm text-white/70">Powering the best teams</p>
+                                <p className="text-end text-sm text-[#F5F0E6]/70">Powering the best teams</p>
                             </div>
                             <div className="relative py-8 md:w-[calc(100%-11rem)]">
                                 <InfiniteSlider
@@ -348,7 +348,7 @@ export function HeroSection() {
                     className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
                     <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-white/45">
+                        <p className="text-sm tracking-wide text-[#F5F0E6]/45">
                             Section — coming soon
                         </p>
                     </div>
@@ -359,7 +359,7 @@ export function HeroSection() {
                     className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
                     <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-white/45">
+                        <p className="text-sm tracking-wide text-[#F5F0E6]/45">
                             Section — coming soon
                         </p>
                     </div>
@@ -370,7 +370,7 @@ export function HeroSection() {
                     className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
                     <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-white/45">
+                        <p className="text-sm tracking-wide text-[#F5F0E6]/45">
                             Section — coming soon
                         </p>
                     </div>

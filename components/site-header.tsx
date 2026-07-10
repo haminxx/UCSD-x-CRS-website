@@ -196,8 +196,8 @@ function LoginButton({
         "border-0 shadow-none outline-none ring-0",
         "transition-[opacity,background-color,color] duration-200",
         light
-          ? "bg-[#0a1218] text-white hover:bg-[#0a1218]/90 focus-visible:ring-2 focus-visible:ring-[#0a1218]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f6f7]"
-          : "bg-white text-black hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          ? "bg-[#00629B] text-[#F5F0E6] hover:bg-[#004F7C] focus-visible:ring-2 focus-visible:ring-[#00629B]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]"
+          : "bg-[#00629B] text-[#F5F0E6] hover:bg-[#004F7C] focus-visible:ring-2 focus-visible:ring-[#00629B]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
       )}
     >
@@ -293,19 +293,14 @@ export function SiteHeader() {
             "mx-auto max-w-7xl rounded-3xl px-6 transition-all duration-300 lg:px-12",
             light
               ? scrolled
-                ? "border border-black/[0.08] bg-white/90 shadow-md shadow-black/10 backdrop-blur-2xl"
-                : "border border-black/[0.06] bg-white/78 shadow-sm shadow-black/[0.06] backdrop-blur-xl"
+                ? "border border-black/[0.08] bg-[#F5F0E6]/90 shadow-md shadow-black/10 backdrop-blur-2xl"
+                : "border border-black/[0.06] bg-[#F5F0E6]/78 shadow-sm shadow-black/[0.06] backdrop-blur-xl"
               : scrolled
                 ? "bg-black/55 shadow-lg shadow-black/20 backdrop-blur-2xl"
                 : "bg-black/20 backdrop-blur-md",
           )}
         >
-          <motion.div
-            className={cn(
-              "relative flex flex-wrap items-center justify-between gap-6 py-3 duration-200 lg:gap-0 lg:py-5",
-              scrolled && "lg:py-3.5",
-            )}
-          >
+          <motion.div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-5">
             <div className="flex w-full items-center justify-between gap-10 lg:w-auto lg:gap-14">
               <Link
                 href="/"
@@ -361,7 +356,7 @@ export function SiteHeader() {
                   className={cn(
                     "mb-6 w-full space-y-8 rounded-3xl border p-6 shadow-2xl lg:hidden",
                     light
-                      ? "border-black/10 bg-white shadow-black/12"
+                      ? "border-black/10 bg-[#F5F0E6] shadow-black/12"
                       : "border-white/15 bg-zinc-950 shadow-black/40",
                   )}
                 >

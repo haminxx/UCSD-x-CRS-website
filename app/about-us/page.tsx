@@ -121,7 +121,7 @@ export default function AboutUsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="overflow-x-clip bg-[#f5f6f7] text-[#0a1218]">
+      <main className="overflow-x-clip bg-[#F5F0E6] text-[#0a1218]">
         <PageEnter>
         <section className="relative z-0 px-6 pb-4 pt-32 md:pb-6 md:pt-40">
           <div className="mx-auto max-w-7xl text-center">
@@ -160,7 +160,7 @@ export default function AboutUsPage() {
           />
         </section>
 
-        <section className="relative z-0 bg-[#f5f6f7] px-6 pb-28 pt-6 md:pt-8">
+        <section className="relative z-0 bg-[#F5F0E6] px-6 pb-28 pt-6 md:pt-8">
           <div className="mx-auto max-w-7xl">
             <div
               role="tablist"
@@ -178,9 +178,9 @@ export default function AboutUsPage() {
                     onClick={() => setActiveFilter(filter)}
                     className={cn(
                       "relative rounded-lg px-2.5 py-1.5 text-xs font-medium tracking-wide outline-none transition-colors md:px-3 md:py-1.5 md:text-sm",
-                      "focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f6f7]",
+                      "focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]",
                       isActive
-                        ? "text-white"
+                        ? "text-[#F5F0E6]"
                         : "text-black/55 hover:text-black",
                     )}
                   >

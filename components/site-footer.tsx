@@ -66,7 +66,7 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-black text-[#F5F0E6]">
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-12 lg:py-24">
         <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-4">
@@ -80,7 +80,7 @@ export function SiteFooter() {
                 unoptimized
               />
             </Link>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#F5F0E6]/60">
               Student-led racing and engineering at UC San Diego, competing in
               the Collegiate Racing Series.
             </p>
@@ -92,7 +92,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={name}
-                  className="text-white/60 transition-colors duration-200 hover:text-white"
+                  className="text-[#F5F0E6]/60 transition-colors duration-200 hover:text-[#F5F0E6]"
                 >
                   <Icon className="size-5" />
                 </a>
@@ -102,13 +102,13 @@ export function SiteFooter() {
 
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3 lg:justify-items-start lg:gap-12">
             <div>
-              <p className="text-sm font-medium tracking-wide text-white">Explore</p>
+              <p className="text-sm font-medium tracking-wide text-[#F5F0E6]">Explore</p>
               <ul className="mt-5 space-y-3.5">
                 {exploreLinks.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-sm text-white/60 transition-colors duration-200 hover:text-white"
+                      className="text-sm text-[#F5F0E6]/60 transition-colors duration-200 hover:text-[#F5F0E6]"
                     >
                       {item.name}
                     </Link>
@@ -118,13 +118,13 @@ export function SiteFooter() {
             </div>
 
             <div>
-              <p className="text-sm font-medium tracking-wide text-white">Connect</p>
+              <p className="text-sm font-medium tracking-wide text-[#F5F0E6]">Connect</p>
               <ul className="mt-5 space-y-3.5">
                 {connectLinks.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-sm text-white/60 transition-colors duration-200 hover:text-white"
+                      className="text-sm text-[#F5F0E6]/60 transition-colors duration-200 hover:text-[#F5F0E6]"
                     >
                       {item.name}
                     </Link>
@@ -134,7 +134,7 @@ export function SiteFooter() {
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-sm font-medium tracking-wide text-white">Follow</p>
+              <p className="text-sm font-medium tracking-wide text-[#F5F0E6]">Follow</p>
               <ul className="mt-5 space-y-3.5">
                 {socialLinks.map((item) => (
                   <li key={item.name}>
@@ -142,7 +142,7 @@ export function SiteFooter() {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-white/60 transition-colors duration-200 hover:text-white"
+                      className="text-sm text-[#F5F0E6]/60 transition-colors duration-200 hover:text-[#F5F0E6]"
                     >
                       {item.name}
                     </a>
@@ -153,8 +153,8 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-white/15 pt-8">
-          <div className="flex flex-col gap-5 text-sm text-white/50 md:flex-row md:items-center md:justify-between">
+        <div className="mt-16 border-t border-[#F5F0E6]/15 pt-8">
+          <div className="flex flex-col gap-5 text-sm text-[#F5F0E6]/50 md:flex-row md:items-center md:justify-between">
             <p>
               © 2026 University of California, San Diego x Collegiate Racing
               Series. All rights reserved.
@@ -162,13 +162,13 @@ export function SiteFooter() {
             <div className="flex flex-wrap gap-6">
               <Link
                 href="#"
-                className="transition-colors duration-200 hover:text-white"
+                className="transition-colors duration-200 hover:text-[#F5F0E6]"
               >
                 Terms and Conditions
               </Link>
               <Link
                 href="#"
-                className="transition-colors duration-200 hover:text-white"
+                className="transition-colors duration-200 hover:text-[#F5F0E6]"
               >
                 Privacy Policy
               </Link>

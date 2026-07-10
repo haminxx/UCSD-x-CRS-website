@@ -138,7 +138,7 @@ function TeamRoleCard({
           >
             <motion.p
               variants={roleOverlayItemVariants}
-              className="text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-white"
+              className="text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-[#F5F0E6]"
             >
               {role.title}
             </motion.p>
@@ -146,9 +146,9 @@ function TeamRoleCard({
             <motion.span
               variants={roleOverlayItemVariants}
               className={cn(
-                "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-white/90",
+                "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-[#F5F0E6]/90",
                 "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left",
-                "after:scale-x-0 after:bg-white/90 after:transition-transform after:duration-300 after:ease-out",
+                "after:scale-x-0 after:bg-[#F5F0E6]/90 after:transition-transform after:duration-300 after:ease-out",
                 "group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100",
                 showOverlay && "after:scale-x-100",
               )}
@@ -210,7 +210,7 @@ function TeamRoleModal({
             aria-modal="true"
             aria-labelledby={titleId}
             className={cn(
-              "relative z-10 flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl",
+              "relative z-10 flex w-full flex-col overflow-hidden rounded-2xl bg-[#F5F0E6] shadow-2xl",
               "max-h-[min(86dvh,36rem)] max-w-[min(94vw,42rem)]",
               "sm:max-h-[min(78dvh,28rem)] sm:max-w-[min(92vw,52rem)]",
               "md:max-h-[min(72dvh,30rem)] md:max-w-[min(90vw,58rem)]",
@@ -226,7 +226,7 @@ function TeamRoleModal({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-[#0a1218] shadow-sm transition hover:bg-white sm:bg-black/[0.04] sm:shadow-none sm:hover:bg-black/[0.08]"
+              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-[#F5F0E6]/90 text-[#0a1218] shadow-sm transition hover:bg-[#F5F0E6] sm:bg-black/[0.04] sm:shadow-none sm:hover:bg-black/[0.08]"
             >
               <X className="size-4" aria-hidden="true" />
             </button>
@@ -284,7 +284,7 @@ export default function RecruitmentPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative overflow-x-clip bg-[#f5f6f7] text-[#0a1218]">
+      <main className="relative overflow-x-clip bg-[#F5F0E6] text-[#0a1218]">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           aria-hidden="true"
@@ -333,12 +333,12 @@ export default function RecruitmentPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full bg-[#0a1218]",
+                  "inline-flex items-center gap-2 rounded-full bg-[#00629B]",
                   "px-[clamp(1.25rem,2vw,1.75rem)] py-[clamp(0.65rem,1.2vh,0.85rem)]",
-                  "text-[clamp(0.875rem,1.1vw,1rem)] font-medium tracking-wide text-white",
-                  "shadow-[0_10px_28px_-14px_rgba(10,18,24,0.55),0_2px_6px_-2px_rgba(10,18,24,0.2)]",
-                  "transition hover:bg-black focus-visible:outline-none",
-                  "focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2",
+                  "text-[clamp(0.875rem,1.1vw,1rem)] font-medium tracking-wide text-[#F5F0E6]",
+                  "shadow-[0_10px_28px_-14px_rgba(0,98,155,0.45),0_2px_6px_-2px_rgba(0,98,155,0.25)]",
+                  "transition hover:bg-[#004F7C] focus-visible:outline-none",
+                  "focus-visible:ring-2 focus-visible:ring-[#00629B]/35 focus-visible:ring-offset-2",
                   "touch-manipulation",
                 )}
               >

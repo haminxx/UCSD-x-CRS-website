@@ -40,7 +40,7 @@ export default function LoginPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-28 text-white md:pt-32">
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-28 text-[#F5F0E6] md:pt-32">
         <div className="absolute inset-0 overflow-hidden" aria-hidden>
           <div
             className="absolute inset-[-8%] will-change-transform transition-transform duration-500 ease-out"
@@ -65,12 +65,12 @@ export default function LoginPage() {
         {/* Soft ambient blob behind the form */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[42%] h-[28rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.06] blur-3xl"
+          className="pointer-events-none absolute left-1/2 top-[42%] h-[28rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#F5F0E6]/6 blur-3xl"
         />
 
         <PageEnter className="relative z-10 w-full max-w-md">
           <form onSubmit={handleSubmit} className="flex flex-col">
-            <p className="font-mono text-[11px] tracking-[0.22em] text-white/45 uppercase">
+            <p className="font-mono text-[11px] tracking-[0.22em] text-[#F5F0E6]/45 uppercase">
               System node: UCSDxCRS
             </p>
             <h1 className="mt-4 text-5xl font-bold leading-[0.95] tracking-tight md:text-6xl">
@@ -80,7 +80,7 @@ export default function LoginPage() {
 
             <div className="mt-16 space-y-10">
               <label className="block">
-                <span className="font-mono text-[11px] tracking-[0.2em] text-white/45 uppercase">
+                <span className="font-mono text-[11px] tracking-[0.2em] text-[#F5F0E6]/45 uppercase">
                   User identity
                 </span>
                 <input
@@ -93,15 +93,15 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@ucsd.edu"
                   className={cn(
-                    "mt-3 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3",
-                    "font-mono text-sm text-white/90 placeholder:text-white/30",
-                    "outline-none ring-0 focus:border-white/80",
+                    "mt-3 w-full border-0 border-b border-[#F5F0E6]/35 bg-transparent px-0 pb-3",
+                    "font-mono text-sm text-[#F5F0E6]/90 placeholder:text-[#F5F0E6]/30",
+                    "outline-none ring-0 focus:border-[#F5F0E6]/80",
                   )}
                 />
               </label>
 
               <label className="block">
-                <span className="font-mono text-[11px] tracking-[0.2em] text-white/45 uppercase">
+                <span className="font-mono text-[11px] tracking-[0.2em] text-[#F5F0E6]/45 uppercase">
                   Sequence key
                 </span>
                 <input
@@ -114,9 +114,9 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   className={cn(
-                    "mt-3 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3",
-                    "font-mono text-sm text-white/90 placeholder:text-white/30",
-                    "outline-none ring-0 focus:border-white/80",
+                    "mt-3 w-full border-0 border-b border-[#F5F0E6]/35 bg-transparent px-0 pb-3",
+                    "font-mono text-sm text-[#F5F0E6]/90 placeholder:text-[#F5F0E6]/30",
+                    "outline-none ring-0 focus:border-[#F5F0E6]/80",
                   )}
                 />
               </label>
@@ -124,16 +124,16 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="mt-12 w-full rounded-full bg-white py-4 text-sm font-bold tracking-[0.14em] text-black uppercase transition hover:bg-white/90"
+              className="mt-12 w-full rounded-full bg-[#00629B] py-4 text-sm font-bold tracking-[0.14em] text-[#F5F0E6] uppercase transition hover:bg-[#004F7C]"
             >
               Initialize stream
             </button>
 
-            <div className="mt-10 flex items-center justify-between gap-4 font-mono text-[11px] tracking-[0.16em] text-white/45 uppercase">
-              <Link href="#" className="transition hover:text-white/80">
+            <div className="mt-10 flex items-center justify-between gap-4 font-mono text-[11px] tracking-[0.16em] text-[#F5F0E6]/45 uppercase">
+              <Link href="#" className="transition hover:text-[#F5F0E6]/80">
                 Encrypted recovery
               </Link>
-              <Link href="#" className="transition hover:text-white/80">
+              <Link href="#" className="transition hover:text-[#F5F0E6]/80">
                 Create an Account
               </Link>
             </div>
