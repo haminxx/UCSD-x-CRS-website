@@ -224,16 +224,33 @@ export function HeroSection() {
                                         >
                                             Engineering the future
                                         </motion.span>
-                                        <motion.span variants={staggerItem} className="block">
+                                        <motion.span
+                                            variants={staggerItem}
+                                            className="block whitespace-nowrap"
+                                        >
                                             of collegiate motorsport
                                         </motion.span>
                                     </h1>
-                                    <motion.p
-                                        variants={staggerItem}
-                                        className="mx-auto mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]"
-                                    >
-                                        Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
-                                    </motion.p>
+                                    <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]">
+                                        <motion.span
+                                            variants={staggerItem}
+                                            className="block whitespace-nowrap"
+                                        >
+                                            Learning by doing. We run a fully structured,
+                                        </motion.span>
+                                        <motion.span
+                                            variants={staggerItem}
+                                            className="block whitespace-nowrap"
+                                        >
+                                            student-led organization apply hands-on knowledge
+                                        </motion.span>
+                                        <motion.span
+                                            variants={staggerItem}
+                                            className="block whitespace-nowrap"
+                                        >
+                                            to compete in the Collegiate Racing Series.
+                                        </motion.span>
+                                    </p>
 
                                     <motion.div
                                         variants={staggerItem}
