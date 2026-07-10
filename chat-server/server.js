@@ -165,11 +165,13 @@ app.post("/api/recruitment-chat", async (req, res) => {
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
     console.error("recruitment-chat error", detail);
+    const billingIssue = /prepayment|billing|quota|credit/i.test(detail);
     res.status(502).json({
-      error:
-        "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.",
+      error: billingIssue
+        ? "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later."
+        : "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.",
       // Safe diagnostic (Gemini messages never include the API key)
-      detail: detail.slice(0, 200),
+      detail: detail.slice(0, 240),
     });
   }
 });
