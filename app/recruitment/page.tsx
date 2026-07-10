@@ -58,6 +58,24 @@ const TEAM_ROLES: TeamRole[] = [
   },
 ];
 
+const roleOverlayVariants = {
+  hidden: {
+    transition: { staggerChildren: 0.04, staggerDirection: -1 },
+  },
+  visible: {
+    transition: { staggerChildren: 0.09, delayChildren: 0.02 },
+  },
+};
+
+const roleOverlayItemVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
 function TeamRoleCard({
   role,
   index,
@@ -67,11 +85,17 @@ function TeamRoleCard({
   index: number;
   onOpen: (role: TeamRole) => void;
 }) {
+  const [showOverlay, setShowOverlay] = useState(false);
+
   return (
     <BlurFade delay={0.1 + index * 0.04} inView>
       <button
         type="button"
         onClick={() => onOpen(role)}
+        onMouseEnter={() => setShowOverlay(true)}
+        onMouseLeave={() => setShowOverlay(false)}
+        onFocus={() => setShowOverlay(true)}
+        onBlur={() => setShowOverlay(false)}
         className="group relative w-full touch-manipulation overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-label={`View ${role.title}`}
       >
@@ -102,44 +126,36 @@ function TeamRoleCard({
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-transparent" />
 
-          {/* Title + view more — top-left, hover / focus only */}
-          <div
+          {/* Title + view more — top-left, hover / focus only (slide up + fade) */}
+          <motion.div
             className={cn(
               "pointer-events-none absolute left-[clamp(0.55rem,1.1vw,0.85rem)] top-[clamp(0.55rem,1.1vw,0.85rem)] z-10",
               "flex max-w-[calc(100%-1.1rem)] flex-col items-start gap-1",
             )}
+            initial={false}
+            animate={showOverlay ? "visible" : "hidden"}
+            variants={roleOverlayVariants}
           >
-            <div className="overflow-hidden">
-              <p
-                className={cn(
-                  "text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-white",
-                  "-translate-x-[110%] opacity-0",
-                  "transition-[transform,opacity] duration-300 ease-out",
-                  "group-hover:translate-x-0 group-hover:opacity-100",
-                  "group-focus-visible:translate-x-0 group-focus-visible:opacity-100",
-                  "group-active:translate-x-0 group-active:opacity-100",
-                )}
-              >
-                {role.title}
-              </p>
-            </div>
+            <motion.p
+              variants={roleOverlayItemVariants}
+              className="text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-white"
+            >
+              {role.title}
+            </motion.p>
 
-            <span
+            <motion.span
+              variants={roleOverlayItemVariants}
               className={cn(
                 "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-white/90",
-                "-translate-x-[110%] opacity-0",
-                "transition-[transform,opacity] duration-300 ease-out delay-75",
-                "group-hover:translate-x-0 group-hover:opacity-100",
-                "group-focus-visible:translate-x-0 group-focus-visible:opacity-100",
-                "group-active:translate-x-0 group-active:opacity-100",
                 "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left",
                 "after:scale-x-0 after:bg-white/90 after:transition-transform after:duration-300 after:ease-out",
-                "group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 group-active:after:scale-x-100",
+                "group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100",
+                showOverlay && "after:scale-x-100",
               )}
             >
               view more
-            </span>
-          </div>
+            </motion.span>
+          </motion.div>
         </div>
       </button>
     </BlurFade>
@@ -300,7 +316,7 @@ export default function RecruitmentPage() {
               <h1
                 className={cn(
                   "text-balance font-bold text-[#0a1218]",
-                  "text-[clamp(2.75rem,6.5vw,5.25rem)]",
+                  "text-[clamp(3.25rem,7.5vw,6.75rem)]",
                   "leading-[1.05] tracking-[-0.04em]",
                 )}
               >
