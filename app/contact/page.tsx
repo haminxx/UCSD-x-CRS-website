@@ -14,7 +14,10 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpRight,
+  Check,
+  Loader2,
   Paperclip,
+  X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
@@ -34,29 +37,84 @@ const CONTACT_GRADIENT_COLORS = [
 ];
 const CONTACT_GRADIENT_STOPS = [35, 50, 60, 70, 80, 90, 100];
 
-const SERVICES = ["Brand", "Digital", "Campaign", "Other"] as const;
-const BUDGETS = [
-  "Under £20k",
-  "£20-50k",
-  "£50-£80k",
-  "£80-£150k",
-  "Over £150k",
-  "Not sure",
-] as const;
-const TIMEFRAMES = [
-  "0-3 months",
-  "3-6 months",
-  "6-12 months",
-  "12+ months",
-  "Not sure",
+const ORGANIZATION_TYPES = [
+  "Student Organization",
+  "Non-Profit / NGO",
+  "Corporate / Industry",
+  "Academic / University Department",
+  "Other",
 ] as const;
 
-type Service = (typeof SERVICES)[number];
-type Budget = (typeof BUDGETS)[number];
+const INQUIRY_FOCUSES = [
+  "Co-hosted Event",
+  "Workshop / Speaker Session",
+  "Sponsorship / Funding",
+  "Recruitment / Internship",
+  "General Partnership",
+  "Other",
+] as const;
+
+const TIMEFRAMES = [
+  "Urgent (within 2 weeks)",
+  "1 month",
+  "1 - 2 months",
+  "3+ months",
+  "Flexible / Not sure yet",
+] as const;
+
+const MAX_ATTACHMENTS = 5;
+const ACCEPTED_EXTENSIONS = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".webp",
+  ".ppt",
+  ".pptx",
+  ".xls",
+  ".xlsx",
+  ".txt",
+  ".zip",
+] as const;
+const ACCEPTED_ACCEPT_ATTR = ACCEPTED_EXTENSIONS.join(",");
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
+type OrganizationType = (typeof ORGANIZATION_TYPES)[number];
+type InquiryFocus = (typeof INQUIRY_FOCUSES)[number];
 type Timeframe = (typeof TIMEFRAMES)[number];
+
+type AttachmentFile = {
+  id: string;
+  file: File;
+};
+
+/** Shape ready for a future Firestore `contactSubmissions` write. */
+type ContactSubmissionPayload = {
+  firstName: string;
+  lastName: string;
+  organization: string;
+  email: string;
+  organizationTypes: OrganizationType[];
+  inquiryFocus: InquiryFocus | null;
+  budgetAllocated: boolean | null;
+  timeframe: Timeframe | null;
+  message: string;
+  attachmentNames: string[];
+  privacyAgreed: boolean;
+  createdAt: string;
+};
 
 const SECTION_COUNT = 4;
 const easePremium = [0.22, 1, 0.36, 1] as const;
+
+function isAcceptedFile(file: File): boolean {
+  const name = file.name.toLowerCase();
+  return ACCEPTED_EXTENSIONS.some((ext) => name.endsWith(ext));
+}
 
 function PillButton({
   label,
@@ -139,37 +197,117 @@ export default function ContactPage() {
   const [activeSection, setActiveSection] = useState(0);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [company, setCompany] = useState("");
+  const [organization, setOrganization] = useState("");
   const [email, setEmail] = useState("");
-  const [services, setServices] = useState<Service[]>([]);
-  const [budget, setBudget] = useState<Budget | null>(null);
+  const [organizationTypes, setOrganizationTypes] = useState<
+    OrganizationType[]
+  >([]);
+  const [inquiryFocus, setInquiryFocus] = useState<InquiryFocus | null>(null);
+  const [budgetAllocated, setBudgetAllocated] = useState(false);
   const [timeframe, setTimeframe] = useState<Timeframe | null>(null);
   const [message, setMessage] = useState("");
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<AttachmentFile[]>([]);
+  const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [submitState, setSubmitState] = useState<
+    "idle" | "loading" | "success"
+  >("idle");
 
-  function toggleService(service: Service) {
-    setServices((prev) =>
-      prev.includes(service)
-        ? prev.filter((item) => item !== service)
-        : [...prev, service],
+  const showBudgetCheckbox =
+    inquiryFocus !== null && inquiryFocus !== "Other";
+
+  function toggleOrganizationType(type: OrganizationType) {
+    setOrganizationTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((item) => item !== type)
+        : [...prev, type],
     );
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleInquiryFocusSelect(option: InquiryFocus) {
+    setInquiryFocus((prev) => {
+      const next = prev === option ? null : option;
+      if (next === null || next === "Other") {
+        setBudgetAllocated(false);
+      }
+      return next;
+    });
+  }
+
+  function handleFilesSelected(fileList: FileList | null) {
+    if (!fileList?.length) return;
+
+    const incoming = Array.from(fileList);
+    const errors: string[] = [];
+    const accepted: File[] = [];
+
+    for (const file of incoming) {
+      if (!isAcceptedFile(file)) {
+        errors.push(
+          `"${file.name}" is not a supported format. Use PDF, DOC/DOCX, images, PPT, XLS, TXT, or ZIP.`,
+        );
+        continue;
+      }
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        errors.push(
+          `"${file.name}" exceeds the ${MAX_FILE_SIZE_MB}MB size limit.`,
+        );
+        continue;
+      }
+      accepted.push(file);
+    }
+
+    setAttachments((prev) => {
+      const remaining = MAX_ATTACHMENTS - prev.length;
+      if (remaining <= 0) {
+        errors.push(`You can attach up to ${MAX_ATTACHMENTS} files.`);
+        return prev;
+      }
+      if (accepted.length > remaining) {
+        errors.push(
+          `Only ${remaining} more file${remaining === 1 ? "" : "s"} can be added (max ${MAX_ATTACHMENTS}).`,
+        );
+      }
+      const toAdd = accepted.slice(0, remaining).map((file) => ({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2, 8)}`,
+        file,
+      }));
+      return [...prev, ...toAdd];
+    });
+
+    setAttachmentError(errors[0] ?? null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function removeAttachment(id: string) {
+    setAttachments((prev) => prev.filter((item) => item.id !== id));
+    setAttachmentError(null);
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log({
+    if (submitState === "loading" || submitState === "success") return;
+
+    const payload: ContactSubmissionPayload = {
       firstName,
       lastName,
-      company,
+      organization,
       email,
-      services,
-      budget,
+      organizationTypes,
+      inquiryFocus,
+      budgetAllocated: showBudgetCheckbox ? budgetAllocated : null,
       timeframe,
       message,
-      fileName,
+      attachmentNames: attachments.map((item) => item.file.name),
       privacyAgreed,
-    });
+      createdAt: new Date().toISOString(),
+    };
+
+    setSubmitState("loading");
+    // UI-only stub until Firestore + Storage are wired.
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    console.info("[contact] submission ready for Firestore:", payload);
+    setSubmitState("success");
   }
 
   const goToSection = useCallback((index: number) => {
@@ -235,8 +373,8 @@ export default function ContactPage() {
               className="snap-start snap-always"
             >
               <ContactSection active={activeSection === 0}>
-                <h1 className="text-center text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-[3.1rem]">
-                  Let&apos;s talk about your next project...
+                <h1 className="text-center text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-[4rem]">
+                  Get in touch!
                 </h1>
                 <div className="mt-12 space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -258,11 +396,11 @@ export default function ContactPage() {
                     />
                   </div>
                   <SoftInput
-                    name="company"
+                    name="organization"
                     autoComplete="organization"
-                    placeholder="Company name"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
+                    placeholder="Organization / Company Name"
+                    value={organization}
+                    onChange={(e) => setOrganization(e.target.value)}
                   />
                   <SoftInput
                     name="email"
@@ -277,58 +415,77 @@ export default function ContactPage() {
               </ContactSection>
             </section>
 
-            {/* Section 2 — service & budget */}
+            {/* Section 2 — organization type & inquiry focus */}
             <section
               data-contact-section={1}
               className="snap-start snap-always"
             >
               <ContactSection active={activeSection === 1}>
                 <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
-                  What sort of service?
+                  How would you categorize your organization
                 </h2>
                 <p className="mt-4 text-center text-sm text-black/50">
                   Select all that apply
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2.5">
-                  {SERVICES.map((service) => (
+                  {ORGANIZATION_TYPES.map((type) => (
                     <PillButton
-                      key={service}
-                      label={service}
-                      selected={services.includes(service)}
-                      onClick={() => toggleService(service)}
+                      key={type}
+                      label={type}
+                      selected={organizationTypes.includes(type)}
+                      onClick={() => toggleOrganizationType(type)}
                     />
                   ))}
                 </div>
 
                 <p className="mt-12 text-center text-sm text-black/80 md:text-base">
-                  What rough budget are we working within?
+                  What is the primary focus of your inquiry?
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2.5">
-                  {BUDGETS.map((option) => (
+                  {INQUIRY_FOCUSES.map((option) => (
                     <PillButton
                       key={option}
                       label={option}
-                      selected={budget === option}
-                      onClick={() =>
-                        setBudget((prev) => (prev === option ? null : option))
-                      }
+                      selected={inquiryFocus === option}
+                      onClick={() => handleInquiryFocusSelect(option)}
                     />
                   ))}
                 </div>
+
+                <AnimatePresence>
+                  {showBudgetCheckbox && (
+                    <motion.label
+                      key="budget-checkbox"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.35, ease: easePremium }}
+                      className="mt-10 flex cursor-pointer items-start justify-center gap-3 text-left text-sm text-black/70"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={budgetAllocated}
+                        onChange={(e) => setBudgetAllocated(e.target.checked)}
+                        className="mt-0.5 size-4 shrink-0 rounded border-black/30 accent-black"
+                      />
+                      <span>Is there a budget allocated for this initiative?</span>
+                    </motion.label>
+                  )}
+                </AnimatePresence>
               </ContactSection>
             </section>
 
-            {/* Section 3 — anything else */}
+            {/* Section 3 — details */}
             <section
               data-contact-section={2}
               className="snap-start snap-always"
             >
               <ContactSection active={activeSection === 2}>
                 <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
-                  Anything else?
+                  What are the details?
                 </h2>
                 <p className="mt-7 text-center text-sm text-black/80 md:text-base">
-                  Do you have a specific timeframe in mind?
+                  What is your target timeframe for this?
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2.5">
                   {TIMEFRAMES.map((option) => (
@@ -349,13 +506,14 @@ export default function ContactPage() {
                   htmlFor="message"
                   className="mt-12 block text-center text-sm text-black/80 md:text-base"
                 >
-                  Anything you&apos;d like to add?
+                  Tell us more about your proposal, goals, or how we can
+                  collaborate!
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   rows={5}
-                  placeholder="Message (optional)"
+                  placeholder="Share a bit more context (optional)"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="mt-4 w-full resize-y rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-sm text-[#0a1218] placeholder:text-black/40 outline-none transition-[box-shadow] focus:bg-[#e4e8eb] focus:ring-2 focus:ring-black/15"
@@ -365,23 +523,62 @@ export default function ContactPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex w-full items-center justify-between rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-left text-sm text-black/40 transition-colors hover:bg-[#e4e8eb]"
+                    disabled={attachments.length >= MAX_ATTACHMENTS}
+                    className={cn(
+                      "flex w-full items-center justify-between rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-left text-sm transition-colors",
+                      attachments.length >= MAX_ATTACHMENTS
+                        ? "cursor-not-allowed text-black/30"
+                        : "text-black/40 hover:bg-[#e4e8eb]",
+                    )}
                   >
-                    <span className={cn(fileName && "text-[#0a1218]")}>
-                      {fileName ?? "Attachments (optional)"}
+                    <span>
+                      {attachments.length > 0
+                        ? `Attachments (${attachments.length}/${MAX_ATTACHMENTS})`
+                        : `Attachments (optional, up to ${MAX_ATTACHMENTS})`}
                     </span>
                     <Paperclip className="size-4 shrink-0 text-black/45" />
                   </button>
                   <input
                     ref={fileInputRef}
                     type="file"
+                    multiple
+                    accept={ACCEPTED_ACCEPT_ATTR}
                     className="sr-only"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      setFileName(file?.name ?? null);
-                    }}
+                    onChange={(e) => handleFilesSelected(e.target.files)}
                   />
                 </div>
+
+                {attachments.length > 0 && (
+                  <ul className="mt-3 space-y-2">
+                    {attachments.map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex items-center justify-between gap-3 rounded-xl bg-[#eef1f3] px-4 py-2.5 text-sm text-[#0a1218]"
+                      >
+                        <span className="truncate">{item.file.name}</span>
+                        <button
+                          type="button"
+                          aria-label={`Remove ${item.file.name}`}
+                          onClick={() => removeAttachment(item.id)}
+                          className="shrink-0 rounded-full p-1 text-black/45 transition-colors hover:bg-black/5 hover:text-[#0a1218]"
+                        >
+                          <X className="size-3.5" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {attachmentError && (
+                  <p className="mt-3 text-center text-sm text-red-600" role="alert">
+                    {attachmentError}
+                  </p>
+                )}
+
+                <p className="mt-3 text-center text-xs text-black/40">
+                  PDF, DOC/DOCX, PNG, JPG, GIF, WEBP, PPT/PPTX, XLS/XLSX, TXT,
+                  ZIP — max {MAX_ATTACHMENTS} files, {MAX_FILE_SIZE_MB}MB each
+                </p>
               </ContactSection>
             </section>
 
@@ -392,32 +589,76 @@ export default function ContactPage() {
             >
               <ContactSection active={activeSection === 3}>
                 <div className="flex flex-col items-center gap-8 text-center">
-                  <label className="flex max-w-md cursor-pointer items-start gap-3 text-left text-sm text-black/50">
-                    <input
-                      type="checkbox"
-                      checked={privacyAgreed}
-                      onChange={(e) => setPrivacyAgreed(e.target.checked)}
-                      required
-                      className="mt-0.5 size-4 shrink-0 rounded border-black/30 accent-black"
-                    />
-                    <span>
-                      I have read and agree to the{" "}
-                      <Link
-                        href="#"
-                        className="underline underline-offset-2 hover:text-[#0a1218]"
+                  <AnimatePresence mode="wait">
+                    {submitState === "success" ? (
+                      <motion.div
+                        key="success"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45, ease: easePremium }}
+                        className="flex max-w-md flex-col items-center gap-4"
                       >
-                        Privacy Policy ↗
-                      </Link>
-                    </span>
-                  </label>
+                        <div className="flex size-12 items-center justify-center rounded-full bg-[#0a1218] text-white">
+                          <Check className="size-5" strokeWidth={2.5} />
+                        </div>
+                        <p className="text-base font-medium leading-relaxed text-[#0a1218] md:text-lg">
+                          Submission Successful. Our team will review your
+                          details and be in touch within 48 hours.
+                        </p>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="form-actions"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex flex-col items-center gap-8"
+                      >
+                        <p className="max-w-md text-base font-medium text-[#0a1218] md:text-lg">
+                          We look forward to building something great together!
+                        </p>
 
-                  <button
-                    type="submit"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0a1218] px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-black"
-                  >
-                    Submit
-                    <ArrowUpRight className="size-4" />
-                  </button>
+                        <label className="flex max-w-md cursor-pointer items-start gap-3 text-left text-sm text-black/50">
+                          <input
+                            type="checkbox"
+                            checked={privacyAgreed}
+                            onChange={(e) =>
+                              setPrivacyAgreed(e.target.checked)
+                            }
+                            required
+                            className="mt-0.5 size-4 shrink-0 rounded border-black/30 accent-black"
+                          />
+                          <span>
+                            I have read and agree to the{" "}
+                            <Link
+                              href="#"
+                              className="underline underline-offset-2 hover:text-[#0a1218]"
+                            >
+                              Privacy Policy ↗
+                            </Link>
+                          </span>
+                        </label>
+
+                        <button
+                          type="submit"
+                          disabled={submitState === "loading"}
+                          className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[#0a1218] px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-black disabled:cursor-wait disabled:opacity-90"
+                        >
+                          {submitState === "loading" ? (
+                            <>
+                              <Loader2 className="size-4 animate-spin" />
+                              Submitting
+                            </>
+                          ) : (
+                            <>
+                              Submit
+                              <ArrowUpRight className="size-4" />
+                            </>
+                          )}
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </ContactSection>
             </section>
