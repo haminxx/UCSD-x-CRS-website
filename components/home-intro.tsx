@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, animate } from "motion/react";
 
 export const HOME_INTRO_STORAGE_KEY = "ucsdxcrs-home-intro-seen";
-export const HERO_VIDEO_SRC = "/videos/ucsdxcrs-v3.mp4";
+export const HERO_VIDEO_SRC = "/videos/ucsdxcrs-v4.mp4";
 
 const LOAD_DURATION_S = 3.4;
 const EXPAND_DURATION_S = 1.2;
