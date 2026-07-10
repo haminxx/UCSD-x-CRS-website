@@ -55,8 +55,8 @@ function NavItem({
               (active || showUnderline) && "font-bold text-[#0a1218]",
             )
           : cn(
-              "text-white/65 hover:text-white",
-              (active || showUnderline) && "font-bold text-white",
+              "text-[#F5F0E6]/65 hover:text-[#F5F0E6]",
+              (active || showUnderline) && "font-bold text-[#F5F0E6]",
             ),
       )}
     >
@@ -72,7 +72,7 @@ function NavItem({
           layoutId={layoutId}
           className={cn(
             "absolute inset-x-0 -bottom-0.5 h-[2px]",
-            light ? "bg-black" : "bg-white",
+            light ? "bg-black" : "bg-[#F5F0E6]",
           )}
           transition={springTransition}
         />
@@ -176,7 +176,7 @@ function MobileNav({ light }: { light: boolean }) {
   );
 }
 
-/** Login button — white fill on dark pages; black fill on light pages. Bold weight on hover (box size fixed). */
+/** Login button — navy fill with cream label. Bold weight on hover (box size fixed). */
 function LoginButton({
   className,
   light,
@@ -196,8 +196,8 @@ function LoginButton({
         "border-0 shadow-none outline-none ring-0",
         "transition-[opacity,background-color,color] duration-200",
         light
-          ? "bg-[#00629B] text-[#F5F0E6] hover:bg-[#004F7C] focus-visible:ring-2 focus-visible:ring-[#00629B]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]"
-          : "bg-[#00629B] text-[#F5F0E6] hover:bg-[#004F7C] focus-visible:ring-2 focus-visible:ring-[#00629B]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          ? "bg-[#182B49] text-[#F5F0E6] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]"
+          : "bg-[#182B49] text-[#F5F0E6] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
       )}
     >
@@ -285,7 +285,7 @@ export function SiteHeader() {
         }
         className={cn(
           "group fixed inset-x-0 top-0 z-[100] w-full pt-4 lg:pt-6",
-          light ? "text-[#0a1218]" : "text-white",
+          light ? "text-[#0a1218]" : "text-[#F5F0E6]",
         )}
       >
         <div
@@ -320,7 +320,7 @@ export function SiteHeader() {
                     "w-auto object-contain",
                     light
                       ? "h-9 brightness-[0.92] contrast-[1.08] md:h-10"
-                      : "h-8 md:h-9",
+                      : "h-8 brightness-[0.96] sepia-[0.22] saturate-[0.7] md:h-9",
                   )}
                   priority
                   unoptimized
@@ -357,7 +357,7 @@ export function SiteHeader() {
                     "mb-6 w-full space-y-8 rounded-3xl border p-6 shadow-2xl lg:hidden",
                     light
                       ? "border-black/10 bg-[#F5F0E6] shadow-black/12"
-                      : "border-white/15 bg-zinc-950 shadow-black/40",
+                      : "border-[#F5F0E6]/15 bg-zinc-950 shadow-black/40",
                   )}
                 >
                   <MobileNav light={light} />

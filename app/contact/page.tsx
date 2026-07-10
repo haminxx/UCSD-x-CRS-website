@@ -647,7 +647,7 @@ export default function ContactPage() {
                       <button
                         type="submit"
                         disabled={submitState === "loading"}
-                        className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[#00629B] px-8 py-3.5 text-sm font-medium text-[#F5F0E6] transition-colors hover:bg-[#004F7C] disabled:cursor-wait disabled:opacity-90"
+                        className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[#182B49] px-8 py-3.5 text-sm font-medium text-[#F5F0E6] transition-colors hover:bg-[#121F38] disabled:cursor-wait disabled:opacity-90"
                       >
                         {submitState === "loading" ? (
                           <>

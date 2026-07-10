@@ -96,7 +96,7 @@ function TeamRoleCard({
         onMouseLeave={() => setShowOverlay(false)}
         onFocus={() => setShowOverlay(true)}
         onBlur={() => setShowOverlay(false)}
-        className="group relative w-full touch-manipulation overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className="group relative w-full touch-manipulation overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]"
         aria-label={`View ${role.title}`}
       >
         <div
@@ -333,12 +333,12 @@ export default function RecruitmentPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full bg-[#00629B]",
+                  "inline-flex items-center gap-2 rounded-full bg-[#182B49]",
                   "px-[clamp(1.25rem,2vw,1.75rem)] py-[clamp(0.65rem,1.2vh,0.85rem)]",
                   "text-[clamp(0.875rem,1.1vw,1rem)] font-medium tracking-wide text-[#F5F0E6]",
-                  "shadow-[0_10px_28px_-14px_rgba(0,98,155,0.45),0_2px_6px_-2px_rgba(0,98,155,0.25)]",
-                  "transition hover:bg-[#004F7C] focus-visible:outline-none",
-                  "focus-visible:ring-2 focus-visible:ring-[#00629B]/35 focus-visible:ring-offset-2",
+                  "shadow-[0_10px_28px_-14px_rgba(24,43,73,0.45),0_2px_6px_-2px_rgba(24,43,73,0.25)]",
+                  "transition hover:bg-[#121F38] focus-visible:outline-none",
+                  "focus-visible:ring-2 focus-visible:ring-[#182B49]/35 focus-visible:ring-offset-2",
                   "touch-manipulation",
                 )}
               >

@@ -87,7 +87,7 @@ function JoinTeamButton() {
         <Button
             asChild
             size="lg"
-            className="h-12 rounded-full border-0 bg-[#00629B] pl-5 pr-3 text-base font-medium text-[#F5F0E6] shadow-none hover:bg-[#004F7C] hover:text-[#F5F0E6]"
+            className="h-12 rounded-full border-0 bg-[#182B49] pl-5 pr-3 text-base font-medium text-[#F5F0E6] shadow-none hover:bg-[#121F38] hover:text-[#F5F0E6]"
         >
             <Link
                 href="/recruitment/"
@@ -300,8 +300,12 @@ export function HeroSection() {
                 >
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
-                            <div className="md:max-w-44 md:border-r md:border-white/15 md:pr-6">
-                                <p className="text-end text-sm text-[#F5F0E6]/70">Powering the best teams</p>
+                            <div className="md:max-w-44 md:border-r md:border-[#F5F0E6]/15 md:pr-6">
+                                <p className="text-end text-sm leading-snug text-[#F5F0E6]/70">
+                                    Powering by the
+                                    <br />
+                                    best teams
+                                </p>
                             </div>
                             <div className="relative py-8 md:w-[calc(100%-11rem)]">
                                 <InfiniteSlider

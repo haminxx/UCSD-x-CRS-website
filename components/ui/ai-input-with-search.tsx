@@ -55,7 +55,7 @@ export function AIInputWithSearch({
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden rounded-[1.15rem] border border-black/10 bg-white",
+        "relative w-full overflow-hidden rounded-[1.15rem] border border-black/10 bg-[#F5F0E6]",
         "shadow-[0_14px_44px_-18px_rgba(10,18,24,0.3),0_2px_8px_-4px_rgba(10,18,24,0.12)]",
         className,
       )}
@@ -90,7 +90,7 @@ export function AIInputWithSearch({
           className={cn(
             "inline-flex size-10 touch-manipulation items-center justify-center rounded-full transition",
             value.trim()
-              ? "bg-[#0a1218] text-white hover:bg-black"
+              ? "bg-[#0a1218] text-[#F5F0E6] hover:bg-black"
               : "bg-black/[0.06] text-black/30",
           )}
         >

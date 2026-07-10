@@ -124,7 +124,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="mt-12 w-full rounded-full bg-[#00629B] py-4 text-sm font-bold tracking-[0.14em] text-[#F5F0E6] uppercase transition hover:bg-[#004F7C]"
+              className="mt-12 w-full rounded-full bg-[#182B49] py-4 text-sm font-bold tracking-[0.14em] text-[#F5F0E6] uppercase transition hover:bg-[#121F38]"
             >
               Initialize stream
             </button>

@@ -78,8 +78,8 @@
   --radius: 0.625rem;
   /* Brand */
   --brand-cream: #f5f0e6;
-  --brand-blue: #00629b;
-  --brand-blue-hover: #004f7c;
+  --brand-blue: #182b49;
+  --brand-blue-hover: #121f38;
   /* Deep blue-black charcoal — cinematic motorsport canvas */
   --background: #0a1218;
   --foreground: #f5f0e6;
@@ -104,8 +104,8 @@
 
 .dark {
   --brand-cream: #f5f0e6;
-  --brand-blue: #00629b;
-  --brand-blue-hover: #004f7c;
+  --brand-blue: #182b49;
+  --brand-blue-hover: #121f38;
   --background: #0a1218;
   --foreground: #f5f0e6;
   --card: #121a20;
@@ -200,8 +200,8 @@ body::before {
 /* Informational pages: cream-tinted canvas, dark text, no grain/vignette */
 html[data-theme="light"] {
   --brand-cream: #f5f0e6;
-  --brand-blue: #00629b;
-  --brand-blue-hover: #004f7c;
+  --brand-blue: #182b49;
+  --brand-blue-hover: #121f38;
   --background: #f5f0e6;
   --foreground: #0a1218;
   --card: #f5f0e6;
