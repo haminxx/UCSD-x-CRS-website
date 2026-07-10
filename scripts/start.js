@@ -29,7 +29,7 @@ if (isRender) {
     const install = spawnSync("npm", ["install"], {
       cwd: chatDir,
       stdio: "inherit",
-      shell: true,
+      shell: process.platform === "win32",
       env: process.env,
     });
     if (install.status !== 0) {

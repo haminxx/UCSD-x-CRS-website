@@ -51,12 +51,27 @@ After redeploy, `/health` and `/api/recruitment-chat` should respond (cold start
 
 ### Quick dashboard checklist (if auto-redeploy still fails)
 
+Your Render logs should **not** show `Running build command 'npm start'`. If they do, fix Settings:
+
+| Setting | Correct value |
+| --- | --- |
+| **Root Directory** | `chat-server` *(preferred)* |
+| **Build Command** | `npm install` |
+| **Start Command** | `npm start` |
+
+If Root Directory is blank (repo root fallback):
+
+| Setting | Correct value |
+| --- | --- |
+| **Build Command** | `npm install --prefix ./chat-server` |
+| **Start Command** | `npm start` |
+
 1. Root Directory = `chat-server` **or** blank with Build = `npm install --prefix ./chat-server`
-2. Start Command = `npm start`
-3. `GEMINI_API_KEY` is set in Environment
+2. Start Command = `npm start` — **never** use `npm start` as the Build Command
+3. `GEMINI_API_KEY` is set in Environment (from https://aistudio.google.com/apikey — **no quotes**)
 4. `GEMINI_MODEL` = `gemini-2.5-flash` (or leave unset — server defaults to this and remaps shut-down `gemini-2.0-flash`)
 5. Manual Deploy → Clear build cache & deploy
-6. Wait until status is Live, then open `/health`
+6. Wait until status is Live, then open `/health` — expect `"keyFormatValid": true`
 
 ## Cold start vs billing (do not confuse)
 

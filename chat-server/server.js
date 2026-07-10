@@ -4,7 +4,29 @@ const express = require("express");
 const cors = require("cors");
 
 const PORT = Number(process.env.PORT) || 10000;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim() || "";
+
+/** Strip quotes/newlines from copy-paste mistakes in Render Environment. */
+function normalizeGeminiApiKey(raw) {
+  if (raw == null) return "";
+  let key = String(raw)
+    .replace(/^\uFEFF/, "")
+    .replace(/[\r\n]+/g, "")
+    .trim();
+  if (
+    (key.startsWith('"') && key.endsWith('"')) ||
+    (key.startsWith("'") && key.endsWith("'"))
+  ) {
+    key = key.slice(1, -1).trim();
+  }
+  return key;
+}
+
+/** AI Studio keys start with AIza — helps catch wrong key types early. */
+function keyFormatLooksValid(key) {
+  return /^AIza[\w-]{20,}$/.test(key);
+}
+
+const GEMINI_API_KEY = normalizeGeminiApiKey(process.env.GEMINI_API_KEY);
 
 /** Models shut down June 2026 — never call these. */
 const SHUT_DOWN_MODELS = new Set([
@@ -115,7 +137,7 @@ function classifyGeminiError(message, status) {
 function publicErrorMessage(kind) {
   switch (kind) {
     case "invalid_key":
-      return "Chat server Gemini API key is invalid. Update GEMINI_API_KEY in Render Environment.";
+      return "Chat server Gemini API key is invalid. In Render Environment, set GEMINI_API_KEY to a fresh key from https://aistudio.google.com/apikey (no quotes). If the key was created in Google Cloud Console, set Application restrictions to None for server use.";
     case "billing":
       return "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later.";
     case "model_unavailable":
@@ -131,11 +153,14 @@ function modelCandidates(primary) {
 }
 
 async function callGeminiOnce(apiKey, model, systemPrompt, history, message) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
   const res = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": apiKey,
+    },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: systemPrompt }] },
       contents: toGeminiContents(history, message),
@@ -242,6 +267,7 @@ app.get("/health", (_req, res) => {
   res.json({
     ok: true,
     hasKey: Boolean(GEMINI_API_KEY),
+    keyFormatValid: keyFormatLooksValid(GEMINI_API_KEY),
     model: PRIMARY_MODEL,
     // Knowledge is the bundled markdown file — not Google Drive / Firebase.
     knowledgeLoaded: knowledge.loaded,
@@ -301,6 +327,11 @@ app.post("/api/recruitment-chat", async (req, res) => {
 });
 
 app.listen(PORT, () => {
+  if (GEMINI_API_KEY && !keyFormatLooksValid(GEMINI_API_KEY)) {
+    console.warn(
+      "GEMINI_API_KEY is set but does not look like an AI Studio key (expected AIza… prefix). Create one at https://aistudio.google.com/apikey — paste in Render with no quotes.",
+    );
+  }
   console.log(
     `Recruitment chat listening on :${PORT} (model=${PRIMARY_MODEL}${
       requestedModel !== PRIMARY_MODEL
