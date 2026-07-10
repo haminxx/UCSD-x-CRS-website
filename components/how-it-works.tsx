@@ -20,11 +20,23 @@ const STEPS = [
   },
 ] as const;
 
-export function HowItWorks() {
+type HowItWorksProps = {
+  title?: string;
+  /** Extra top padding when stacked under dark home sections */
+  className?: string;
+};
+
+export function HowItWorks({
+  title = "How it works",
+  className,
+}: HowItWorksProps) {
   return (
     <section
-      aria-label="How it works"
-      className="bg-[#F5F0E6] px-4 pb-24 pt-8 md:px-8 md:pb-32 md:pt-12 lg:px-12"
+      aria-label={title}
+      className={
+        className ??
+        "bg-[#F5F0E6] px-4 pb-24 pt-8 md:px-8 md:pb-32 md:pt-12 lg:px-12"
+      }
     >
       <motion.div
         initial={{ opacity: 0, y: 32 }}
@@ -34,7 +46,7 @@ export function HowItWorks() {
         className="mx-auto max-w-7xl overflow-hidden rounded-[1.75rem] bg-[#1a2229] px-8 py-14 text-[#F5F0E6] md:rounded-[2rem] md:px-12 md:py-20 lg:px-16 lg:py-24"
       >
         <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-bold tracking-tight uppercase leading-[0.95]">
-          How it works
+          {title}
         </h2>
 
         <div className="mt-14 grid gap-12 md:mt-20 md:grid-cols-3 md:gap-10 lg:gap-14">

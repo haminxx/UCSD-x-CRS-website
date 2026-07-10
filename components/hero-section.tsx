@@ -6,6 +6,8 @@ import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { HomeWhatIsCrs } from '@/components/home-what-is-crs'
+import { HowItWorks } from '@/components/how-it-works'
 import { BoldHoverText, SpringUnderline } from '@/components/spring-underline'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
@@ -347,38 +349,12 @@ export function HeroSection() {
                     </div>
                 </motion.section>
 
-                <section
-                    aria-label="Section placeholder 1"
-                    className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
-                >
-                    <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-[#F5F0E6]/45">
-                            Section — coming soon
-                        </p>
-                    </div>
-                </section>
+                <HomeWhatIsCrs />
 
-                <section
-                    aria-label="Section placeholder 2"
-                    className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
-                >
-                    <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-[#F5F0E6]/45">
-                            Section — coming soon
-                        </p>
-                    </div>
-                </section>
-
-                <section
-                    aria-label="Section placeholder 3"
-                    className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
-                >
-                    <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-[#F5F0E6]/45">
-                            Section — coming soon
-                        </p>
-                    </div>
-                </section>
+                <HowItWorks
+                    title="How it works?"
+                    className="bg-[#F5F0E6] px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-20 lg:px-12"
+                />
             </main>
             <SiteFooter />
         </>
