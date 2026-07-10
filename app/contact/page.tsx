@@ -614,7 +614,7 @@ export default function ContactPage() {
                         exit={{ opacity: 0 }}
                         className="flex flex-col items-center gap-8"
                       >
-                        <p className="max-w-md text-base font-medium text-[#0a1218] md:text-lg">
+                        <p className="max-w-md text-xl font-bold text-[#0a1218] md:text-2xl">
                           We look forward to building something great together!
                         </p>
 
