@@ -71,7 +71,18 @@ If Root Directory is blank (repo root fallback):
 3. `GEMINI_API_KEY` is set in Environment (from https://aistudio.google.com/apikey — **no quotes**)
 4. `GEMINI_MODEL` = `gemini-2.5-flash` (or leave unset — server defaults to this and remaps shut-down `gemini-2.0-flash`)
 5. Manual Deploy → Clear build cache & deploy
-6. Wait until status is Live, then open `/health` — expect `"keyFormatValid": true`
+6. Wait until status is Live, then open `/health` — expect `"keyFormatValid": true` and `"keyType": "auth"` or `"standard"`
+
+## AI Studio key formats (2026)
+
+Google now issues two key types from [AI Studio](https://aistudio.google.com/apikey):
+
+| Prefix | Type | Status |
+| --- | --- | --- |
+| `AIza…` | Standard (legacy) | Still works if restricted to Gemini API |
+| `AQ.…` | Auth (new default) | **Normal** — all new keys use this format |
+
+If `/health` shows `"keyType": "auth"` and `"keyFormatValid": true`, your key format is correct. Chat failures after that usually mean Google rejected the key for that project — try creating a **new key in a new AI Studio project**, or report a compatibility issue to Google if `generateContent` still returns 401.
 
 ## Cold start vs billing (do not confuse)
 

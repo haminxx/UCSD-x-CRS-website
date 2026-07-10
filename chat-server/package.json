@@ -12,6 +12,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@google/genai": "^1.44.0",
     "cors": "^2.8.5",
     "express": "^4.21.2"
   }

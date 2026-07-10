@@ -21,9 +21,15 @@ function normalizeGeminiApiKey(raw) {
   return key;
 }
 
-/** AI Studio keys start with AIza — helps catch wrong key types early. */
+/** AI Studio keys: legacy Standard (AIza…) or new Auth (AQ.…) — both valid since mid-2026. */
+function geminiKeyType(key) {
+  if (/^AIza[\w-]{10,}$/i.test(key)) return "standard";
+  if (/^AQ\.[\w-]{10,}$/i.test(key)) return "auth";
+  return "unknown";
+}
+
 function keyFormatLooksValid(key) {
-  return /^AIza[\w-]{20,}$/.test(key);
+  return geminiKeyType(key) !== "unknown";
 }
 
 const GEMINI_API_KEY = normalizeGeminiApiKey(process.env.GEMINI_API_KEY);
@@ -112,7 +118,12 @@ function toGeminiContents(history, message) {
 
 function classifyGeminiError(message, status) {
   const m = String(message || "");
-  if (/API[_ ]?key|invalid.?key|PERMISSION_DENIED|401/i.test(m) || status === 401) {
+  if (
+    /API[_ ]?key|invalid.?key|PERMISSION_DENIED|ACCESS_TOKEN_TYPE_UNSUPPORTED|401/i.test(
+      m,
+    ) ||
+    status === 401
+  ) {
     return "invalid_key";
   }
   if (
@@ -137,7 +148,7 @@ function classifyGeminiError(message, status) {
 function publicErrorMessage(kind) {
   switch (kind) {
     case "invalid_key":
-      return "Chat server Gemini API key is invalid. In Render Environment, set GEMINI_API_KEY to a fresh key from https://aistudio.google.com/apikey (no quotes). If the key was created in Google Cloud Console, set Application restrictions to None for server use.";
+      return "Chat server Gemini API key was rejected by Google. Create a key at https://aistudio.google.com/apikey (AIza or AQ format both work). Paste in Render with no quotes. If you have an older AIza key, restrict it to Gemini API only in AI Studio.";
     case "billing":
       return "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later.";
     case "model_unavailable":
@@ -152,49 +163,48 @@ function modelCandidates(primary) {
   return [...new Set(list.filter((m) => !SHUT_DOWN_MODELS.has(m)))];
 }
 
-async function callGeminiOnce(apiKey, model, systemPrompt, history, message) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+/** Lazy-load official SDK — handles both AIza (standard) and AQ. (auth) keys. */
+let genAiModulePromise;
+function loadGenAI() {
+  if (!genAiModulePromise) {
+    genAiModulePromise = import("@google/genai");
+  }
+  return genAiModulePromise;
+}
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-goog-api-key": apiKey,
-    },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: systemPrompt }] },
+async function callGeminiOnce(apiKey, model, systemPrompt, history, message) {
+  try {
+    const { GoogleGenAI } = await loadGenAI();
+    const ai = new GoogleGenAI({ apiKey });
+
+    const response = await ai.models.generateContent({
+      model,
       contents: toGeminiContents(history, message),
-      generationConfig: {
+      config: {
+        systemInstruction: systemPrompt,
         temperature: 0.4,
         maxOutputTokens: 512,
       },
-    }),
-  });
+    });
 
-  const data = await res.json();
-  const errMsg = data?.error?.message || `Gemini HTTP ${res.status}`;
+    const text = response.text?.trim();
+    if (!text) {
+      const err = new Error("Empty Gemini response");
+      err.kind = "unknown";
+      err.model = model;
+      throw err;
+    }
 
-  if (!res.ok) {
-    const err = new Error(errMsg);
-    err.status = res.status;
-    err.kind = classifyGeminiError(errMsg, res.status);
-    err.model = model;
-    throw err;
+    return text;
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const status = err?.status ?? err?.statusCode;
+    const wrapped = new Error(errMsg);
+    wrapped.status = status;
+    wrapped.kind = classifyGeminiError(errMsg, status);
+    wrapped.model = model;
+    throw wrapped;
   }
-
-  const text = data?.candidates?.[0]?.content?.parts
-    ?.map((p) => p?.text || "")
-    .join("")
-    .trim();
-
-  if (!text) {
-    const err = new Error("Empty Gemini response");
-    err.kind = "unknown";
-    err.model = model;
-    throw err;
-  }
-
-  return text;
 }
 
 /**
@@ -268,6 +278,7 @@ app.get("/health", (_req, res) => {
     ok: true,
     hasKey: Boolean(GEMINI_API_KEY),
     keyFormatValid: keyFormatLooksValid(GEMINI_API_KEY),
+    keyType: geminiKeyType(GEMINI_API_KEY),
     model: PRIMARY_MODEL,
     // Knowledge is the bundled markdown file — not Google Drive / Firebase.
     knowledgeLoaded: knowledge.loaded,
@@ -329,8 +340,10 @@ app.post("/api/recruitment-chat", async (req, res) => {
 app.listen(PORT, () => {
   if (GEMINI_API_KEY && !keyFormatLooksValid(GEMINI_API_KEY)) {
     console.warn(
-      "GEMINI_API_KEY is set but does not look like an AI Studio key (expected AIza… prefix). Create one at https://aistudio.google.com/apikey — paste in Render with no quotes.",
+      "GEMINI_API_KEY is set but does not look like a Gemini key (expected AIza… or AQ.… from https://aistudio.google.com/apikey).",
     );
+  } else if (geminiKeyType(GEMINI_API_KEY) === "auth") {
+    console.log("GEMINI_API_KEY type=auth (AQ.… — Google’s new AI Studio key format)");
   }
   console.log(
     `Recruitment chat listening on :${PORT} (model=${PRIMARY_MODEL}${
