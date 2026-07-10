@@ -284,7 +284,7 @@ export default function RecruitmentPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative overflow-x-clip bg-white text-[#0a1218]">
+      <main className="relative overflow-x-clip bg-[#f5f6f7] text-[#0a1218]">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           aria-hidden="true"
@@ -310,8 +310,8 @@ export default function RecruitmentPage() {
             gap: "clamp(1.25rem, 3.5vh, 2.75rem)",
           }}
         >
-          {/* Band 1 — Headline */}
-          <section className="flex shrink-0 flex-col items-center text-center">
+          {/* Band 1 — Headline (slight top offset for even spacing vs CTA + chat) */}
+          <section className="mt-[1.125rem] flex shrink-0 flex-col items-center text-center">
             <BlurFade delay={0.05}>
               <h1
                 className={cn(
