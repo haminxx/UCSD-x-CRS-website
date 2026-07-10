@@ -109,14 +109,37 @@ async function fetchAssistantReplyOnce(
     );
   }
 
-  let data: { reply?: string; error?: string } = {};
+  let data: {
+    reply?: string;
+    error?: string;
+    kind?: string;
+    detail?: string;
+  } = {};
   try {
-    data = (await res.json()) as { reply?: string; error?: string };
+    data = (await res.json()) as {
+      reply?: string;
+      error?: string;
+      kind?: string;
+      detail?: string;
+    };
   } catch {
     /* non-JSON body */
   }
 
   if (!res.ok) {
+    // Billing/credits is project-level — not a cold start or missing Drive file.
+    if (data.kind === "billing" || /billing\/credits/i.test(data.error || "")) {
+      throw new Error(
+        data.error ||
+          "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later.",
+      );
+    }
+    if (data.kind === "invalid_key" || data.kind === "missing_key") {
+      throw new Error(
+        data.error ||
+          "Chat server Gemini API key is missing or invalid. Update GEMINI_API_KEY in Render Environment.",
+      );
+    }
     throw new Error(
       data.error ||
         `Chat unavailable (${res.status}). Try again shortly, or use Contact / Fall 2026 Application.`,

@@ -39,11 +39,19 @@ const ALLOWED_ORIGINS = new Set([
   "http://127.0.0.1:3000",
 ]);
 
+const KNOWLEDGE_FALLBACK =
+  "UCSD × CRS is a student-led Collegiate Racing Series team at UC San Diego.";
+
 function loadKnowledge() {
   try {
-    return fs.readFileSync(path.join(__dirname, "knowledge.md"), "utf8");
+    const text = fs.readFileSync(path.join(__dirname, "knowledge.md"), "utf8");
+    return { text, loaded: true, chars: text.length };
   } catch {
-    return "UCSD × CRS is a student-led Collegiate Racing Series team at UC San Diego.";
+    return {
+      text: KNOWLEDGE_FALLBACK,
+      loaded: false,
+      chars: KNOWLEDGE_FALLBACK.length,
+    };
   }
 }
 
@@ -230,10 +238,14 @@ app.get("/", (_req, res) => {
 });
 
 app.get("/health", (_req, res) => {
+  const knowledge = loadKnowledge();
   res.json({
     ok: true,
     hasKey: Boolean(GEMINI_API_KEY),
     model: PRIMARY_MODEL,
+    // Knowledge is the bundled markdown file — not Google Drive / Firebase.
+    knowledgeLoaded: knowledge.loaded,
+    knowledgeChars: knowledge.chars,
   });
 });
 
@@ -242,6 +254,7 @@ app.post("/api/recruitment-chat", async (req, res) => {
     res.status(503).json({
       error:
         "Chat server is missing GEMINI_API_KEY. Add it in Render Environment.",
+      kind: "missing_key",
     });
     return;
   }
@@ -249,7 +262,7 @@ app.post("/api/recruitment-chat", async (req, res) => {
   const message =
     typeof req.body?.message === "string" ? req.body.message.trim() : "";
   if (!message || message.length > 2000) {
-    res.status(400).json({ error: "Invalid message" });
+    res.status(400).json({ error: "Invalid message", kind: "bad_request" });
     return;
   }
 
@@ -265,7 +278,7 @@ app.post("/api/recruitment-chat", async (req, res) => {
     .slice(-12);
 
   try {
-    const knowledge = loadKnowledge();
+    const { text: knowledge } = loadKnowledge();
     const reply = await callGemini(
       GEMINI_API_KEY,
       buildSystemPrompt(knowledge),
@@ -280,6 +293,7 @@ app.post("/api/recruitment-chat", async (req, res) => {
     console.error("recruitment-chat error", kind, detail);
     res.status(502).json({
       error: publicErrorMessage(kind),
+      kind,
       // Safe diagnostic (Gemini messages never include the API key)
       detail: detail.slice(0, 240),
     });

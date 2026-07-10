@@ -58,6 +58,21 @@ After redeploy, `/health` and `/api/recruitment-chat` should respond (cold start
 5. Manual Deploy → Clear build cache & deploy
 6. Wait until status is Live, then open `/health`
 
+## Cold start vs billing (do not confuse)
+
+| Symptom | Cause |
+| --- | --- |
+| First request slow / timeout / “waking up” | Render free tier **cold start** (30–60s). Retry once. |
+| `Chat is temporarily unavailable (Gemini API billing/credits)` | Request **reached Gemini**; the API key’s Google project has **no credits/quota**. Not cold start, not missing Drive. |
+| `/health` → `hasKey: false` | `GEMINI_API_KEY` missing on Render. |
+| `/health` → `knowledgeLoaded: false` | `knowledge.md` missing on the server (fallback text only). |
+
+`GET /health` should show `hasKey: true`, `knowledgeLoaded: true`, and the active `model`. That means the website ↔ Render link is fine; chat still fails only if Gemini rejects the key/billing.
+
+## Knowledge base (not Google Drive)
+
+Answers come from `chat-server/knowledge.md` (synced from `content/recruitment-faq.md`). There is **no** Google Drive / Docs connection. To update facts: edit the markdown → redeploy chat-server. A Drive API sync would be a separate future feature (service account + sync job).
+
 ## If chat says “billing/credits”
 
 The Render key’s Google project has **no usable quota** (prepaid credits depleted, or free-tier limit 0). Model fallbacks cannot invent credits.
@@ -67,7 +82,7 @@ The Render key’s Google project has **no usable quota** (prepaid credits deple
 3. In Render → Environment → set `GEMINI_API_KEY` to the new key
 4. Optionally set `GEMINI_MODEL` = `gemini-2.5-flash`
 5. Manual Deploy → Clear build cache & deploy
-6. Test `POST /api/recruitment-chat`
+6. Test `POST /api/recruitment-chat` (or the website chat modal)
 
 If the project is on **prepaid** billing with $0 balance, either add credits at [AI Studio projects](https://ai.studio/projects) or switch to a free-tier project/key as above.
 
