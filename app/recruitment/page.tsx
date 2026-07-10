@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { AIInputWithSearch } from "@/components/ui/ai-input-with-search";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { DotPattern } from "@/components/ui/dot-pattern";
+import { RecruitmentChatModal } from "@/components/recruitment-chat-modal";
 import { cn } from "@/lib/utils";
 
 type TeamRole = {
@@ -66,14 +67,14 @@ function TeamRoleCard({
   onOpen: (role: TeamRole) => void;
 }) {
   return (
-    <BlurFade delay={0.12 + index * 0.06} inView>
+    <BlurFade delay={0.1 + index * 0.04} inView>
       <button
         type="button"
         onClick={() => onOpen(role)}
-        className="group relative w-full overflow-hidden rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className="group relative w-full overflow-hidden rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-label={`View ${role.title}`}
       >
-        <div className="relative aspect-[2/3] overflow-hidden rounded-2xl bg-[#eef1f3]">
+        <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#eef1f3] lg:aspect-[2/3]">
           <div
             className="absolute inset-0"
             style={{
@@ -92,22 +93,22 @@ function TeamRoleCard({
 
           <span
             className={cn(
-              "absolute bottom-4 left-4 inline-flex items-center gap-1.5 overflow-hidden rounded-full",
+              "absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 overflow-hidden rounded-full",
               "bg-white/95 text-[#0a1218] shadow-sm backdrop-blur-sm",
-              "max-w-9 transition-[max-width] duration-300 ease-out",
-              "group-hover:max-w-[7.5rem]",
+              "max-w-7 transition-[max-width] duration-300 ease-out",
+              "group-hover:max-w-[6.5rem]",
             )}
           >
-            <span className="flex size-9 shrink-0 items-center justify-center">
-              <Eye className="size-4" aria-hidden="true" />
+            <span className="flex size-7 shrink-0 items-center justify-center">
+              <Eye className="size-3.5" aria-hidden="true" />
             </span>
-            <span className="whitespace-nowrap pr-3.5 text-xs font-medium tracking-wide opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="whitespace-nowrap pr-2.5 text-[10px] font-medium tracking-wide opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               View
             </span>
           </span>
         </div>
 
-        <p className="mt-3 text-center text-sm font-medium tracking-wide text-[#0a1218] md:text-[0.95rem]">
+        <p className="mt-2 text-center text-[11px] font-medium tracking-wide text-[#0a1218] sm:text-xs md:text-[0.8rem]">
           {role.title}
         </p>
       </button>
@@ -200,7 +201,6 @@ function TeamRoleModal({
               >
                 {role.title}
               </h2>
-              {/* Placeholder for future role description */}
               <div
                 className="mt-4 min-h-[7.5rem] flex-1 rounded-xl border border-dashed border-black/10 bg-[#f7f8f9]"
                 aria-hidden="true"
@@ -215,6 +215,15 @@ function TeamRoleModal({
 
 export default function RecruitmentPage() {
   const [selected, setSelected] = useState<TeamRole | null>(null);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatSeed, setChatSeed] = useState<string | null>(null);
+  const [chatSeedKey, setChatSeedKey] = useState(0);
+
+  const openChat = (message: string) => {
+    setChatSeed(message);
+    setChatSeedKey((k) => k + 1);
+    setChatOpen(true);
+  };
 
   return (
     <>
@@ -232,27 +241,31 @@ export default function RecruitmentPage() {
           />
         </div>
 
-        <section className="relative z-10 px-6 pb-10 pt-32 md:px-10 md:pb-14 md:pt-40 lg:px-16">
+        <section className="relative z-10 px-6 pb-5 pt-28 md:px-10 md:pb-6 md:pt-32 lg:px-16 lg:pt-36">
           <div className="mx-auto max-w-3xl text-center">
             <BlurFade delay={0.05}>
-              <h1 className="text-balance text-5xl font-semibold tracking-tight text-[#0a1218] md:text-6xl lg:text-7xl">
+              <h1 className="text-balance text-4xl font-semibold tracking-tight text-[#0a1218] md:text-5xl lg:text-6xl">
                 Join the team
               </h1>
             </BlurFade>
             <BlurFade delay={0.12}>
-              <p className="mt-4 text-base text-black/55 md:text-lg">
+              <p className="mt-3 text-sm text-black/55 md:text-base">
                 Feel free to ask me any question
               </p>
             </BlurFade>
 
-            <BlurFade delay={0.2} className="mx-auto mt-10 max-w-xl">
-              <AIInputWithSearch />
+            <BlurFade delay={0.2} className="mx-auto mt-6 max-w-xl md:mt-8">
+              <AIInputWithSearch
+                onSubmit={(value) => {
+                  openChat(value);
+                }}
+              />
             </BlurFade>
           </div>
         </section>
 
-        <section className="relative z-10 px-6 pb-28 pt-4 md:px-10 md:pt-6 lg:px-16">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-5 sm:gap-6 md:grid-cols-3 md:gap-8">
+        <section className="relative z-10 px-4 pb-16 pt-2 md:px-8 md:pb-20 md:pt-3 lg:px-12">
+          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:gap-5 lg:grid-cols-6 lg:gap-4">
             {TEAM_ROLES.map((role, index) => (
               <TeamRoleCard
                 key={role.id}
@@ -266,6 +279,15 @@ export default function RecruitmentPage() {
       </main>
 
       <TeamRoleModal role={selected} onClose={() => setSelected(null)} />
+      <RecruitmentChatModal
+        open={chatOpen}
+        initialMessage={chatSeed}
+        seedKey={chatSeedKey}
+        onClose={() => {
+          setChatOpen(false);
+          setChatSeed(null);
+        }}
+      />
       <SiteFooter />
     </>
   );

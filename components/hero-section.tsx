@@ -120,6 +120,32 @@ export function HeroSection() {
                             src="/videos/ucsdxcrs-v2.mp4"
                         />
 
+                        {/* Blur while UI is visible; clears when idle (synced with text fade) */}
+                        <motion.div
+                            aria-hidden
+                            className="pointer-events-none absolute inset-0 z-[1] bg-black/45 backdrop-blur-[6px]"
+                            animate={{
+                                opacity: contentVisible ? 1 : 0,
+                            }}
+                            transition={
+                                fadingOut
+                                    ? { duration: FADE_OUT_S, ease: 'easeOut' }
+                                    : FADE_IN_SPRING
+                            }
+                        />
+                        <motion.div
+                            aria-hidden
+                            className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/35 via-transparent to-black/55"
+                            animate={{
+                                opacity: contentVisible ? 1 : 0.35,
+                            }}
+                            transition={
+                                fadingOut
+                                    ? { duration: FADE_OUT_S, ease: 'easeOut' }
+                                    : FADE_IN_SPRING
+                            }
+                        />
+
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
                             <PageEnter>
                                 <motion.div
