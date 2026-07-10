@@ -99,7 +99,7 @@ app.use(
       }
       cb(new Error("Not allowed by CORS"));
     },
-    methods: ["POST", "OPTIONS"],
+    methods: ["GET", "POST", "OPTIONS"],
   }),
 );
 app.use(express.json({ limit: "32kb" }));

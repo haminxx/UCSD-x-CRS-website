@@ -59,7 +59,23 @@ function persistMessages(messages: ChatMessage[]) {
   setCookie(COOKIE_KEY, payload, 30);
 }
 
-async function fetchAssistantReply(
+const CHAT_FETCH_TIMEOUT_MS = 90_000;
+
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchAssistantReplyOnce(
   userText: string,
   history: ChatMessage[],
 ): Promise<string> {
@@ -68,14 +84,30 @@ async function fetchAssistantReply(
     .slice(-12)
     .map((m) => ({ role: m.role, content: m.content }));
 
-  const res = await fetch(CHAT_API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message: userText,
-      history: prior,
-    }),
-  });
+  let res: Response;
+  try {
+    res = await fetchWithTimeout(
+      CHAT_API_URL,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userText,
+          history: prior,
+        }),
+      },
+      CHAT_FETCH_TIMEOUT_MS,
+    );
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw new Error(
+        "Chat timed out (the free server may be waking up). Please try again in a moment.",
+      );
+    }
+    throw new Error(
+      "Could not reach the chat server. Please try again shortly, or use Contact / Fall 2026 Application.",
+    );
+  }
 
   let data: { reply?: string; error?: string } = {};
   try {
@@ -98,6 +130,27 @@ async function fetchAssistantReply(
   }
 
   return data.reply.trim();
+}
+
+/** One automatic retry helps with Render free-tier cold starts / brief 502s. */
+async function fetchAssistantReply(
+  userText: string,
+  history: ChatMessage[],
+): Promise<string> {
+  try {
+    return await fetchAssistantReplyOnce(userText, history);
+  } catch (first) {
+    await new Promise((r) => setTimeout(r, 1500));
+    try {
+      return await fetchAssistantReplyOnce(userText, history);
+    } catch {
+      throw first instanceof Error
+        ? first
+        : new Error(
+            "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.",
+          );
+    }
+  }
 }
 
 function MessageBubble({ message }: { message: ChatMessage }) {

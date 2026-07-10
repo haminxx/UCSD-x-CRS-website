@@ -13,18 +13,49 @@ The Gemini API key stays in Render Environment — never in the static site or G
 
 The repo root includes `render.yaml` so a **Blueprint** deploy uses `chat-server` as the root (not the Next.js site). Prefer **New → Blueprint** and select this repo if you are creating the service from scratch.
 
+## Dual start (works even if Root Directory is blank)
+
+Repo root `npm start` → `node scripts/start.js`:
+
+- If `RENDER=true` (set automatically by Render): installs `chat-server` deps if needed, then runs `node chat-server/server.js`
+- Otherwise: runs Next.js (`next start`) for local/static hosting builds
+
+So even when the dashboard Root Directory is empty and Start Command is `npm start`, the chat service should start — **as long as Build Command installs chat-server deps**.
+
 ## Fix existing service (502 / wrong start command)
 
-If Render logs show `ucsd-x-crs-website@0.1.0 start` → `next start` and *Could not find a production build in the '.next' directory*, the service is pointed at the **repo root** instead of `chat-server`. Fix in the Render Dashboard:
+If Render logs show `ucsd-x-crs-website@0.1.0 start` → `next start` and *Could not find a production build in the '.next' directory*, the service was pointed at the **repo root** and using the old start script. After this repo update, either option works:
+
+### Option A (preferred) — Root Directory = `chat-server`
 
 1. Open the service → **Settings**
-2. Set **Root Directory** = `chat-server`
-3. Set **Build Command** = `npm install`
-4. Set **Start Command** = `npm start` (runs `node server.js`, not Next)
-5. Confirm **Environment** has `GEMINI_API_KEY` set (and optionally `GEMINI_MODEL` = `gemini-2.0-flash`)
+2. **Root Directory** = `chat-server`
+3. **Build Command** = `npm install`
+4. **Start Command** = `npm start`
+5. Confirm **Environment** has `GEMINI_API_KEY`
 6. **Manual Deploy** → **Clear build cache & deploy**
 
-After that redeploy, `/api/recruitment-chat` should respond (cold start on free tier may take 30–60s).
+### Option B — Root Directory blank (repo root fallback)
+
+1. **Root Directory** = *(empty)*
+2. **Build Command** = `npm install --prefix ./chat-server`  
+   (or `npm run render-build`)
+3. **Start Command** = `npm start`  
+   (runs `scripts/start.js`, which detects `RENDER=true` and starts chat-server)
+4. Confirm **Environment** has `GEMINI_API_KEY`
+5. **Manual Deploy** → **Clear build cache & deploy**
+
+Do **not** use Build Command `npm install && npm run build` at repo root for this service — that builds Next.js and is unnecessary for the chatbot.
+
+After redeploy, `/health` and `/api/recruitment-chat` should respond (cold start on free tier may take 30–60s).
+
+### Quick dashboard checklist (if auto-redeploy still fails)
+
+1. Root Directory = `chat-server` **or** blank with Build = `npm install --prefix ./chat-server`
+2. Start Command = `npm start`
+3. `GEMINI_API_KEY` is set in Environment
+4. Manual Deploy → Clear build cache & deploy
+5. Wait until status is Live, then open `/health`
 
 ## Deploy on Render — step by step
 
@@ -39,10 +70,10 @@ After that redeploy, `/api/recruitment-chat` should respond (cold start on free 
 1. Sign up / log in at https://render.com (GitHub login is easiest)
 2. Prefer **New** → **Blueprint** (uses root `render.yaml`), **or** **New** → **Web Service**
 3. Connect the repo: `haminxx/UCSD-x-CRS-website` (or your fork)
-4. Settings (must match — wrong Root Directory runs Next.js and fails):
+4. Settings (must match — wrong Root Directory used to run Next.js and fail):
    - **Name:** `ucsd-x-crs-recruitment-chatbot` (or any name)
    - **Region:** Oregon (or closest)
-   - **Root Directory:** `chat-server`
+   - **Root Directory:** `chat-server` (preferred)
    - **Runtime:** Node
    - **Build Command:** `npm install`
    - **Start Command:** `npm start`
