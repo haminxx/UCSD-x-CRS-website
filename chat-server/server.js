@@ -5,16 +5,31 @@ const cors = require("cors");
 
 const PORT = Number(process.env.PORT) || 10000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim() || "";
-/** gemini-2.0-flash was shut down 2026-06-01; remap so stale Render env still works. */
+
+/** Models shut down June 2026 — never call these. */
 const SHUT_DOWN_MODELS = new Set([
   "gemini-2.0-flash",
   "gemini-2.0-flash-001",
   "gemini-2.0-flash-lite",
   "gemini-2.0-flash-lite-001",
 ]);
-const requestedModel = process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash";
-const GEMINI_MODEL = SHUT_DOWN_MODELS.has(requestedModel)
-  ? "gemini-3.5-flash"
+
+/**
+ * Free-tier-friendly defaults (2026). Prefer 2.5 Flash over 3.x when the
+ * project has no prepaid credits — 2.5 Flash remains on the free tier.
+ * Override with GEMINI_MODEL on Render if needed.
+ */
+const DEFAULT_MODEL = "gemini-2.5-flash";
+const FALLBACK_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
+  "gemini-flash-latest",
+  "gemini-3.1-flash-lite",
+];
+
+const requestedModel = process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL;
+const PRIMARY_MODEL = SHUT_DOWN_MODELS.has(requestedModel)
+  ? DEFAULT_MODEL
   : requestedModel;
 
 const ALLOWED_ORIGINS = new Set([
@@ -65,8 +80,50 @@ function toGeminiContents(history, message) {
   return contents;
 }
 
-async function callGemini(apiKey, systemPrompt, history, message) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+function classifyGeminiError(message, status) {
+  const m = String(message || "");
+  if (/API[_ ]?key|invalid.?key|PERMISSION_DENIED|401/i.test(m) || status === 401) {
+    return "invalid_key";
+  }
+  if (
+    /prepayment|billing|credit|quota|RESOURCE_EXHAUSTED|exceeded your current quota/i.test(
+      m,
+    ) ||
+    status === 429
+  ) {
+    return "billing";
+  }
+  if (
+    /not found|NOT_FOUND|is not found|unsupported|no longer available|has been shut down|404/i.test(
+      m,
+    ) ||
+    status === 404
+  ) {
+    return "model_unavailable";
+  }
+  return "unknown";
+}
+
+function publicErrorMessage(kind) {
+  switch (kind) {
+    case "invalid_key":
+      return "Chat server Gemini API key is invalid. Update GEMINI_API_KEY in Render Environment.";
+    case "billing":
+      return "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later.";
+    case "model_unavailable":
+      return "Chat model is unavailable. Please try again later, or use Contact / Fall 2026 Application.";
+    default:
+      return "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.";
+  }
+}
+
+function modelCandidates(primary) {
+  const list = [primary, ...FALLBACK_MODELS.filter((m) => m !== primary)];
+  return [...new Set(list.filter((m) => !SHUT_DOWN_MODELS.has(m)))];
+}
+
+async function callGeminiOnce(apiKey, model, systemPrompt, history, message) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
   const res = await fetch(url, {
     method: "POST",
@@ -82,9 +139,14 @@ async function callGemini(apiKey, systemPrompt, history, message) {
   });
 
   const data = await res.json();
+  const errMsg = data?.error?.message || `Gemini HTTP ${res.status}`;
 
   if (!res.ok) {
-    throw new Error(data?.error?.message || `Gemini HTTP ${res.status}`);
+    const err = new Error(errMsg);
+    err.status = res.status;
+    err.kind = classifyGeminiError(errMsg, res.status);
+    err.model = model;
+    throw err;
   }
 
   const text = data?.candidates?.[0]?.content?.parts
@@ -93,10 +155,55 @@ async function callGemini(apiKey, systemPrompt, history, message) {
     .trim();
 
   if (!text) {
-    throw new Error("Empty Gemini response");
+    const err = new Error("Empty Gemini response");
+    err.kind = "unknown";
+    err.model = model;
+    throw err;
   }
 
   return text;
+}
+
+/**
+ * Try primary model, then free-tier fallbacks on model-not-found / unsupported.
+ * Do not retry on billing or invalid key — those are project-level.
+ */
+async function callGemini(apiKey, systemPrompt, history, message) {
+  const models = modelCandidates(PRIMARY_MODEL);
+  let lastErr;
+
+  for (let i = 0; i < models.length; i++) {
+    const model = models[i];
+    try {
+      const text = await callGeminiOnce(
+        apiKey,
+        model,
+        systemPrompt,
+        history,
+        message,
+      );
+      if (i > 0) {
+        console.warn(`recruitment-chat: fell back to model ${model}`);
+      }
+      return text;
+    } catch (err) {
+      lastErr = err;
+      const kind = err?.kind || classifyGeminiError(err?.message, err?.status);
+      console.error(
+        `recruitment-chat model=${model} kind=${kind}:`,
+        err?.message || err,
+      );
+      if (kind === "billing" || kind === "invalid_key") {
+        throw err;
+      }
+      // model_unavailable / unknown → try next fallback
+      if (i === models.length - 1) {
+        throw err;
+      }
+    }
+  }
+
+  throw lastErr || new Error("Gemini call failed");
 }
 
 const app = express();
@@ -123,7 +230,11 @@ app.get("/", (_req, res) => {
 });
 
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, hasKey: Boolean(GEMINI_API_KEY) });
+  res.json({
+    ok: true,
+    hasKey: Boolean(GEMINI_API_KEY),
+    model: PRIMARY_MODEL,
+  });
 });
 
 app.post("/api/recruitment-chat", async (req, res) => {
@@ -164,12 +275,11 @@ app.post("/api/recruitment-chat", async (req, res) => {
     res.status(200).json({ reply });
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
-    console.error("recruitment-chat error", detail);
-    const billingIssue = /prepayment|billing|quota|credit/i.test(detail);
+    const kind =
+      err?.kind || classifyGeminiError(detail, err?.status);
+    console.error("recruitment-chat error", kind, detail);
     res.status(502).json({
-      error: billingIssue
-        ? "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later."
-        : "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.",
+      error: publicErrorMessage(kind),
       // Safe diagnostic (Gemini messages never include the API key)
       detail: detail.slice(0, 240),
     });
@@ -178,8 +288,10 @@ app.post("/api/recruitment-chat", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(
-    `Recruitment chat listening on :${PORT} (model=${GEMINI_MODEL}${
-      requestedModel !== GEMINI_MODEL ? `, remapped from ${requestedModel}` : ""
-    })`,
+    `Recruitment chat listening on :${PORT} (model=${PRIMARY_MODEL}${
+      requestedModel !== PRIMARY_MODEL
+        ? `, remapped from ${requestedModel}`
+        : ""
+    }, fallbacks=${FALLBACK_MODELS.filter((m) => m !== PRIMARY_MODEL).join(",")})`,
   );
 });
