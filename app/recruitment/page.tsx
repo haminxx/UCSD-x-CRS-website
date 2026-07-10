@@ -72,10 +72,20 @@ function TeamRoleCard({
       <button
         type="button"
         onClick={() => onOpen(role)}
-        className="group relative w-full overflow-hidden rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className="group relative w-full touch-manipulation overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-label={`View ${role.title}`}
       >
-        <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#eef1f3] sm:aspect-[2/3] lg:aspect-[5/7] xl:aspect-[3/4] 2xl:aspect-[5/6]">
+        <div
+          className={cn(
+            "relative w-full overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] bg-[#eef1f3]",
+            "aspect-[3/4]",
+            "min-h-[clamp(9.5rem,18vh,14rem)]",
+            "sm:min-h-[clamp(11rem,20vh,16rem)]",
+            "lg:min-h-[clamp(12rem,22vh,18rem)]",
+            "xl:min-h-[clamp(13.5rem,24vh,20rem)]",
+            "2xl:min-h-[clamp(15rem,26vh,22rem)]",
+          )}
+        >
           <div
             className="absolute inset-0"
             style={{
@@ -94,22 +104,22 @@ function TeamRoleCard({
 
           <span
             className={cn(
-              "absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 overflow-hidden rounded-full",
+              "absolute bottom-[clamp(0.5rem,1vw,0.75rem)] left-[clamp(0.5rem,1vw,0.75rem)] inline-flex items-center gap-1 overflow-hidden rounded-full",
               "bg-white/95 text-[#0a1218] shadow-sm backdrop-blur-sm",
               "max-w-7 transition-[max-width] duration-300 ease-out",
               "group-hover:max-w-[6.5rem]",
             )}
           >
-            <span className="flex size-7 shrink-0 items-center justify-center">
-              <Eye className="size-3.5" aria-hidden="true" />
+            <span className="flex size-7 shrink-0 items-center justify-center sm:size-8">
+              <Eye className="size-3.5 sm:size-4" aria-hidden="true" />
             </span>
-            <span className="whitespace-nowrap pr-2.5 text-[10px] font-medium tracking-wide opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="whitespace-nowrap pr-2.5 text-[10px] font-medium tracking-wide opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:text-xs">
               View
             </span>
           </span>
         </div>
 
-        <p className="mt-1.5 text-center text-[11px] font-medium tracking-wide text-[#0a1218] sm:mt-2 sm:text-xs md:text-[0.8rem]">
+        <p className="mt-[clamp(0.4rem,0.9vh,0.65rem)] text-center text-[clamp(0.7rem,1.15vw,0.95rem)] font-medium tracking-wide text-[#0a1218]">
           {role.title}
         </p>
       </button>
@@ -252,69 +262,83 @@ export default function RecruitmentPage() {
           />
         </div>
 
-        {/* One-screen composition on laptop/desktop: header + content before footer */}
-        <div className="relative z-10 flex min-h-[100dvh] flex-col">
-          <section
-            className="flex flex-1 flex-col justify-center px-5 md:px-10 lg:px-16 xl:px-[clamp(2rem,6vw,5rem)]"
-            style={{
-              paddingTop: "clamp(5.5rem, 10vh, 8.5rem)",
-              paddingBottom: "clamp(1rem, 2.5vh, 2rem)",
-            }}
-          >
-            <div className="mx-auto w-full max-w-3xl text-center xl:max-w-4xl">
-              <BlurFade delay={0.05}>
-                <h1 className="text-balance text-[clamp(2.15rem,5.5vw,3.75rem)] font-semibold tracking-tight text-[#0a1218]">
-                  Join the team.
-                </h1>
-              </BlurFade>
-
-              <BlurFade delay={0.1} className="mt-[clamp(1.1rem,2.8vh,2rem)]">
-                <div className="flex justify-center">
-                  <a
-                    href={FALL_2026_APPLICATION_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "inline-flex items-center gap-2 rounded-full bg-[#0a1218] px-5 py-2.5",
-                      "text-sm font-medium tracking-wide text-white",
-                      "shadow-[0_10px_28px_-14px_rgba(10,18,24,0.55)]",
-                      "transition hover:bg-black focus-visible:outline-none",
-                      "focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2",
-                      "sm:px-6 sm:py-3 sm:text-[0.95rem]",
-                    )}
-                  >
-                    Fall 2026 Application
-                    <ArrowUpRight className="size-4 opacity-80" aria-hidden="true" />
-                  </a>
-                </div>
-              </BlurFade>
-
-              <BlurFade delay={0.16} className="mt-[clamp(1.35rem,3.2vh,2.35rem)]">
-                <p className="text-sm text-black/55 md:text-base">
-                  Feel free to ask me any question
-                </p>
-              </BlurFade>
-
-              <BlurFade
-                delay={0.22}
-                className="mx-auto mt-[clamp(0.85rem,2vh,1.35rem)] w-full max-w-xl xl:max-w-2xl"
+        {/* Three groups with even vertical rhythm across the viewport */}
+        <div
+          className={cn(
+            "relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[110rem] flex-col",
+            "justify-evenly",
+            "px-4 sm:px-6 md:px-10 lg:px-12 xl:px-[clamp(1.5rem,4vw,3.5rem)]",
+          )}
+          style={{
+            paddingTop: "clamp(5.25rem, 9vh, 7.5rem)",
+            paddingBottom: "clamp(1.25rem, 3vh, 2.75rem)",
+            gap: "clamp(1.25rem, 3.5vh, 2.75rem)",
+          }}
+        >
+          {/* Group 1 — Headline + CTA */}
+          <section className="flex shrink-0 flex-col items-center text-center">
+            <BlurFade delay={0.05}>
+              <h1
+                className={cn(
+                  "text-balance font-bold text-[#0a1218]",
+                  "text-[clamp(2.75rem,6.5vw,5.25rem)]",
+                  "leading-[1.05] tracking-[-0.04em]",
+                )}
               >
-                <AIInputWithSearch
-                  onSubmit={(value) => {
-                    openChat(value);
-                  }}
-                />
-              </BlurFade>
-            </div>
+                Join the team.
+              </h1>
+            </BlurFade>
+
+            <BlurFade delay={0.1} className="mt-[clamp(1rem,2.4vh,1.75rem)]">
+              <a
+                href={FALL_2026_APPLICATION_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full bg-[#0a1218]",
+                  "px-[clamp(1.25rem,2vw,1.75rem)] py-[clamp(0.65rem,1.2vh,0.85rem)]",
+                  "text-[clamp(0.875rem,1.1vw,1rem)] font-medium tracking-wide text-white",
+                  "shadow-[0_10px_28px_-14px_rgba(10,18,24,0.55),0_2px_6px_-2px_rgba(10,18,24,0.2)]",
+                  "transition hover:bg-black focus-visible:outline-none",
+                  "focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2",
+                  "touch-manipulation",
+                )}
+              >
+                Fall 2026 Application
+                <ArrowUpRight className="size-4 opacity-80" aria-hidden="true" />
+              </a>
+            </BlurFade>
           </section>
 
-          <section
-            className="px-3 pb-[clamp(1.25rem,3vh,2.5rem)] md:px-8 lg:px-12 xl:px-[clamp(1.5rem,4vw,3rem)]"
-            style={{
-              paddingTop: "clamp(1.25rem, 3.5vh, 2.75rem)",
-            }}
-          >
-            <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3.5 md:gap-4 lg:grid-cols-6 lg:gap-3 xl:max-w-[90rem] xl:gap-3.5 2xl:max-w-[96rem] 2xl:gap-4">
+          {/* Group 2 — Ask line + chatbox */}
+          <section className="mx-auto flex w-full max-w-[min(100%,42rem)] shrink-0 flex-col items-center text-center xl:max-w-[min(100%,48rem)]">
+            <BlurFade delay={0.14}>
+              <p className="text-[clamp(0.9rem,1.35vw,1.125rem)] text-black/55">
+                Feel free to ask me any question
+              </p>
+            </BlurFade>
+
+            <BlurFade
+              delay={0.2}
+              className="mt-[clamp(0.75rem,1.8vh,1.25rem)] w-full"
+            >
+              <AIInputWithSearch
+                onSubmit={(value) => {
+                  openChat(value);
+                }}
+              />
+            </BlurFade>
+          </section>
+
+          {/* Group 3 — Role / team cards */}
+          <section className="w-full shrink-0">
+            <div
+              className={cn(
+                "mx-auto grid w-full",
+                "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6",
+                "gap-[clamp(0.55rem,1.4vw,1.15rem)]",
+              )}
+            >
               {TEAM_ROLES.map((role, index) => (
                 <TeamRoleCard
                   key={role.id}

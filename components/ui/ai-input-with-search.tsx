@@ -23,7 +23,7 @@ export function AIInputWithSearch({
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+    el.style.height = `${Math.min(el.scrollHeight, 180)}px`;
   }, []);
 
   useEffect(() => {
@@ -41,7 +41,8 @@ export function AIInputWithSearch({
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_12px_40px_-18px_rgba(10,18,24,0.28)]",
+        "relative w-full overflow-hidden rounded-[1.15rem] border border-black/10 bg-white",
+        "shadow-[0_14px_44px_-18px_rgba(10,18,24,0.3),0_2px_8px_-4px_rgba(10,18,24,0.12)]",
         className,
       )}
     >
@@ -57,17 +58,17 @@ export function AIInputWithSearch({
           }
         }}
         placeholder={placeholder}
-        className="block w-full resize-none bg-transparent px-5 pb-3 pt-4 text-[0.95rem] leading-relaxed text-[#0a1218] outline-none placeholder:text-black/35"
+        className="block w-full resize-none bg-transparent px-5 pb-3.5 pt-5 text-base leading-relaxed text-[#0a1218] outline-none placeholder:text-black/35 sm:px-6 sm:pt-[1.35rem] sm:text-[1.05rem]"
         aria-label="Ask a recruitment question"
       />
 
-      <div className="flex items-center justify-between gap-3 px-3 pb-3">
+      <div className="flex items-center justify-between gap-3 px-3.5 pb-3.5 sm:px-4 sm:pb-4">
         <button
           type="button"
           onClick={() => setWithSearch((v) => !v)}
           aria-pressed={withSearch}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium tracking-wide transition",
+            "inline-flex touch-manipulation items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium tracking-wide transition sm:text-[0.8125rem]",
             withSearch
               ? "bg-[#0a1218] text-white"
               : "bg-black/[0.04] text-black/55 hover:bg-black/[0.07] hover:text-black/80",
@@ -83,7 +84,7 @@ export function AIInputWithSearch({
           disabled={!value.trim()}
           aria-label="Send message"
           className={cn(
-            "inline-flex size-9 items-center justify-center rounded-full transition",
+            "inline-flex size-10 touch-manipulation items-center justify-center rounded-full transition",
             value.trim()
               ? "bg-[#0a1218] text-white hover:bg-black"
               : "bg-black/[0.06] text-black/30",
