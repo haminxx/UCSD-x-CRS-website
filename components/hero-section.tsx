@@ -12,9 +12,9 @@ import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
 const RESTING_OPACITY = 1
-const IDLE_MS = 5000
-const FADE_OUT_S = 2
-const FADE_IN_SPRING = { type: 'spring' as const, stiffness: 280, damping: 28, mass: 0.7 }
+const IDLE_MS = 2500
+const FADE_OUT_S = 1.6
+const FADE_IN_SPRING = { type: 'spring' as const, stiffness: 260, damping: 30, mass: 0.75 }
 
 function SponsorLink() {
     return (

@@ -22,37 +22,37 @@ const TEAM_ROLES: TeamRole[] = [
   {
     id: "driver",
     title: "Driver",
-    image: "https://picsum.photos/seed/crs-driver/600/900",
+    image: "/images/recruitment/driver.png",
     accent: "#1a3a4a",
   },
   {
     id: "engineer",
     title: "Engineer",
-    image: "https://picsum.photos/seed/crs-engineer/600/900",
+    image: "/images/recruitment/engineer.png",
     accent: "#2a4a3a",
   },
   {
     id: "pit-crew",
     title: "PIT Crew",
-    image: "https://picsum.photos/seed/crs-pit/600/900",
+    image: "/images/recruitment/pit-crew.png",
     accent: "#3a2a1a",
   },
   {
     id: "media-team",
     title: "Media Team",
-    image: "https://picsum.photos/seed/crs-media/600/900",
+    image: "/images/recruitment/media-team.png",
     accent: "#2a2a4a",
   },
   {
     id: "content-creator",
     title: "Content Creator",
-    image: "https://picsum.photos/seed/crs-content/600/900",
+    image: "/images/recruitment/content-creator.png",
     accent: "#3a1a2a",
   },
   {
     id: "operation-team",
     title: "Operation Team",
-    image: "https://picsum.photos/seed/crs-ops/600/900",
+    image: "/images/recruitment/operation-team.png",
     accent: "#1a2a3a",
   },
 ];
