@@ -172,7 +172,7 @@ function MemberPortrait({ member }: { member: TeamMember }) {
   }
 
   return (
-    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#1a242c] via-[#121a20] to-[#243038] text-3xl font-semibold tracking-wide text-white/80">
+    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#e8ecef] via-[#dfe4e8] to-[#d0d7dc] text-3xl font-semibold tracking-wide text-[#0a1218]/70">
       {initials}
     </div>
   );
@@ -181,13 +181,13 @@ function MemberPortrait({ member }: { member: TeamMember }) {
 function TeamProfileCard({ member }: { member: TeamMember }) {
   return (
     <article className="flex flex-col items-center text-center">
-      <div className="w-full overflow-hidden bg-[#121a20]">
+      <div className="w-full overflow-hidden bg-[#eef1f3]">
         <MemberPortrait member={member} />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-foreground md:text-xl">
+      <h3 className="mt-5 text-lg font-bold text-[#0a1218] md:text-xl">
         {member.name}
       </h3>
-      <p className="mt-1.5 text-sm text-muted-foreground md:text-base">
+      <p className="mt-1.5 text-sm text-black/55 md:text-base">
         {member.role} ({member.team})
       </p>
     </article>
@@ -205,7 +205,7 @@ export default function AboutUsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="overflow-x-hidden bg-background text-foreground">
+      <main className="overflow-x-hidden bg-white text-[#0a1218]">
         <section className="relative px-6 pb-12 pt-32 md:pt-40">
           <div className="mx-auto max-w-7xl text-center">
             <div className="relative mx-auto flex min-h-[5.5rem] items-center justify-center md:min-h-[7rem]">
@@ -216,7 +216,7 @@ export default function AboutUsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.22 }}
-                  className="max-w-5xl text-balance text-5xl font-semibold tracking-tight text-foreground md:text-7xl lg:text-8xl"
+                  className="max-w-5xl text-balance text-5xl font-semibold tracking-tight text-[#0a1218] md:text-7xl lg:text-8xl"
                 >
                   {headline}
                 </motion.h1>
@@ -232,12 +232,12 @@ export default function AboutUsPage() {
           />
         </section>
 
-        <section className="bg-background px-6 pb-28 pt-12">
+        <section className="bg-white px-6 pb-28 pt-12">
           <div className="mx-auto max-w-7xl">
             <div
               role="tablist"
               aria-label="Team filters"
-              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#121a20]/70 p-2.5 md:gap-3"
+              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-black/10 bg-[#f4f6f7] p-2.5 md:gap-3"
             >
               {teamFilters.map((filter) => {
                 const isActive = activeFilter === filter;
@@ -252,8 +252,8 @@ export default function AboutUsPage() {
                     className={cn(
                       "rounded-xl px-4 py-2 text-sm md:px-5",
                       isActive
-                        ? "bg-white text-[#0a1218] hover:bg-white/90"
-                        : "text-white/65 hover:bg-white/5 hover:text-white",
+                        ? "bg-[#0a1218] text-white hover:bg-black"
+                        : "text-black/55 hover:bg-black/5 hover:text-black",
                     )}
                   >
                     {filter}
@@ -264,12 +264,15 @@ export default function AboutUsPage() {
 
             <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
               {filteredMembers.map((member) => (
-                <TeamProfileCard key={`${member.name}-${member.team}`} member={member} />
+                <TeamProfileCard
+                  key={`${member.name}-${member.team}`}
+                  member={member}
+                />
               ))}
             </div>
 
             {filteredMembers.length === 0 && (
-              <p className="mt-14 text-center text-muted-foreground">
+              <p className="mt-14 text-center text-black/50">
                 No members in this team yet.
               </p>
             )}

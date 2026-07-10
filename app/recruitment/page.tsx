@@ -32,8 +32,7 @@ export default function RecruitmentPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative min-h-dvh overflow-hidden bg-background text-foreground">
-        {/* Video-ready full-bleed background — drop a src on <video> when ready */}
+      <main className="relative min-h-dvh overflow-hidden bg-white text-[#0a1218]">
         <div className="absolute inset-0" aria-hidden="true">
           <video
             className="absolute inset-0 size-full object-cover opacity-0"
@@ -49,17 +48,17 @@ export default function RecruitmentPage() {
           <div className="mx-auto w-full max-w-7xl">
             <h1 className="flex flex-col items-center gap-5 text-center text-[clamp(2.25rem,6.5vw,5.5rem)] font-light leading-[1.05] tracking-tight md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
               <span className="md:max-w-[42%] md:flex-1">life is a creative</span>
-              <FloralMark className="size-8 shrink-0 text-white/75 md:size-10 lg:size-12" />
+              <FloralMark className="size-8 shrink-0 text-black/60 md:size-10 lg:size-12" />
               <span className="md:max-w-[42%] md:flex-1 md:text-right">
                 Join the team
               </span>
             </h1>
 
             <div className="mt-10 flex flex-col gap-9 md:mt-12 md:ml-auto md:max-w-[42%] md:gap-11">
-              <div className="h-px w-16 bg-white/60 md:ml-auto" />
+              <div className="h-px w-16 bg-black/40 md:ml-auto" />
 
               <div className="flex flex-col items-start gap-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
-                <p className="max-w-sm text-left text-sm leading-relaxed text-muted-foreground md:text-[0.95rem]">
+                <p className="max-w-sm text-left text-sm leading-relaxed text-black/55 md:text-[0.95rem]">
                   Build, race, and grow with UCSD x CRS. Bring your craft to a
                   team that turns late nights into lap times — and purpose into
                   every mile.
@@ -69,7 +68,7 @@ export default function RecruitmentPage() {
                   href={JOIN_FORM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-[#0a1218] transition hover:bg-white/90"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#0a1218] px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-black"
                 >
                   JOIN US
                   <ArrowRight className="size-4" aria-hidden="true" />

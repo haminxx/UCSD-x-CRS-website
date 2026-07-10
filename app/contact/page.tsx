@@ -50,8 +50,8 @@ function PillButton({
       className={cn(
         "rounded-full border px-4 py-2 text-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-white bg-white text-[#0a1218]"
-          : "border-white/25 bg-transparent text-white/80 hover:border-white/50 hover:text-white"
+          ? "border-[#0a1218] bg-[#0a1218] text-white"
+          : "border-black/20 bg-transparent text-black/70 hover:border-black/40 hover:text-black",
       )}
     >
       {label}
@@ -66,8 +66,8 @@ function SoftInput({
   return (
     <input
       className={cn(
-        "w-full rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none ring-0 transition-[box-shadow] focus:bg-[#243038] focus:ring-2 focus:ring-white/15",
-        className
+        "w-full rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-sm text-[#0a1218] placeholder:text-black/40 outline-none ring-0 transition-[box-shadow] focus:bg-[#e4e8eb] focus:ring-2 focus:ring-black/15",
+        className,
       )}
       {...props}
     />
@@ -91,7 +91,7 @@ export default function ContactPage() {
     setServices((prev) =>
       prev.includes(service)
         ? prev.filter((item) => item !== service)
-        : [...prev, service]
+        : [...prev, service],
     );
   }
 
@@ -114,12 +114,11 @@ export default function ContactPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-white text-[#0a1218]">
         <form
           onSubmit={handleSubmit}
           className="mx-auto max-w-3xl px-6 pb-24 pt-32 md:px-10 md:pb-32 md:pt-40"
         >
-          {/* Personal Information */}
           <section>
             <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-[3.25rem]">
               Let&apos;s talk about your next project...
@@ -163,16 +162,13 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <hr className="my-14 border-0 border-t border-white/15" />
+          <hr className="my-14 border-0 border-t border-black/10" />
 
-          {/* Service and Budget */}
           <section>
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               What sort of service?
             </h2>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Select all that apply
-            </p>
+            <p className="mt-4 text-sm text-black/50">Select all that apply</p>
             <div className="mt-6 flex flex-wrap gap-2.5">
               {SERVICES.map((service) => (
                 <PillButton
@@ -184,7 +180,7 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <p className="mt-12 text-sm text-white/85 md:text-base">
+            <p className="mt-12 text-sm text-black/80 md:text-base">
               What rough budget are we working within?
             </p>
             <div className="mt-5 flex flex-wrap gap-2.5">
@@ -201,14 +197,13 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <hr className="my-14 border-0 border-t border-white/15" />
+          <hr className="my-14 border-0 border-t border-black/10" />
 
-          {/* Additional Details */}
           <section>
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Anything else?
             </h2>
-            <p className="mt-7 text-sm text-white/85 md:text-base">
+            <p className="mt-7 text-sm text-black/80 md:text-base">
               Do you have a specific timeframe in mind?
             </p>
             <div className="mt-5 flex flex-wrap gap-2.5">
@@ -226,7 +221,7 @@ export default function ContactPage() {
 
             <label
               htmlFor="message"
-              className="mt-12 block text-sm text-white/85 md:text-base"
+              className="mt-12 block text-sm text-black/80 md:text-base"
             >
               Anything you&apos;d like to add?
             </label>
@@ -237,19 +232,19 @@ export default function ContactPage() {
               placeholder="Message (optional)"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="mt-4 w-full resize-y rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none transition-[box-shadow] focus:bg-[#243038] focus:ring-2 focus:ring-white/15"
+              className="mt-4 w-full resize-y rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-sm text-[#0a1218] placeholder:text-black/40 outline-none transition-[box-shadow] focus:bg-[#e4e8eb] focus:ring-2 focus:ring-black/15"
             />
 
             <div className="relative mt-4">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full items-center justify-between rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-left text-sm text-white/40 transition-colors hover:bg-[#243038]"
+                className="flex w-full items-center justify-between rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-left text-sm text-black/40 transition-colors hover:bg-[#e4e8eb]"
               >
-                <span className={cn(fileName && "text-foreground")}>
+                <span className={cn(fileName && "text-[#0a1218]")}>
                   {fileName ?? "Attachments (optional)"}
                 </span>
-                <Paperclip className="size-4 shrink-0 text-white/45" />
+                <Paperclip className="size-4 shrink-0 text-black/45" />
               </button>
               <input
                 ref={fileInputRef}
@@ -263,23 +258,22 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <hr className="my-14 border-0 border-t border-white/15" />
+          <hr className="my-14 border-0 border-t border-black/10" />
 
-          {/* Submission footer */}
           <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
-            <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
+            <label className="flex cursor-pointer items-start gap-3 text-sm text-black/50">
               <input
                 type="checkbox"
                 checked={privacyAgreed}
                 onChange={(e) => setPrivacyAgreed(e.target.checked)}
                 required
-                className="mt-0.5 size-4 shrink-0 rounded border-white/30 accent-white"
+                className="mt-0.5 size-4 shrink-0 rounded border-black/30 accent-black"
               />
               <span>
                 I have read and agree to the{" "}
                 <Link
                   href="#"
-                  className="underline underline-offset-2 hover:text-foreground"
+                  className="underline underline-offset-2 hover:text-[#0a1218]"
                 >
                   Privacy Policy ↗
                 </Link>
@@ -288,7 +282,7 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-white px-6 py-3 text-sm font-medium text-[#0a1218] transition-colors hover:bg-white/90 sm:self-auto"
+              className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-[#0a1218] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-black sm:self-auto"
             >
               Submit
               <ArrowUpRight className="size-4" />

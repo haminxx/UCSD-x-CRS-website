@@ -8,11 +8,12 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { SpringUnderline } from '@/components/spring-underline'
 import { ChevronRight } from 'lucide-react'
+import { motion } from 'motion/react'
 
-const RESTING_OPACITY = 0.75
+const RESTING_OPACITY = 1
 const IDLE_MS = 5000
-const FADE_OUT_MS = 2500
-const FADE_IN_MS = 1500
+const FADE_OUT_S = 2
+const FADE_IN_SPRING = { type: 'spring' as const, stiffness: 280, damping: 28, mass: 0.7 }
 
 function SponsorLink() {
     return (
@@ -85,6 +86,7 @@ export function HeroSection() {
             'wheel',
             'scroll',
             'pointermove',
+            'click',
         ] as const
 
         for (const event of events) {
@@ -106,8 +108,8 @@ export function HeroSection() {
         <>
             <SiteHeader />
             <main className="overflow-x-hidden">
-                <section ref={heroRef} className="px-1 pt-1">
-                    <div className="relative isolate min-h-[min(92vh,56rem)] overflow-hidden rounded-3xl border border-black/10 sm:min-h-[min(88vh,48rem)] lg:rounded-[3rem] dark:border-white/5">
+                <section ref={heroRef} className="relative">
+                    <div className="relative isolate min-h-[min(92vh,56rem)] overflow-hidden sm:min-h-[min(88vh,48rem)]">
                         <video
                             autoPlay
                             loop
@@ -118,13 +120,17 @@ export function HeroSection() {
                         />
 
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
-                            <div
+                            <motion.div
                                 className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left"
-                                style={{
+                                animate={{
                                     opacity: contentVisible ? RESTING_OPACITY : 0,
-                                    transition: fadingOut
-                                        ? `opacity ${FADE_OUT_MS}ms ease-out`
-                                        : `opacity ${FADE_IN_MS}ms ease`,
+                                }}
+                                transition={
+                                    fadingOut
+                                        ? { duration: FADE_OUT_S, ease: 'easeOut' }
+                                        : FADE_IN_SPRING
+                                }
+                                style={{
                                     pointerEvents: contentVisible ? 'auto' : 'none',
                                 }}
                             >
@@ -148,7 +154,7 @@ export function HeroSection() {
                                     </Button>
                                     <SponsorLink />
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </section>

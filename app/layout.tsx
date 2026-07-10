@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageTheme } from "@/components/page-theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,8 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">{children}</body>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <body className="antialiased">
+        <PageTheme />
+        {children}
+      </body>
     </html>
   );
 }
