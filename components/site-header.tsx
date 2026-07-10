@@ -226,13 +226,14 @@ export function SiteHeader() {
                   src={
                     light
                       ? "/images/ucsd-x-crs-logo-dark.png"
-                      : "/images/ucsd-x-crs-logo-footer.png"
+                      : "/images/ucsd-x-crs-logo-light.png"
                   }
                   alt="UCSD x CRS"
-                  width={1024}
-                  height={588}
+                  width={866}
+                  height={454}
                   className="h-8 w-auto object-contain md:h-9"
                   priority
+                  unoptimized
                 />
               </Link>
 

@@ -72,11 +72,12 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <Link href="/" aria-label="UCSD x CRS home" className="inline-block">
               <Image
-                src="/images/ucsd-x-crs-logo-footer.png"
+                src="/images/ucsd-x-crs-logo-light.png"
                 alt="UCSD x CRS"
-                width={1024}
-                height={639}
+                width={866}
+                height={454}
                 className="h-11 w-auto object-contain md:h-12"
+                unoptimized
               />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
