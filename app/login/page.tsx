@@ -50,7 +50,7 @@ export default function LoginPage() {
           >
             <video
               className="size-full object-cover"
-              src="/videos/ucsdxcrs.mp4"
+              src="/videos/ucsdxcrs-v2.mp4"
               autoPlay
               muted
               loop

@@ -117,7 +117,7 @@ export function HeroSection() {
                             muted
                             playsInline
                             className="absolute inset-0 size-full scale-125 object-cover"
-                            src="/videos/ucsdxcrs.mp4"
+                            src="/videos/ucsdxcrs-v2.mp4"
                         />
 
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
