@@ -21,7 +21,7 @@ const emptyOrbitCard = (accent: string): OrbitStackItem => ({
   stat: "",
 });
 
-/** Index 1 = Stephanie (left-of-center), index 2 = Christian (center). */
+/** Index 1 = Stephanie (left-of-center), index 2 = Christian (center), index 3 = Vin (right-of-center). */
 const orbitLeaders: OrbitStackItem[] = [
   emptyOrbitCard("#f8d66d"),
   {
@@ -45,7 +45,15 @@ const orbitLeaders: OrbitStackItem[] = [
     image: "/images/team/christian-lee.jpg",
     href: "https://www.linkedin.com/in/christian-j-l/",
   },
-  emptyOrbitCard("#b9a7ff"),
+  {
+    name: "Vin",
+    role: "Driver Development Coach",
+    description:
+      "Guides CRS drivers on track craft, race craft, and getting the most out of every session.",
+    accent: "#b9a7ff",
+    initials: "V",
+    stat: "Warren College",
+  },
   emptyOrbitCard("#ff9d77"),
 ];
 
@@ -150,6 +158,8 @@ export default function AboutUsPage() {
                 setHeadline("Founder");
               } else if (item.name === "Stephanie Kovalchuk-Lum") {
                 setHeadline("Co-founder");
+              } else if (item.name === "Vin") {
+                setHeadline("Driver Coach");
               } else if (item.name.trim()) {
                 setHeadline(item.name);
               } else {

@@ -111,9 +111,6 @@ export function HomeWhatIsCrs() {
             <h3 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-tight text-[#F2F0EF] leading-tight">
               How it works?
             </h3>
-            <p className="mt-3 max-w-md text-base leading-relaxed text-[#F2F0EF]/55 md:mt-4">
-              From first signup to race weekend, the path is clear and hands-on.
-            </p>
 
             <ul className="mt-10 space-y-8 md:mt-12 md:space-y-10">
               {FEATURES.map((feature, i) => {
