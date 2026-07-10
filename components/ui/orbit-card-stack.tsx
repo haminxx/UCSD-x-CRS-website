@@ -292,7 +292,7 @@ export function OrbitCardStack({
               key={`${item.name}-${index}`}
               className={cn(
                 "absolute left-1/2 top-1/2 w-[min(78vw,21rem)] origin-bottom cursor-pointer rounded-[1.9rem] border border-black/10 bg-[#e9e6df] p-4 text-[#141414] outline-none",
-                "focus-visible:ring-2 focus-visible:ring-zinc-950/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]",
+                "focus-visible:ring-2 focus-visible:ring-zinc-950/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F2F0EF]",
                 cardClassName,
               )}
               style={{ zIndex }}

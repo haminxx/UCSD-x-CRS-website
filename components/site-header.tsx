@@ -55,8 +55,8 @@ function NavItem({
               (active || showUnderline) && "font-bold text-[#0a1218]",
             )
           : cn(
-              "text-[#F5F0E6]/65 hover:text-[#F5F0E6]",
-              (active || showUnderline) && "font-bold text-[#F5F0E6]",
+              "text-[#F2F0EF]/65 hover:text-[#F2F0EF]",
+              (active || showUnderline) && "font-bold text-[#F2F0EF]",
             ),
       )}
     >
@@ -72,7 +72,7 @@ function NavItem({
           layoutId={layoutId}
           className={cn(
             "absolute inset-x-0 -bottom-0.5 h-[2px]",
-            light ? "bg-black" : "bg-[#F5F0E6]",
+            light ? "bg-black" : "bg-[#F2F0EF]",
           )}
           transition={springTransition}
         />
@@ -196,8 +196,8 @@ function LoginButton({
         "border-0 shadow-none outline-none ring-0",
         "transition-[opacity,background-color,color] duration-200",
         light
-          ? "bg-[#182B49] text-[#F5F0E6] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]"
-          : "bg-[#182B49] text-[#F5F0E6] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          ? "bg-[#182B49] text-[#F2F0EF] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F2F0EF]"
+          : "bg-[#182B49] text-[#F2F0EF] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
       )}
     >
@@ -285,7 +285,7 @@ export function SiteHeader() {
         }
         className={cn(
           "group fixed inset-x-0 top-0 z-[100] w-full pt-4 lg:pt-6",
-          light ? "text-[#0a1218]" : "text-[#F5F0E6]",
+          light ? "text-[#0a1218]" : "text-[#F2F0EF]",
         )}
       >
         <div
@@ -293,8 +293,8 @@ export function SiteHeader() {
             "mx-auto max-w-7xl rounded-3xl px-6 transition-all duration-300 lg:px-12",
             light
               ? scrolled
-                ? "border border-black/[0.08] bg-[#F5F0E6]/90 shadow-md shadow-black/10 backdrop-blur-2xl"
-                : "border border-black/[0.06] bg-[#F5F0E6]/78 shadow-sm shadow-black/[0.06] backdrop-blur-xl"
+                ? "border border-black/[0.08] bg-[#F2F0EF]/90 shadow-md shadow-black/10 backdrop-blur-2xl"
+                : "border border-black/[0.06] bg-[#F2F0EF]/78 shadow-sm shadow-black/[0.06] backdrop-blur-xl"
               : scrolled
                 ? "bg-black/55 shadow-lg shadow-black/20 backdrop-blur-2xl"
                 : "bg-black/20 backdrop-blur-md",
@@ -317,10 +317,10 @@ export function SiteHeader() {
                   width={866}
                   height={454}
                   className={cn(
-                    "w-auto object-contain",
+                    "h-8 w-auto object-contain md:h-9",
                     light
-                      ? "h-9 brightness-[0.92] contrast-[1.08] md:h-10"
-                      : "h-8 brightness-[0.96] sepia-[0.22] saturate-[0.7] md:h-9",
+                      ? "brightness-[0.92] contrast-[1.08]"
+                      : "brightness-[0.96] sepia-[0.22] saturate-[0.7]",
                   )}
                   priority
                   unoptimized
@@ -356,8 +356,8 @@ export function SiteHeader() {
                   className={cn(
                     "mb-6 w-full space-y-8 rounded-3xl border p-6 shadow-2xl lg:hidden",
                     light
-                      ? "border-black/10 bg-[#F5F0E6] shadow-black/12"
-                      : "border-[#F5F0E6]/15 bg-zinc-950 shadow-black/40",
+                      ? "border-black/10 bg-[#F2F0EF] shadow-black/12"
+                      : "border-[#F2F0EF]/15 bg-zinc-950 shadow-black/40",
                   )}
                 >
                   <MobileNav light={light} />

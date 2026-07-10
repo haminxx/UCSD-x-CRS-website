@@ -96,7 +96,7 @@ function TeamRoleCard({
         onMouseLeave={() => setShowOverlay(false)}
         onFocus={() => setShowOverlay(true)}
         onBlur={() => setShowOverlay(false)}
-        className="group relative w-full touch-manipulation overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F0E6]"
+        className="group relative w-full touch-manipulation overflow-hidden rounded-[clamp(0.75rem,1.2vw,1rem)] text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F2F0EF]"
         aria-label={`View ${role.title}`}
       >
         <div
@@ -138,7 +138,7 @@ function TeamRoleCard({
           >
             <motion.p
               variants={roleOverlayItemVariants}
-              className="text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-[#F5F0E6]"
+              className="text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-[#F2F0EF]"
             >
               {role.title}
             </motion.p>
@@ -146,9 +146,9 @@ function TeamRoleCard({
             <motion.span
               variants={roleOverlayItemVariants}
               className={cn(
-                "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-[#F5F0E6]/90",
+                "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-[#F2F0EF]/90",
                 "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left",
-                "after:scale-x-0 after:bg-[#F5F0E6]/90 after:transition-transform after:duration-300 after:ease-out",
+                "after:scale-x-0 after:bg-[#F2F0EF]/90 after:transition-transform after:duration-300 after:ease-out",
                 "group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100",
                 showOverlay && "after:scale-x-100",
               )}
@@ -210,7 +210,7 @@ function TeamRoleModal({
             aria-modal="true"
             aria-labelledby={titleId}
             className={cn(
-              "relative z-10 flex w-full flex-col overflow-hidden rounded-2xl bg-[#F5F0E6] shadow-2xl",
+              "relative z-10 flex w-full flex-col overflow-hidden rounded-2xl bg-[#F2F0EF] shadow-2xl",
               "max-h-[min(86dvh,36rem)] max-w-[min(94vw,42rem)]",
               "sm:max-h-[min(78dvh,28rem)] sm:max-w-[min(92vw,52rem)]",
               "md:max-h-[min(72dvh,30rem)] md:max-w-[min(90vw,58rem)]",
@@ -226,7 +226,7 @@ function TeamRoleModal({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-[#F5F0E6]/90 text-[#0a1218] shadow-sm transition hover:bg-[#F5F0E6] sm:bg-black/[0.04] sm:shadow-none sm:hover:bg-black/[0.08]"
+              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-[#F2F0EF]/90 text-[#0a1218] shadow-sm transition hover:bg-[#F2F0EF] sm:bg-black/[0.04] sm:shadow-none sm:hover:bg-black/[0.08]"
             >
               <X className="size-4" aria-hidden="true" />
             </button>
@@ -284,7 +284,7 @@ export default function RecruitmentPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative overflow-x-clip bg-[#F5F0E6] text-[#0a1218]">
+      <main className="relative overflow-x-clip bg-[#F2F0EF] text-[#0a1218]">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           aria-hidden="true"
@@ -335,7 +335,7 @@ export default function RecruitmentPage() {
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full bg-[#182B49]",
                   "px-[clamp(1.25rem,2vw,1.75rem)] py-[clamp(0.65rem,1.2vh,0.85rem)]",
-                  "text-[clamp(0.875rem,1.1vw,1rem)] font-medium tracking-wide text-[#F5F0E6]",
+                  "text-[clamp(0.875rem,1.1vw,1rem)] font-medium tracking-wide text-[#F2F0EF]",
                   "shadow-[0_10px_28px_-14px_rgba(24,43,73,0.45),0_2px_6px_-2px_rgba(24,43,73,0.25)]",
                   "transition hover:bg-[#121F38] focus-visible:outline-none",
                   "focus-visible:ring-2 focus-visible:ring-[#182B49]/35 focus-visible:ring-offset-2",

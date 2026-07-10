@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 
 /** Shared cream field surface — ~70% opacity over blurred video. */
 const fieldSurface =
-  "rounded-xl border border-[#F5F0E6]/25 bg-[#F5F0E6]/70 text-[#0a1218] shadow-[0_8px_28px_-16px_rgba(0,0,0,0.45)] outline-none transition-[box-shadow,border-color,background-color] placeholder:text-[#0a1218]/40 focus:border-[#F5F0E6]/50 focus:bg-[#F5F0E6]/90 focus:ring-2 focus:ring-[#F5F0E6]/40";
+  "rounded-xl border border-[#F2F0EF]/25 bg-[#F2F0EF]/70 text-[#0a1218] shadow-[0_8px_28px_-16px_rgba(0,0,0,0.45)] outline-none transition-[box-shadow,border-color,background-color] placeholder:text-[#0a1218]/40 focus:border-[#F2F0EF]/50 focus:bg-[#F2F0EF]/90 focus:ring-2 focus:ring-[#F2F0EF]/40";
 
 const ORGANIZATION_TYPES = [
   "Student Organization",
@@ -123,8 +123,8 @@ function PillButton({
       className={cn(
         "rounded-full border px-4 py-2 text-sm font-medium shadow-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-[#F5F0E6] bg-[#F5F0E6] text-[#0a1218] shadow-md shadow-black/25"
-          : "border-[#F5F0E6]/30 bg-[#F5F0E6]/70 text-[#0a1218]/80 hover:border-[#F5F0E6]/50 hover:bg-[#F5F0E6]/85 hover:text-[#0a1218]",
+          ? "border-[#F2F0EF] bg-[#F2F0EF] text-[#0a1218] shadow-md shadow-black/25"
+          : "border-[#F2F0EF]/30 bg-[#F2F0EF]/70 text-[#0a1218]/80 hover:border-[#F2F0EF]/50 hover:bg-[#F2F0EF]/85 hover:text-[#0a1218]",
       )}
     >
       {label}
@@ -359,7 +359,7 @@ export default function ContactPage() {
     <>
       {/* Dark-page header (isLightPage excludes /contact) — z-[100], above video */}
       <SiteHeader />
-      <main className="fixed inset-0 z-0 overflow-hidden text-[#F5F0E6]">
+      <main className="fixed inset-0 z-0 overflow-hidden text-[#F2F0EF]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <video
           className="size-full scale-110 object-cover"
@@ -432,7 +432,7 @@ export default function ContactPage() {
               <h2 className="whitespace-nowrap text-center text-[clamp(0.95rem,3.6vw,2.25rem)] font-semibold leading-none tracking-tight md:text-3xl lg:text-4xl">
                 How would you categorize your organization
               </h2>
-              <p className="mt-4 text-center text-sm text-[#F5F0E6]/50">
+              <p className="mt-4 text-center text-sm text-[#F2F0EF]/50">
                 Select all that apply
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-2.5">
@@ -446,7 +446,7 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              <p className="mt-12 text-center text-sm text-[#F5F0E6]/80 md:text-base">
+              <p className="mt-12 text-center text-sm text-[#F2F0EF]/80 md:text-base">
                 What is the primary focus of your inquiry?
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-2.5">
@@ -468,13 +468,13 @@ export default function ContactPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.35, ease: easePremium }}
-                    className="mt-10 flex cursor-pointer items-start justify-center gap-3 text-left text-sm text-[#F5F0E6]/70"
+                    className="mt-10 flex cursor-pointer items-start justify-center gap-3 text-left text-sm text-[#F2F0EF]/70"
                   >
                     <input
                       type="checkbox"
                       checked={budgetAllocated}
                       onChange={(e) => setBudgetAllocated(e.target.checked)}
-                      className="mt-0.5 size-4 shrink-0 rounded border-[#F5F0E6]/40 accent-[#F5F0E6]"
+                      className="mt-0.5 size-4 shrink-0 rounded border-[#F2F0EF]/40 accent-[#F2F0EF]"
                     />
                     <span>Is there a budget allocated for this initiative?</span>
                   </motion.label>
@@ -489,7 +489,7 @@ export default function ContactPage() {
               <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
                 What are the details?
               </h2>
-              <p className="mt-7 text-center text-sm text-[#F5F0E6]/80 md:text-base">
+              <p className="mt-7 text-center text-sm text-[#F2F0EF]/80 md:text-base">
                 What is your target timeframe for this?
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-2.5">
@@ -507,7 +507,7 @@ export default function ContactPage() {
 
               <label
                 htmlFor="message"
-                className="mt-12 block text-center text-sm text-[#F5F0E6]/80 md:text-base"
+                className="mt-12 block text-center text-sm text-[#F2F0EF]/80 md:text-base"
               >
                 Tell us more about your proposal, goals, or how we can
                 collaborate!
@@ -535,7 +535,7 @@ export default function ContactPage() {
                     fieldSurface,
                     attachments.length >= MAX_ATTACHMENTS
                       ? "cursor-not-allowed opacity-50"
-                      : "hover:bg-[#F5F0E6]/85",
+                      : "hover:bg-[#F2F0EF]/85",
                   )}
                 >
                   <span className="text-[#0a1218]/55">
@@ -585,7 +585,7 @@ export default function ContactPage() {
                 </p>
               )}
 
-              <p className="mt-3 text-center text-xs text-[#F5F0E6]/40">
+              <p className="mt-3 text-center text-xs text-[#F2F0EF]/40">
                 PDF, DOC/DOCX, PNG, JPG, GIF, WEBP, PPT/PPTX, XLS/XLSX, TXT,
                 ZIP — max {MAX_ATTACHMENTS} files, {MAX_FILE_SIZE_MB}MB each
               </p>
@@ -605,10 +605,10 @@ export default function ContactPage() {
                       transition={{ duration: 0.45, ease: easePremium }}
                       className="flex max-w-md flex-col items-center gap-4"
                     >
-                      <div className="flex size-12 items-center justify-center rounded-full bg-[#F5F0E6] text-[#0a1218]">
+                      <div className="flex size-12 items-center justify-center rounded-full bg-[#F2F0EF] text-[#0a1218]">
                         <Check className="size-5" strokeWidth={2.5} />
                       </div>
-                      <p className="text-base font-medium leading-relaxed text-[#F5F0E6] md:text-lg">
+                      <p className="text-base font-medium leading-relaxed text-[#F2F0EF] md:text-lg">
                         Submission Successful. Our team will review your details
                         and be in touch within 48 hours.
                       </p>
@@ -621,23 +621,23 @@ export default function ContactPage() {
                       exit={{ opacity: 0 }}
                       className="flex flex-col items-center gap-8"
                     >
-                      <p className="max-w-md text-xl font-bold text-[#F5F0E6] md:text-2xl">
+                      <p className="max-w-md text-xl font-bold text-[#F2F0EF] md:text-2xl">
                         We look forward to building something great together!
                       </p>
 
-                      <label className="flex max-w-md cursor-pointer items-start gap-3 text-left text-sm text-[#F5F0E6]/50">
+                      <label className="flex max-w-md cursor-pointer items-start gap-3 text-left text-sm text-[#F2F0EF]/50">
                         <input
                           type="checkbox"
                           checked={privacyAgreed}
                           onChange={(e) => setPrivacyAgreed(e.target.checked)}
                           required
-                          className="mt-0.5 size-4 shrink-0 rounded border-[#F5F0E6]/40 accent-[#F5F0E6]"
+                          className="mt-0.5 size-4 shrink-0 rounded border-[#F2F0EF]/40 accent-[#F2F0EF]"
                         />
                         <span>
                           I have read and agree to the{" "}
                           <Link
                             href="#"
-                            className="underline underline-offset-2 hover:text-[#F5F0E6]"
+                            className="underline underline-offset-2 hover:text-[#F2F0EF]"
                           >
                             Privacy Policy ↗
                           </Link>
@@ -647,7 +647,7 @@ export default function ContactPage() {
                       <button
                         type="submit"
                         disabled={submitState === "loading"}
-                        className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[#182B49] px-8 py-3.5 text-sm font-medium text-[#F5F0E6] transition-colors hover:bg-[#121F38] disabled:cursor-wait disabled:opacity-90"
+                        className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[#182B49] px-8 py-3.5 text-sm font-medium text-[#F2F0EF] transition-colors hover:bg-[#121F38] disabled:cursor-wait disabled:opacity-90"
                       >
                         {submitState === "loading" ? (
                           <>
@@ -677,7 +677,7 @@ export default function ContactPage() {
             disabled={activeSection === 0}
             onClick={() => goToSection(activeSection - 1)}
             className={cn(
-              "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-[#F5F0E6]/20 bg-black/40 text-[#F5F0E6] shadow-md backdrop-blur transition",
+              "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-[#F2F0EF]/20 bg-black/40 text-[#F2F0EF] shadow-md backdrop-blur transition",
               "hover:bg-black/55 disabled:cursor-not-allowed disabled:opacity-35",
             )}
           >
@@ -689,7 +689,7 @@ export default function ContactPage() {
             disabled={activeSection >= SECTION_COUNT - 1}
             onClick={() => goToSection(activeSection + 1)}
             className={cn(
-              "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-[#F5F0E6]/20 bg-black/40 text-[#F5F0E6] shadow-md backdrop-blur transition",
+              "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-[#F2F0EF]/20 bg-black/40 text-[#F2F0EF] shadow-md backdrop-blur transition",
               "hover:bg-black/55 disabled:cursor-not-allowed disabled:opacity-35",
             )}
           >

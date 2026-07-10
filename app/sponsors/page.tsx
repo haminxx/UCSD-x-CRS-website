@@ -11,7 +11,7 @@ export default function SponsorsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-[#F5F0E6] text-[#0a1218]">
+      <main className="min-h-screen bg-[#F2F0EF] text-[#0a1218]">
         <PageEnter>
           <section className="flex min-h-dvh items-center justify-center px-6 pb-24 pt-28 md:px-10 md:pb-28 md:pt-32 lg:px-16">
             <div className="mx-auto flex max-w-4xl -translate-y-2 flex-col items-center text-center md:-translate-y-4 lg:-translate-y-6">

@@ -125,7 +125,7 @@ export function ProgramImpactScroll() {
   return (
     <section
       aria-label="Program impact"
-      className="relative bg-[#F5F0E6] text-[#0a1218]"
+      className="relative bg-[#F2F0EF] text-[#0a1218]"
     >
       {/* Mobile: stacked narrative */}
       <div className="px-6 pb-8 pt-28 md:hidden">

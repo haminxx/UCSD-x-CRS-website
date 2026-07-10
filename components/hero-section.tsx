@@ -72,7 +72,7 @@ function SponsorLink() {
     return (
         <Link
             href="/sponsors/"
-            className="inline-flex items-center px-2 py-2 text-base text-[#F5F0E6] mix-blend-difference"
+            className="inline-flex items-center px-2 py-2 text-base text-[#F2F0EF] mix-blend-difference"
         >
             <SpringUnderline className="text-nowrap pb-0.5">
                 Become a Sponsor
@@ -89,7 +89,7 @@ function JoinTeamButton() {
         <Button
             asChild
             size="lg"
-            className="h-12 rounded-full border-0 bg-[#182B49] pl-5 pr-3 text-base font-medium text-[#F5F0E6] shadow-none hover:bg-[#121F38] hover:text-[#F5F0E6]"
+            className="h-12 rounded-full border-0 bg-[#182B49] pl-5 pr-3 text-base font-medium text-[#F2F0EF] shadow-none hover:bg-[#121F38] hover:text-[#F2F0EF]"
         >
             <Link
                 href="/recruitment/"
@@ -247,7 +247,7 @@ export function HeroSection() {
                                     initial="hidden"
                                     animate="visible"
                                 >
-                                    <h1 className="mx-auto max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-[#F5F0E6] mix-blend-difference md:text-5xl xl:mx-0 xl:max-w-none xl:text-[clamp(3.35rem,2.15rem+1.15vw,4.5rem)]">
+                                    <h1 className="mx-auto max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-[#F2F0EF] mix-blend-difference md:text-5xl xl:mx-0 xl:max-w-none xl:text-[clamp(3.35rem,2.15rem+1.15vw,4.5rem)]">
                                         <motion.span
                                             variants={staggerItem}
                                             className="block whitespace-nowrap"
@@ -261,7 +261,7 @@ export function HeroSection() {
                                             of collegiate motorsport
                                         </motion.span>
                                     </h1>
-                                    <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#F5F0E6]/70 mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]">
+                                    <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#F2F0EF]/70 mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]">
                                         <motion.span
                                             variants={staggerItem}
                                             className="block whitespace-nowrap"
@@ -302,8 +302,8 @@ export function HeroSection() {
                 >
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
-                            <div className="md:max-w-44 md:border-r md:border-[#F5F0E6]/15 md:pr-6">
-                                <p className="text-end text-sm leading-snug text-[#F5F0E6]/70">
+                            <div className="md:max-w-44 md:border-r md:border-[#F2F0EF]/15 md:pr-6">
+                                <p className="text-end text-sm leading-snug text-[#F2F0EF]/70">
                                     Powering by the
                                     <br />
                                     best teams
@@ -353,7 +353,7 @@ export function HeroSection() {
 
                 <HowItWorks
                     title="How it works?"
-                    className="bg-[#F5F0E6] px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-20 lg:px-12"
+                    className="bg-[#F2F0EF] px-4 pb-24 pt-16 md:px-8 md:pb-32 md:pt-20 lg:px-12"
                 />
             </main>
             <SiteFooter />

@@ -184,7 +184,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         className={cn(
           "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
           isUser
-            ? "bg-[#0a1218] text-[#F5F0E6]"
+            ? "bg-[#0a1218] text-[#F2F0EF]"
             : "bg-black/[0.05] text-[#0a1218]",
         )}
       >
@@ -361,7 +361,7 @@ export function RecruitmentChatModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative z-10 flex h-[min(78dvh,640px)] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-[#F5F0E6] shadow-2xl"
+            className="relative z-10 flex h-[min(78dvh,640px)] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-[#F2F0EF] shadow-2xl"
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -444,7 +444,7 @@ export function RecruitmentChatModal({
                   className={cn(
                     "mb-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full transition",
                     draft.trim() && !busy
-                      ? "bg-[#0a1218] text-[#F5F0E6] hover:bg-black"
+                      ? "bg-[#0a1218] text-[#F2F0EF] hover:bg-black"
                       : "bg-black/[0.06] text-black/30",
                   )}
                 >

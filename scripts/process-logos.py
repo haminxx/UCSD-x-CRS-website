@@ -21,7 +21,7 @@ FILES = {
     "jacobs-school.png": "*UCSD_Jacobs*",
 }
 
-CREAM = np.array([245.0, 240.0, 230.0], dtype=np.float32)  # #F5F0E6
+CREAM = np.array([242.0, 240.0, 239.0], dtype=np.float32)  # #F2F0EF
 # Soft lift target for near-black navy so it reads on dark home without going white
 NAVY_LIFT = np.array([0.0, 98.0, 155.0], dtype=np.float32)  # toward #00629B
 
