@@ -100,7 +100,7 @@ function DesktopNav({ isDark }: { isDark: boolean }) {
   const underlineHref = hoveredHref ?? activeHref;
 
   return (
-    <ul className="flex gap-8 text-sm font-medium">
+    <ul className="flex gap-7 text-sm font-medium tracking-wide lg:gap-9">
       {menuItems.map((item) => (
         <li key={item.href}>
           <NavItem
@@ -165,13 +165,14 @@ function LoginLink({ isDark, className }: { isDark: boolean; className?: string 
   );
 }
 
-export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
+export function SiteHeader({ theme = "dark" }: SiteHeaderProps) {
   const pathname = usePathname();
   const showLogin = isHomePath(pathname);
   const [menuState, setMenuState] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { scrollYProgress } = useScroll();
-  const isDark = theme === "dark";
+  // Site canvas is Wine Ash (dark). Default to light text / white logo.
+  const isDark = theme !== "light";
 
   React.useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
@@ -211,23 +212,23 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
               scrolled && "lg:py-3.5",
             )}
           >
-            <div className="flex w-full items-center justify-between gap-12 lg:w-auto">
+            <div className="flex w-full items-center justify-between gap-10 lg:w-auto lg:gap-14">
               <Link
                 href="/"
                 aria-label="UCSD x CRS home"
                 className="flex items-center"
               >
-                {/* Home/video & dark theme: white mark. Light pages: black mark. */}
+                {/* White mark on Wine Ash / dark chrome */}
                 <Image
                   src={
-                    isDark || isHomePath(pathname)
-                      ? "/images/ucsd-x-crs-logo-light.png"
+                    isDark
+                      ? "/images/ucsd-x-crs-logo-footer.png"
                       : "/images/ucsd-x-crs-logo.png"
                   }
                   alt="UCSD x CRS"
-                  width={171}
-                  height={256}
-                  className="h-7 w-auto object-contain md:h-8"
+                  width={1024}
+                  height={639}
+                  className="h-8 w-auto object-contain md:h-9"
                   priority
                 />
               </Link>

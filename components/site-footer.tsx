@@ -67,23 +67,23 @@ const socialLinks = [
 export function SiteFooter() {
   return (
     <footer className="bg-black text-white">
-      <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-12 lg:py-20">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-12 lg:py-24">
+        <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-4">
             <Link href="/" aria-label="UCSD x CRS home" className="inline-block">
               <Image
-                src="/images/ucsd-x-crs-logo-light.png"
+                src="/images/ucsd-x-crs-logo-footer.png"
                 alt="UCSD x CRS"
-                width={171}
-                height={256}
-                className="h-10 w-auto object-contain md:h-11"
+                width={1024}
+                height={639}
+                className="h-11 w-auto object-contain md:h-12"
               />
             </Link>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
               Student-led racing and engineering at UC San Diego, competing in
               the Collegiate Racing Series.
             </p>
-            <div className="mt-6 flex items-center gap-4">
+            <div className="mt-7 flex items-center gap-5">
               {socialLinks.map(({ name, href, icon: Icon }) => (
                 <a
                   key={name}
@@ -99,10 +99,10 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3 lg:justify-items-start lg:gap-10">
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3 lg:justify-items-start lg:gap-12">
             <div>
-              <p className="text-sm font-medium text-white">Explore</p>
-              <ul className="mt-4 space-y-3">
+              <p className="text-sm font-medium tracking-wide text-white">Explore</p>
+              <ul className="mt-5 space-y-3.5">
                 {exploreLinks.map((item) => (
                   <li key={item.name}>
                     <Link
@@ -117,8 +117,8 @@ export function SiteFooter() {
             </div>
 
             <div>
-              <p className="text-sm font-medium text-white">Connect</p>
-              <ul className="mt-4 space-y-3">
+              <p className="text-sm font-medium tracking-wide text-white">Connect</p>
+              <ul className="mt-5 space-y-3.5">
                 {connectLinks.map((item) => (
                   <li key={item.name}>
                     <Link
@@ -133,8 +133,8 @@ export function SiteFooter() {
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-sm font-medium text-white">Follow</p>
-              <ul className="mt-4 space-y-3">
+              <p className="text-sm font-medium tracking-wide text-white">Follow</p>
+              <ul className="mt-5 space-y-3.5">
                 {socialLinks.map((item) => (
                   <li key={item.name}>
                     <a
@@ -152,8 +152,8 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-white/15 pt-8">
-          <div className="flex flex-col gap-4 text-sm text-white/50 md:flex-row md:items-center md:justify-between">
+        <div className="mt-16 border-t border-white/15 pt-8">
+          <div className="flex flex-col gap-5 text-sm text-white/50 md:flex-row md:items-center md:justify-between">
             <p>
               © 2026 University of California, San Diego x Collegiate Racing
               Series. All rights reserved.

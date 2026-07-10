@@ -50,8 +50,8 @@ function PillButton({
       className={cn(
         "rounded-full border px-4 py-2 text-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-neutral-900 bg-neutral-900 text-white"
-          : "border-neutral-300 bg-transparent text-neutral-800 hover:border-neutral-500"
+          ? "border-white bg-white text-[#32292f]"
+          : "border-white/25 bg-transparent text-white/80 hover:border-white/50 hover:text-white"
       )}
     >
       {label}
@@ -66,7 +66,7 @@ function SoftInput({
   return (
     <input
       className={cn(
-        "w-full rounded-xl border-0 bg-[#ebe8e1] px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-500 outline-none ring-0 transition-[box-shadow] focus:bg-[#e6e2da] focus:ring-2 focus:ring-neutral-900/10",
+        "w-full rounded-xl border-0 bg-[#463c43] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none ring-0 transition-[box-shadow] focus:bg-[#524850] focus:ring-2 focus:ring-white/15",
         className
       )}
       {...props}
@@ -113,19 +113,19 @@ export default function ContactPage() {
 
   return (
     <>
-      <SiteHeader theme="light" />
-      <main className="min-h-screen bg-[#f7f5f0] text-neutral-900">
+      <SiteHeader />
+      <main className="min-h-screen bg-background text-foreground">
         <form
           onSubmit={handleSubmit}
-          className="mx-auto max-w-3xl px-6 pb-20 pt-28 md:px-10 md:pb-28 md:pt-36"
+          className="mx-auto max-w-3xl px-6 pb-24 pt-32 md:px-10 md:pb-32 md:pt-40"
         >
           {/* Personal Information */}
           <section>
-            <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-[3.25rem]">
+            <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-[3.25rem]">
               Let&apos;s talk about your next project...
             </h1>
 
-            <div className="mt-10 space-y-4">
+            <div className="mt-12 space-y-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <SoftInput
                   name="firstName"
@@ -163,15 +163,17 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <hr className="my-12 border-0 border-t border-neutral-300/80" />
+          <hr className="my-14 border-0 border-t border-white/15" />
 
           {/* Service and Budget */}
           <section>
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               What sort of service?
             </h2>
-            <p className="mt-3 text-sm text-neutral-600">Select all that apply</p>
-            <div className="mt-5 flex flex-wrap gap-2.5">
+            <p className="mt-4 text-sm text-muted-foreground">
+              Select all that apply
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2.5">
               {SERVICES.map((service) => (
                 <PillButton
                   key={service}
@@ -182,10 +184,10 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <p className="mt-10 text-sm text-neutral-800 md:text-base">
+            <p className="mt-12 text-sm text-white/85 md:text-base">
               What rough budget are we working within?
             </p>
-            <div className="mt-4 flex flex-wrap gap-2.5">
+            <div className="mt-5 flex flex-wrap gap-2.5">
               {BUDGETS.map((option) => (
                 <PillButton
                   key={option}
@@ -199,17 +201,17 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <hr className="my-12 border-0 border-t border-neutral-300/80" />
+          <hr className="my-14 border-0 border-t border-white/15" />
 
           {/* Additional Details */}
           <section>
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Anything else?
             </h2>
-            <p className="mt-6 text-sm text-neutral-800 md:text-base">
+            <p className="mt-7 text-sm text-white/85 md:text-base">
               Do you have a specific timeframe in mind?
             </p>
-            <div className="mt-4 flex flex-wrap gap-2.5">
+            <div className="mt-5 flex flex-wrap gap-2.5">
               {TIMEFRAMES.map((option) => (
                 <PillButton
                   key={option}
@@ -224,7 +226,7 @@ export default function ContactPage() {
 
             <label
               htmlFor="message"
-              className="mt-10 block text-sm text-neutral-800 md:text-base"
+              className="mt-12 block text-sm text-white/85 md:text-base"
             >
               Anything you&apos;d like to add?
             </label>
@@ -235,19 +237,19 @@ export default function ContactPage() {
               placeholder="Message (optional)"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="mt-3 w-full resize-y rounded-xl border-0 bg-[#ebe8e1] px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-500 outline-none transition-[box-shadow] focus:bg-[#e6e2da] focus:ring-2 focus:ring-neutral-900/10"
+              className="mt-4 w-full resize-y rounded-xl border-0 bg-[#463c43] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none transition-[box-shadow] focus:bg-[#524850] focus:ring-2 focus:ring-white/15"
             />
 
             <div className="relative mt-4">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full items-center justify-between rounded-xl border-0 bg-[#ebe8e1] px-4 py-3.5 text-left text-sm text-neutral-500 transition-colors hover:bg-[#e6e2da]"
+                className="flex w-full items-center justify-between rounded-xl border-0 bg-[#463c43] px-4 py-3.5 text-left text-sm text-white/40 transition-colors hover:bg-[#524850]"
               >
-                <span className={cn(fileName && "text-neutral-900")}>
+                <span className={cn(fileName && "text-foreground")}>
                   {fileName ?? "Attachments (optional)"}
                 </span>
-                <Paperclip className="size-4 shrink-0 text-neutral-500" />
+                <Paperclip className="size-4 shrink-0 text-white/45" />
               </button>
               <input
                 ref={fileInputRef}
@@ -261,23 +263,23 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <hr className="my-12 border-0 border-t border-neutral-300/80" />
+          <hr className="my-14 border-0 border-t border-white/15" />
 
           {/* Submission footer */}
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <label className="flex cursor-pointer items-start gap-3 text-sm text-neutral-700">
+          <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
+            <label className="flex cursor-pointer items-start gap-3 text-sm text-muted-foreground">
               <input
                 type="checkbox"
                 checked={privacyAgreed}
                 onChange={(e) => setPrivacyAgreed(e.target.checked)}
                 required
-                className="mt-0.5 size-4 shrink-0 rounded border-neutral-400 accent-neutral-900"
+                className="mt-0.5 size-4 shrink-0 rounded border-white/30 accent-white"
               />
               <span>
                 I have read and agree to the{" "}
                 <Link
                   href="#"
-                  className="underline underline-offset-2 hover:text-neutral-900"
+                  className="underline underline-offset-2 hover:text-foreground"
                 >
                   Privacy Policy ↗
                 </Link>
@@ -286,7 +288,7 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-800 sm:self-auto"
+              className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-white px-6 py-3 text-sm font-medium text-[#32292f] transition-colors hover:bg-white/90 sm:self-auto"
             >
               Submit
               <ArrowUpRight className="size-4" />

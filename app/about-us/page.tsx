@@ -172,7 +172,7 @@ function MemberPortrait({ member }: { member: TeamMember }) {
   }
 
   return (
-    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 text-3xl font-semibold tracking-wide text-zinc-700">
+    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#463c43] via-[#3c3339] to-[#524850] text-3xl font-semibold tracking-wide text-white/80">
       {initials}
     </div>
   );
@@ -181,13 +181,13 @@ function MemberPortrait({ member }: { member: TeamMember }) {
 function TeamProfileCard({ member }: { member: TeamMember }) {
   return (
     <article className="flex flex-col items-center text-center">
-      <div className="w-full overflow-hidden bg-zinc-100">
+      <div className="w-full overflow-hidden bg-[#3c3339]">
         <MemberPortrait member={member} />
       </div>
-      <h3 className="mt-4 text-lg font-bold text-zinc-950 md:text-xl">
+      <h3 className="mt-5 text-lg font-bold text-foreground md:text-xl">
         {member.name}
       </h3>
-      <p className="mt-1 text-sm text-zinc-600 md:text-base">
+      <p className="mt-1.5 text-sm text-muted-foreground md:text-base">
         {member.role} ({member.team})
       </p>
     </article>
@@ -205,8 +205,8 @@ export default function AboutUsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="overflow-x-hidden bg-[#f7f5f0]">
-        <section className="relative px-6 pb-10 pt-28 md:pt-36">
+      <main className="overflow-x-hidden bg-background text-foreground">
+        <section className="relative px-6 pb-12 pt-32 md:pt-40">
           <div className="mx-auto max-w-7xl text-center">
             <div className="relative mx-auto flex min-h-[5.5rem] items-center justify-center md:min-h-[7rem]">
               <AnimatePresence mode="wait">
@@ -216,7 +216,7 @@ export default function AboutUsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.22 }}
-                  className="max-w-5xl text-balance text-5xl font-semibold tracking-tight text-zinc-950 md:text-7xl lg:text-8xl"
+                  className="max-w-5xl text-balance text-5xl font-semibold tracking-tight text-foreground md:text-7xl lg:text-8xl"
                 >
                   {headline}
                 </motion.h1>
@@ -226,18 +226,18 @@ export default function AboutUsPage() {
 
           <OrbitCardStack
             items={orbitLeaders}
-            className="mt-2 md:mt-4"
+            className="mt-4 md:mt-6"
             onActiveChange={(item) => setHeadline(item.name)}
             onCollapse={() => setHeadline("Meet our team!")}
           />
         </section>
 
-        <section className="bg-[#f7f5f0] px-6 pb-24 pt-10">
+        <section className="bg-background px-6 pb-28 pt-12">
           <div className="mx-auto max-w-7xl">
             <div
               role="tablist"
               aria-label="Team filters"
-              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-[#ebe8e1]/70 p-2 md:gap-3"
+              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#3c3339]/70 p-2.5 md:gap-3"
             >
               {teamFilters.map((filter) => {
                 const isActive = activeFilter === filter;
@@ -251,7 +251,9 @@ export default function AboutUsPage() {
                     onClick={() => setActiveFilter(filter)}
                     className={cn(
                       "rounded-xl px-4 py-2 text-sm md:px-5",
-                      !isActive && "text-zinc-600 hover:text-zinc-950",
+                      isActive
+                        ? "bg-white text-[#32292f] hover:bg-white/90"
+                        : "text-white/65 hover:bg-white/5 hover:text-white",
                     )}
                   >
                     {filter}
@@ -260,14 +262,14 @@ export default function AboutUsPage() {
               })}
             </div>
 
-            <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
               {filteredMembers.map((member) => (
                 <TeamProfileCard key={`${member.name}-${member.team}`} member={member} />
               ))}
             </div>
 
             {filteredMembers.length === 0 && (
-              <p className="mt-12 text-center text-zinc-500">
+              <p className="mt-14 text-center text-muted-foreground">
                 No members in this team yet.
               </p>
             )}

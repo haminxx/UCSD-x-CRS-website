@@ -76,24 +76,25 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #f7f5f0;
-  --foreground: oklch(0.145 0 0);
-  --card: #f7f5f0;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: #ffffff;
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: #ebe8e1;
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: #ebe8e1;
-  --accent-foreground: oklch(0.205 0 0);
+  /* Wine Ash — brand canvas */
+  --background: #32292f;
+  --foreground: #f5f2ef;
+  --card: #3c3339;
+  --card-foreground: #f5f2ef;
+  --popover: #3c3339;
+  --popover-foreground: #f5f2ef;
+  --primary: #f5f2ef;
+  --primary-foreground: #32292f;
+  --secondary: #463c43;
+  --secondary-foreground: #f5f2ef;
+  --muted: #463c43;
+  --muted-foreground: #c4bbb8;
+  --accent: #463c43;
+  --accent-foreground: #f5f2ef;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: rgb(255 255 255 / 14%);
+  --input: #463c43;
+  --ring: rgb(255 255 255 / 28%);
   --font-sans: "Paperlogy", ui-sans-serif, system-ui, sans-serif;
 }
 

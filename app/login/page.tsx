@@ -18,25 +18,25 @@ export default function LoginPage() {
   return (
     <>
       <SiteHeader />
-      <main className="flex min-h-screen items-center justify-center bg-[#f7f5f0] px-6 pb-16 pt-28 md:pt-36">
+      <main className="flex min-h-screen items-center justify-center bg-background px-6 pb-20 pt-32 text-foreground md:pt-40">
         <div className="w-full max-w-md">
           <div className="text-center">
-            <h1 className="text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
               Welcome back
             </h1>
-            <p className="mt-3 text-sm text-neutral-600 md:text-base">
+            <p className="mt-4 text-sm text-muted-foreground md:text-base">
               Sign in to continue to UCSD x CRS
             </p>
           </div>
 
           <form
             onSubmit={handleSubmit}
-            className="mt-10 space-y-4 rounded-[1.75rem] border border-black/10 bg-[#ebe8e1]/80 p-6 shadow-sm md:p-8"
+            className="mt-12 space-y-5 rounded-[1.75rem] border border-white/12 bg-[#3c3339]/90 p-7 shadow-sm md:p-9"
           >
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-neutral-800"
+                className="text-sm font-medium text-white/90"
               >
                 Email
               </label>
@@ -50,24 +50,24 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@ucsd.edu"
                 className={cn(
-                  "w-full rounded-xl border-0 bg-[#f7f5f0] px-4 py-3.5 text-sm text-neutral-900",
-                  "placeholder:text-neutral-500 outline-none transition-[box-shadow]",
-                  "focus:ring-2 focus:ring-neutral-900/10",
+                  "w-full rounded-xl border-0 bg-[#463c43] px-4 py-3.5 text-sm text-foreground",
+                  "placeholder:text-white/40 outline-none transition-[box-shadow]",
+                  "focus:ring-2 focus:ring-white/20",
                 )}
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between gap-3">
                 <label
                   htmlFor="password"
-                  className="text-sm font-medium text-neutral-800"
+                  className="text-sm font-medium text-white/90"
                 >
                   Password
                 </label>
                 <Link
                   href="#"
-                  className="text-xs text-neutral-500 underline-offset-4 hover:text-neutral-800 hover:underline"
+                  className="text-xs text-white/45 underline-offset-4 hover:text-white/80 hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -82,9 +82,9 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className={cn(
-                  "w-full rounded-xl border-0 bg-[#f7f5f0] px-4 py-3.5 text-sm text-neutral-900",
-                  "placeholder:text-neutral-500 outline-none transition-[box-shadow]",
-                  "focus:ring-2 focus:ring-neutral-900/10",
+                  "w-full rounded-xl border-0 bg-[#463c43] px-4 py-3.5 text-sm text-foreground",
+                  "placeholder:text-white/40 outline-none transition-[box-shadow]",
+                  "focus:ring-2 focus:ring-white/20",
                 )}
               />
             </div>
@@ -92,18 +92,20 @@ export default function LoginPage() {
             <Button
               type="submit"
               size="lg"
-              className="mt-2 h-12 w-full rounded-full text-base"
+              className="mt-3 h-12 w-full rounded-full bg-white text-base text-[#32292f] hover:bg-white/90"
             >
               Log in
             </Button>
 
-            <div className="pt-2 text-center">
-              <p className="text-sm text-neutral-600">Don&apos;t have an account?</p>
+            <div className="pt-3 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don&apos;t have an account?
+              </p>
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="mt-3 h-12 w-full rounded-full border-neutral-900/20 bg-transparent text-base hover:bg-neutral-900/5"
+                className="mt-4 h-12 w-full rounded-full border-white/20 bg-transparent text-base text-foreground hover:bg-white/5"
               >
                 <Link href="#">Create an Account</Link>
               </Button>

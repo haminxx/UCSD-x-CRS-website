@@ -37,17 +37,17 @@ export function HeroSection() {
                             src="/videos/ucsdxcrs.mp4"
                         />
 
-                        <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-16 pt-28 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-20 lg:pt-36">
+                        <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
                             <div className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left">
                                 <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
                                     <span className="block whitespace-nowrap">Engineering the future</span>
                                     <span className="block">of collegiate motorsport</span>
                                 </h1>
-                                <p className="mt-3 max-w-2xl text-balance text-lg text-white mix-blend-difference md:mt-4">
+                                <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg">
                                     Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
                                 </p>
 
-                                <div className="mt-8 flex flex-col items-center justify-center gap-2 sm:flex-row sm:mt-10 lg:justify-start">
+                                <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
                                     <Button
                                         asChild
                                         size="lg"
@@ -63,20 +63,20 @@ export function HeroSection() {
                         </div>
                     </div>
                 </section>
-                <section className="bg-background pb-2">
+                <section className="bg-background pb-4 pt-2">
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
-                            <div className="md:max-w-44 md:border-r md:pr-6">
-                                <p className="text-end text-sm">Powering the best teams</p>
+                            <div className="md:max-w-44 md:border-r md:border-white/15 md:pr-6">
+                                <p className="text-end text-sm text-white/70">Powering the best teams</p>
                             </div>
-                            <div className="relative py-6 md:w-[calc(100%-11rem)]">
+                            <div className="relative py-8 md:w-[calc(100%-11rem)]">
                                 <InfiniteSlider
                                     speedOnHover={20}
                                     speed={40}
                                     gap={112}>
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-5 w-fit dark:invert"
+                                            className="mx-auto h-5 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/nvidia.svg"
                                             alt="Nvidia Logo"
                                             height="20"
@@ -86,7 +86,7 @@ export function HeroSection() {
 
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-4 w-fit dark:invert"
+                                            className="mx-auto h-4 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/column.svg"
                                             alt="Column Logo"
                                             height="16"
@@ -95,7 +95,7 @@ export function HeroSection() {
                                     </div>
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-4 w-fit dark:invert"
+                                            className="mx-auto h-4 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/github.svg"
                                             alt="GitHub Logo"
                                             height="16"
@@ -104,7 +104,7 @@ export function HeroSection() {
                                     </div>
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-5 w-fit dark:invert"
+                                            className="mx-auto h-5 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/nike.svg"
                                             alt="Nike Logo"
                                             height="20"
@@ -113,7 +113,7 @@ export function HeroSection() {
                                     </div>
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-5 w-fit dark:invert"
+                                            className="mx-auto h-5 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg"
                                             alt="Lemon Squeezy Logo"
                                             height="20"
@@ -122,7 +122,7 @@ export function HeroSection() {
                                     </div>
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-4 w-fit dark:invert"
+                                            className="mx-auto h-4 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/laravel.svg"
                                             alt="Laravel Logo"
                                             height="16"
@@ -131,7 +131,7 @@ export function HeroSection() {
                                     </div>
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-7 w-fit dark:invert"
+                                            className="mx-auto h-7 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/lilly.svg"
                                             alt="Lilly Logo"
                                             height="28"
@@ -141,7 +141,7 @@ export function HeroSection() {
 
                                     <div className="flex">
                                         <img
-                                            className="mx-auto h-6 w-fit dark:invert"
+                                            className="mx-auto h-6 w-fit invert"
                                             src="https://html.tailus.io/blocks/customers/openai.svg"
                                             alt="OpenAI Logo"
                                             height="24"
@@ -169,10 +169,10 @@ export function HeroSection() {
 
                 <section
                     aria-label="Section placeholder 1"
-                    className="flex min-h-dvh items-start bg-[#f7f5f0] px-6 pt-24 md:px-10 lg:px-12"
+                    className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
                     <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-neutral-400">
+                        <p className="text-sm tracking-wide text-white/45">
                             Section — coming soon
                         </p>
                     </div>
@@ -180,10 +180,10 @@ export function HeroSection() {
 
                 <section
                     aria-label="Section placeholder 2"
-                    className="flex min-h-dvh items-start bg-[#f7f5f0] px-6 pt-24 md:px-10 lg:px-12"
+                    className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
                     <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-neutral-400">
+                        <p className="text-sm tracking-wide text-white/45">
                             Section — coming soon
                         </p>
                     </div>
@@ -191,10 +191,10 @@ export function HeroSection() {
 
                 <section
                     aria-label="Section placeholder 3"
-                    className="flex min-h-dvh items-start bg-[#f7f5f0] px-6 pt-24 md:px-10 lg:px-12"
+                    className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
                     <div className="mx-auto w-full max-w-7xl">
-                        <p className="text-sm tracking-wide text-neutral-400">
+                        <p className="text-sm tracking-wide text-white/45">
                             Section — coming soon
                         </p>
                     </div>
