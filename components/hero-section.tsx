@@ -157,8 +157,8 @@ export function HeroSection() {
 
             <main className="overflow-x-hidden">
                 <section ref={heroRef} className="relative">
-                    {/* Full-viewport stage — covers large PCs without height caps / black bands */}
-                    <div className="relative isolate min-h-[100dvh] w-full overflow-hidden bg-[#0a1218]">
+                    {/* Slightly under full viewport so the logo cloud peeks into the first screen */}
+                    <div className="relative isolate min-h-[88dvh] w-full overflow-hidden bg-[#0a1218]">
                         <video
                             autoPlay
                             loop
@@ -196,7 +196,7 @@ export function HeroSection() {
                         />
 
                         {/* Same max-w-7xl + px rhythm as SiteHeader so copy shares the header column on xl/2xl */}
-                        <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
+                        <div className="relative z-10 mx-auto flex min-h-[88dvh] w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
                             {/* Centered on mobile/tablet/narrow desktop; left-aligned to header edge from xl up */}
                             <motion.div
                                 className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl xl:mx-0 xl:max-w-[min(100%,42rem)] xl:text-left 2xl:max-w-[min(100%,48rem)]"
