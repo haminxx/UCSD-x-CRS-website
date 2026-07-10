@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const exploreLinks = [
@@ -51,8 +52,16 @@ function LinkedInIcon({ className }: { className?: string }) {
 }
 
 const socialLinks = [
-  { name: "Instagram", href: "#", icon: InstagramIcon },
-  { name: "LinkedIn", href: "#", icon: LinkedInIcon },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/crs_ucsd/?utm_source=ig_web_button_share_sheet",
+    icon: InstagramIcon,
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/company/ucsd-crs",
+    icon: LinkedInIcon,
+  },
 ];
 
 export function SiteFooter() {
@@ -61,21 +70,31 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-12 lg:py-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
-            <p className="text-xl font-semibold tracking-tight">UCSD x CRS</p>
+            <Link href="/" aria-label="UCSD x CRS home" className="inline-block">
+              <Image
+                src="/images/ucsd-x-crs-logo.png"
+                alt="UCSD x CRS"
+                width={200}
+                height={104}
+                className="h-10 w-auto invert md:h-11"
+              />
+            </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
               Student-led racing and engineering at UC San Diego, competing in
               the Collegiate Racing Series.
             </p>
             <div className="mt-6 flex items-center gap-4">
               {socialLinks.map(({ name, href, icon: Icon }) => (
-                <Link
+                <a
                   key={name}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={name}
                   className="text-white/60 transition-colors duration-200 hover:text-white"
                 >
                   <Icon className="size-5" />
-                </Link>
+                </a>
               ))}
             </div>
           </div>
@@ -118,12 +137,14 @@ export function SiteFooter() {
               <ul className="mt-4 space-y-3">
                 {socialLinks.map((item) => (
                   <li key={item.name}>
-                    <Link
+                    <a
                       href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm text-white/60 transition-colors duration-200 hover:text-white"
                     >
                       {item.name}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
