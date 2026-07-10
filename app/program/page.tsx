@@ -5,7 +5,10 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PageEnter } from "@/components/page-motion";
 import { SpringUnderline } from "@/components/spring-underline";
+import { HoverPeek } from "@/components/ui/hover-peek";
 import { cn } from "@/lib/utils";
+
+const CRS_URL = "https://drivecrs.com/";
 
 export default function ProgramPage() {
   return (
@@ -26,16 +29,18 @@ export default function ProgramPage() {
               </h1>
               <p className="mt-8 max-w-3xl text-base leading-relaxed text-black/55 md:mt-10 md:text-lg">
                 For more details, visit{" "}
-                <Link
-                  href="https://drivecrs.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex text-[#0a1218] transition-colors hover:text-black"
-                >
-                  <SpringUnderline className="pb-0.5 font-medium">
-                    CRS
-                  </SpringUnderline>
-                </Link>
+                <HoverPeek url={CRS_URL}>
+                  <Link
+                    href={CRS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex text-[#0a1218] transition-colors hover:text-black"
+                  >
+                    <SpringUnderline className="pb-0.5 font-medium">
+                      Collegiate Racing Series (drivecrs.com)
+                    </SpringUnderline>
+                  </Link>
+                </HoverPeek>
               </p>
             </div>
           </section>
