@@ -194,6 +194,30 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   );
 }
 
+function ThinkingDots() {
+  return (
+    <div
+      className="flex items-center gap-[0.2rem] px-0.5"
+      aria-label="Thinking"
+      role="status"
+    >
+      {[0, 1, 2].map((i) => (
+        <motion.span
+          key={i}
+          className="inline-block size-[0.35rem] rounded-full bg-black/40"
+          animate={{ y: [0, -5, 0] }}
+          transition={{
+            duration: 0.9,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.15,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 type RecruitmentChatModalProps = {
   open: boolean;
   onClose: () => void;
@@ -380,8 +404,8 @@ export function RecruitmentChatModal({
               ))}
               {busy && (
                 <div className="flex justify-start">
-                  <div className="rounded-2xl bg-black/[0.05] px-3.5 py-2.5 text-sm text-black/40">
-                    Thinking…
+                  <div className="rounded-2xl bg-black/[0.05] px-3.5 py-2.5">
+                    <ThinkingDots />
                   </div>
                 </div>
               )}

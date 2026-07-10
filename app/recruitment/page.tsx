@@ -310,8 +310,8 @@ export default function RecruitmentPage() {
             gap: "clamp(1.25rem, 3.5vh, 2.75rem)",
           }}
         >
-          {/* Band 1 — Headline (slight top offset for even spacing vs CTA + chat) */}
-          <section className="mt-[1.125rem] flex shrink-0 flex-col items-center text-center">
+          {/* Band 1 — Headline (top offset for even spacing vs CTA + chat) */}
+          <section className="mt-[2.25rem] flex shrink-0 flex-col items-center text-center">
             <BlurFade delay={0.05}>
               <h1
                 className={cn(
