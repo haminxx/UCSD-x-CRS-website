@@ -81,14 +81,59 @@ function NavItem({
   );
 }
 
-function DesktopNav({ light }: { light: boolean }) {
+/** Delay before underline settles back to the active page after leaving nav items. */
+const NAV_UNDERLINE_SETTLE_MS = 1200;
+
+function useNavUnderline() {
   const pathname = usePathname();
   const [hoveredHref, setHoveredHref] = React.useState<string | null>(null);
+  const settleTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   // No fallback to "/" — pages like /login/ should show no active nav item
   const activeHref =
     menuItems.find((item) => isActivePath(pathname, item.href))?.href ?? null;
+
+  const clearSettleTimer = React.useCallback(() => {
+    if (settleTimerRef.current) {
+      clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = null;
+    }
+  }, []);
+
+  React.useEffect(() => () => clearSettleTimer(), [clearSettleTimer]);
+
+  // Drop hover target on route change so underline tracks the new active page
+  React.useEffect(() => {
+    clearSettleTimer();
+    setHoveredHref(null);
+  }, [pathname, clearSettleTimer]);
+
+  const onHover = React.useCallback(
+    (href: string) => {
+      clearSettleTimer();
+      setHoveredHref(href);
+    },
+    [clearSettleTimer],
+  );
+
+  const onLeave = React.useCallback(() => {
+    clearSettleTimer();
+    // Keep underline on the last hovered item until settle delay elapses
+    settleTimerRef.current = setTimeout(() => {
+      setHoveredHref(null);
+      settleTimerRef.current = null;
+    }, NAV_UNDERLINE_SETTLE_MS);
+  }, [clearSettleTimer]);
+
   const underlineHref = hoveredHref ?? activeHref;
+
+  return { underlineHref, onHover, onLeave, pathname };
+}
+
+function DesktopNav({ light }: { light: boolean }) {
+  const { underlineHref, onHover, onLeave, pathname } = useNavUnderline();
 
   return (
     <ul className="flex gap-7 text-sm font-medium tracking-wide lg:gap-9">
@@ -99,8 +144,8 @@ function DesktopNav({ light }: { light: boolean }) {
             active={isActivePath(pathname, item.href)}
             layoutId="desktop-nav-underline"
             showUnderline={underlineHref === item.href}
-            onHover={() => setHoveredHref(item.href)}
-            onLeave={() => setHoveredHref(null)}
+            onHover={() => onHover(item.href)}
+            onLeave={onLeave}
             light={light}
           />
         </li>
@@ -110,13 +155,7 @@ function DesktopNav({ light }: { light: boolean }) {
 }
 
 function MobileNav({ light }: { light: boolean }) {
-  const pathname = usePathname();
-  const [hoveredHref, setHoveredHref] = React.useState<string | null>(null);
-
-  // No fallback to "/" — pages like /login/ should show no active nav item
-  const activeHref =
-    menuItems.find((item) => isActivePath(pathname, item.href))?.href ?? null;
-  const underlineHref = hoveredHref ?? activeHref;
+  const { underlineHref, onHover, onLeave, pathname } = useNavUnderline();
 
   return (
     <ul className="space-y-6 text-base font-medium">
@@ -127,8 +166,8 @@ function MobileNav({ light }: { light: boolean }) {
             active={isActivePath(pathname, item.href)}
             layoutId="mobile-nav-underline"
             showUnderline={underlineHref === item.href}
-            onHover={() => setHoveredHref(item.href)}
-            onLeave={() => setHoveredHref(null)}
+            onHover={() => onHover(item.href)}
+            onLeave={onLeave}
             light={light}
           />
         </li>

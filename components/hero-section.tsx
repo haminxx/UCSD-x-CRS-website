@@ -17,24 +17,24 @@ const IDLE_MS = 2500
 const FADE_OUT_S = 1.6
 const FADE_IN_SPRING = { type: 'spring' as const, stiffness: 260, damping: 30, mass: 0.75 }
 const LOGO_REVEAL = { duration: 1.15, ease: [0.22, 1, 0.36, 1] as const, delay: 0.35 }
-const LINE_EASE = [0.22, 1, 0.36, 1] as const
+const LINE_EASE = [0.16, 1, 0.3, 1] as const
 
 const staggerContainer = {
     hidden: {},
     visible: {
         transition: {
-            staggerChildren: 0.11,
-            delayChildren: 0.06,
+            staggerChildren: 0.17,
+            delayChildren: 0.1,
         },
     },
 }
 
 const staggerItem = {
-    hidden: { opacity: 0, y: 16 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.52, ease: LINE_EASE },
+        transition: { duration: 0.78, ease: LINE_EASE },
     },
 }
 
@@ -141,7 +141,7 @@ export function HeroSection() {
                             muted
                             playsInline
                             preload="auto"
-                            className="absolute inset-0 h-full w-full object-cover object-[center_bottom]"
+                            className="absolute inset-0 h-full w-full origin-bottom scale-[1.06] object-cover object-[center_bottom] -translate-y-[2vh] sm:scale-[1.08] sm:-translate-y-[2.5vh] md:scale-[1.1] md:-translate-y-[3vh] lg:scale-[1.12] lg:-translate-y-[3.5vh]"
                             src={HERO_VIDEO_SRC}
                         />
 
