@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { isLightPage, normalizePath } from "@/lib/theme";
 import { Menu, X } from "lucide-react";
 import { useScroll, motion, AnimatePresence } from "motion/react";
-import { springTransition } from "@/components/spring-underline";
+import { BoldHoverText, springTransition } from "@/components/spring-underline";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -176,7 +176,7 @@ function MobileNav({ light }: { light: boolean }) {
   );
 }
 
-/** Login button — white fill on dark pages; black fill on light pages. Bold weight on hover. */
+/** Login button — white fill on dark pages; black fill on light pages. Bold weight on hover (box size fixed). */
 function LoginButton({
   className,
   light,
@@ -192,22 +192,18 @@ function LoginButton({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm",
+        "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium",
         "border-0 shadow-none outline-none ring-0",
-        "transition-[opacity,transform,background-color,color] duration-200 active:scale-[0.98]",
+        "transition-[opacity,background-color,color] duration-200",
         light
           ? "bg-[#0a1218] text-white hover:bg-[#0a1218]/90 focus-visible:ring-2 focus-visible:ring-[#0a1218]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f6f7]"
           : "bg-white text-black hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
       )}
     >
-      <motion.span
-        className="inline-block"
-        animate={{ fontWeight: hovered ? 700 : 500 }}
-        transition={springTransition}
-      >
+      <BoldHoverText active={hovered} from={500} to={800}>
         Login
-      </motion.span>
+      </BoldHoverText>
     </Link>
   );
 }

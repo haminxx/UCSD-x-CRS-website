@@ -6,7 +6,7 @@ import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { SpringUnderline } from '@/components/spring-underline'
+import { BoldHoverText, SpringUnderline } from '@/components/spring-underline'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -48,6 +48,30 @@ function SponsorLink() {
                 Become a Sponsor
             </SpringUnderline>
         </Link>
+    )
+}
+
+/** CTA with bold-on-hover label; width reserved so the pill never grows. */
+function JoinTeamButton() {
+    const [hovered, setHovered] = useState(false)
+
+    return (
+        <Button
+            asChild
+            size="lg"
+            className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base font-medium text-black shadow-none hover:bg-white/90 hover:text-black"
+        >
+            <Link
+                href="/recruitment/"
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+            >
+                <BoldHoverText active={hovered} from={500} to={800} className="text-nowrap">
+                    Join the team
+                </BoldHoverText>
+                <ChevronRight className="ml-1 shrink-0" />
+            </Link>
+        </Button>
     )
 }
 
@@ -171,10 +195,11 @@ export function HeroSection() {
                             }
                         />
 
-                        <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
-                            {/* Centered on mobile/tablet/narrow desktop; left-aligned on wide screens */}
+                        {/* Same max-w-7xl + px rhythm as SiteHeader so copy shares the header column on xl/2xl */}
+                        <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
+                            {/* Centered on mobile/tablet/narrow desktop; left-aligned to header edge from xl up */}
                             <motion.div
-                                className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl xl:ml-0 xl:max-w-full xl:text-left"
+                                className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl xl:mx-0 xl:max-w-[min(100%,42rem)] xl:text-left 2xl:max-w-[min(100%,48rem)]"
                                 animate={{
                                     opacity: contentVisible ? RESTING_OPACITY : 0,
                                 }}
@@ -192,7 +217,7 @@ export function HeroSection() {
                                     initial="hidden"
                                     animate="visible"
                                 >
-                                    <h1 className="mx-auto max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:mx-0 xl:text-[3.35rem]">
+                                    <h1 className="mx-auto max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:mx-0 xl:max-w-none xl:text-[clamp(3.35rem,2.15rem+1.15vw,4.5rem)]">
                                         <motion.span
                                             variants={staggerItem}
                                             className="block whitespace-nowrap"
@@ -205,7 +230,7 @@ export function HeroSection() {
                                     </h1>
                                     <motion.p
                                         variants={staggerItem}
-                                        className="mx-auto mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0"
+                                        className="mx-auto mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg xl:mx-0 xl:text-[clamp(1.125rem,0.95rem+0.35vw,1.375rem)]"
                                     >
                                         Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
                                     </motion.p>
@@ -214,15 +239,7 @@ export function HeroSection() {
                                         variants={staggerItem}
                                         className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 xl:justify-start"
                                     >
-                                        <Button
-                                            asChild
-                                            size="lg"
-                                            className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base text-black shadow-none hover:bg-white/90 hover:text-black">
-                                            <Link href="/recruitment/">
-                                                <span className="text-nowrap">Join the team</span>
-                                                <ChevronRight className="ml-1" />
-                                            </Link>
-                                        </Button>
+                                        <JoinTeamButton />
                                         <SponsorLink />
                                     </motion.div>
                                 </motion.div>

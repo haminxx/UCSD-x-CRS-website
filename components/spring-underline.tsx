@@ -47,4 +47,46 @@ export function SpringUnderline({
   );
 }
 
+type BoldHoverTextProps = {
+  children: ReactNode;
+  /** When true, use the bold (hover) weight. Drive from parent hover so chevrons/padding count. */
+  active: boolean;
+  className?: string;
+  /** Resting weight (default medium / 500). */
+  from?: number;
+  /** Hover weight (default extrabold / 800). */
+  to?: number;
+};
+
+/**
+ * Font-weight hover without layout shift: invisible bold twin reserves width/height.
+ */
+export function BoldHoverText({
+  children,
+  active,
+  className,
+  from = 500,
+  to = 800,
+}: BoldHoverTextProps) {
+  return (
+    <span className={cn("inline-grid justify-items-center", className)}>
+      <span
+        aria-hidden
+        className="invisible col-start-1 row-start-1 select-none"
+        style={{ fontWeight: to }}
+      >
+        {children}
+      </span>
+      <motion.span
+        className="col-start-1 row-start-1"
+        initial={false}
+        animate={{ fontWeight: active ? to : from }}
+        transition={springTransition}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
+
 export { springTransition };
