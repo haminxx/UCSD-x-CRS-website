@@ -5,7 +5,17 @@ const cors = require("cors");
 
 const PORT = Number(process.env.PORT) || 10000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim() || "";
-const GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || "gemini-2.0-flash";
+/** gemini-2.0-flash was shut down 2026-06-01; remap so stale Render env still works. */
+const SHUT_DOWN_MODELS = new Set([
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-001",
+  "gemini-2.0-flash-lite",
+  "gemini-2.0-flash-lite-001",
+]);
+const requestedModel = process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash";
+const GEMINI_MODEL = SHUT_DOWN_MODELS.has(requestedModel)
+  ? "gemini-3.5-flash"
+  : requestedModel;
 
 const ALLOWED_ORIGINS = new Set([
   "https://ucsdxcrs.web.app",
@@ -162,5 +172,9 @@ app.post("/api/recruitment-chat", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Recruitment chat listening on :${PORT}`);
+  console.log(
+    `Recruitment chat listening on :${PORT} (model=${GEMINI_MODEL}${
+      requestedModel !== GEMINI_MODEL ? `, remapped from ${requestedModel}` : ""
+    })`,
+  );
 });

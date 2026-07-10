@@ -32,7 +32,7 @@ If Render logs show `ucsd-x-crs-website@0.1.0 start` → `next start` and *Could
 2. **Root Directory** = `chat-server`
 3. **Build Command** = `npm install`
 4. **Start Command** = `npm start`
-5. Confirm **Environment** has `GEMINI_API_KEY`
+5. Confirm **Environment** has `GEMINI_API_KEY` (and preferably `GEMINI_MODEL` = `gemini-3.5-flash`)
 6. **Manual Deploy** → **Clear build cache & deploy**
 
 ### Option B — Root Directory blank (repo root fallback)
@@ -42,7 +42,7 @@ If Render logs show `ucsd-x-crs-website@0.1.0 start` → `next start` and *Could
    (or `npm run render-build`)
 3. **Start Command** = `npm start`  
    (runs `scripts/start.js`, which detects `RENDER=true` and starts chat-server)
-4. Confirm **Environment** has `GEMINI_API_KEY`
+4. Confirm **Environment** has `GEMINI_API_KEY` (and preferably `GEMINI_MODEL` = `gemini-3.5-flash`)
 5. **Manual Deploy** → **Clear build cache & deploy**
 
 Do **not** use Build Command `npm install && npm run build` at repo root for this service — that builds Next.js and is unnecessary for the chatbot.
@@ -54,8 +54,9 @@ After redeploy, `/health` and `/api/recruitment-chat` should respond (cold start
 1. Root Directory = `chat-server` **or** blank with Build = `npm install --prefix ./chat-server`
 2. Start Command = `npm start`
 3. `GEMINI_API_KEY` is set in Environment
-4. Manual Deploy → Clear build cache & deploy
-5. Wait until status is Live, then open `/health`
+4. `GEMINI_MODEL` = `gemini-3.5-flash` (or leave unset — server remaps shut-down `gemini-2.0-flash`)
+5. Manual Deploy → Clear build cache & deploy
+6. Wait until status is Live, then open `/health`
 
 ## Deploy on Render — step by step
 
@@ -81,7 +82,7 @@ After redeploy, `/health` and `/api/recruitment-chat` should respond (cold start
 5. **Environment** → Add:
    - Key: `GEMINI_API_KEY`
    - Value: *(paste your Gemini key)*
-   - Optional: `GEMINI_MODEL` = `gemini-2.0-flash`
+   - Optional: `GEMINI_MODEL` = `gemini-3.5-flash` (default; `gemini-2.0-flash` was shut down June 2026 and is auto-remapped)
 6. Click **Create Web Service** and wait until status is **Live**
 7. Copy your service URL, e.g. `https://ucsd-x-crs-recruitment-chatbot.onrender.com`
 
