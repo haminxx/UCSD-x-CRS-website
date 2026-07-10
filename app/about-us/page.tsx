@@ -41,7 +41,7 @@ const orbitLeaders: OrbitStackItem[] = [
       "Founded UCSD × CRS and sets the direction for the collegiate racing team.",
     accent: "#f3f1ea",
     initials: "CL",
-    stat: "Eight College",
+    stat: "Revelle College",
     image: "/images/team/christian-lee.jpg",
     href: "https://www.linkedin.com/in/christian-j-l/",
   },
@@ -70,7 +70,7 @@ type TeamMember = {
 /** Four placeholder slots per filter until real roster data is ready. */
 const teamMembers: TeamMember[] = teamFilters.flatMap((filter) =>
   Array.from({ length: 4 }, () => ({
-    name: "N/A",
+    name: "Coming Soon",
     role: "N/A",
     filter,
   })),
@@ -153,7 +153,7 @@ export default function AboutUsPage() {
               } else if (item.name.trim()) {
                 setHeadline(item.name);
               } else {
-                setHeadline("Meet our team!");
+                setHeadline("Coming Soon!");
               }
             }}
             onCollapse={() => setHeadline("Meet our team!")}
