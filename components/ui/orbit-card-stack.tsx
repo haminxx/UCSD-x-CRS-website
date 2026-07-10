@@ -234,21 +234,23 @@ export function OrbitCardStack({
   return (
     <div
       className={cn(
-        "relative flex min-h-full w-full items-center justify-center overflow-hidden p-8",
+        // overflow-visible so expanded/rotated side cards are not clipped
+        "relative flex min-h-full w-full items-center justify-center overflow-visible px-4 py-10 md:px-8 md:py-12",
         className,
       )}
     >
-      <div className="relative h-[470px] w-full max-w-[980px]">
+      <div className="relative h-[560px] w-full max-w-[980px] md:h-[600px]">
         {safeItems.map((item, index) => {
           const active = activeIndex === index;
           const cardLayout = cardLayouts[index] ?? cardLayouts[defaultIndex]!;
           const layout = expanded ? cardLayout.expanded : cardLayout.collapsed;
           const raised = raisedIndex === index;
+          // Keep below SiteHeader (z-[100]) so cards never cover the nav
           const zIndex = raised
-            ? 80
+            ? 20
             : expanded
-              ? 50 - Math.abs(index - raisedIndex)
-              : 50 - Math.abs(index - defaultIndex);
+              ? 15 - Math.abs(index - raisedIndex)
+              : 10 - Math.abs(index - defaultIndex);
 
           return (
             <motion.article

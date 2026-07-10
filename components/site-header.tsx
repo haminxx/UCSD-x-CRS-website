@@ -194,7 +194,7 @@ export function SiteHeader() {
       <nav
         data-state={menuState && "active"}
         className={cn(
-          "group fixed inset-x-0 top-0 z-50 w-full pt-4 lg:pt-6",
+          "group fixed inset-x-0 top-0 z-[100] w-full pt-4 lg:pt-6",
           light ? "text-black" : "text-white",
         )}
       >
