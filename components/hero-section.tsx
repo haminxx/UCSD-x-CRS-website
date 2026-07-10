@@ -8,6 +8,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { SpringUnderline } from '@/components/spring-underline'
 import { PageEnter } from '@/components/page-motion'
+import { HeroBackgroundVideo } from '@/components/hero-background-video'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -111,14 +112,7 @@ export function HeroSection() {
             <main className="overflow-x-hidden">
                 <section ref={heroRef} className="relative">
                     <div className="relative isolate min-h-[min(92vh,56rem)] overflow-hidden sm:min-h-[min(88vh,48rem)]">
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="absolute inset-0 size-full scale-125 object-cover"
-                            src="/videos/ucsdxcrs-v2.mp4"
-                        />
+                        <HeroBackgroundVideo className="scale-110 sm:scale-125" />
 
                         {/* Blur while UI is visible; clears when idle (synced with text fade) */}
                         <motion.div
@@ -149,7 +143,7 @@ export function HeroSection() {
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
                             <PageEnter>
                                 <motion.div
-                                    className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left"
+                                    className="mx-auto flex w-full max-w-3xl flex-col items-center text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:items-start lg:text-left"
                                     animate={{
                                         opacity: contentVisible ? RESTING_OPACITY : 0,
                                     }}
@@ -162,15 +156,19 @@ export function HeroSection() {
                                         pointerEvents: contentVisible ? 'auto' : 'none',
                                     }}
                                 >
-                                    <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
-                                        <span className="block whitespace-nowrap">Engineering the future</span>
-                                        <span className="block">of collegiate motorsport</span>
+                                    <h1 className="w-full max-w-2xl text-center text-[clamp(1.65rem,6.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl lg:text-left xl:text-[3.35rem]">
+                                        <span className="block text-balance sm:whitespace-nowrap">
+                                            Engineering the future
+                                        </span>
+                                        <span className="block text-balance">
+                                            of collegiate motorsport
+                                        </span>
                                     </h1>
-                                    <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg">
+                                    <p className="mx-auto mt-5 max-w-xl text-center text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg lg:mx-0 lg:text-left">
                                         Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
                                     </p>
 
-                                    <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
+                                    <div className="mt-10 flex w-full flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
                                         <Button
                                             asChild
                                             size="lg"
@@ -191,7 +189,9 @@ export function HeroSection() {
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
                             <div className="md:max-w-44 md:border-r md:border-white/15 md:pr-6">
-                                <p className="text-end text-sm text-white/70">Powering the best teams</p>
+                                <p className="text-center text-sm text-white/70 md:text-end">
+                                    Powering the best teams
+                                </p>
                             </div>
                             <div className="relative py-8 md:w-[calc(100%-11rem)]">
                                 <InfiniteSlider
@@ -295,7 +295,7 @@ export function HeroSection() {
                     aria-label="Section placeholder 1"
                     className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
-                    <div className="mx-auto w-full max-w-7xl">
+                    <div className="mx-auto w-full max-w-7xl text-center lg:text-left">
                         <p className="text-sm tracking-wide text-white/45">
                             Section — coming soon
                         </p>
@@ -306,7 +306,7 @@ export function HeroSection() {
                     aria-label="Section placeholder 2"
                     className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
-                    <div className="mx-auto w-full max-w-7xl">
+                    <div className="mx-auto w-full max-w-7xl text-center lg:text-left">
                         <p className="text-sm tracking-wide text-white/45">
                             Section — coming soon
                         </p>
@@ -317,7 +317,7 @@ export function HeroSection() {
                     aria-label="Section placeholder 3"
                     className="flex min-h-dvh items-start bg-background px-6 pt-28 md:px-10 lg:px-12"
                 >
-                    <div className="mx-auto w-full max-w-7xl">
+                    <div className="mx-auto w-full max-w-7xl text-center lg:text-left">
                         <p className="text-sm tracking-wide text-white/45">
                             Section — coming soon
                         </p>

@@ -49,12 +49,14 @@ export default function LoginPage() {
             }}
           >
             <video
-              className="size-full object-cover"
+              className="size-full object-cover object-center"
               src="/videos/ucsdxcrs-v2.mp4"
+              poster="/images/hero-poster.jpg"
               autoPlay
               muted
               loop
               playsInline
+              preload="auto"
             />
           </div>
           {/* Lighter blur so the video stays more visible */}
