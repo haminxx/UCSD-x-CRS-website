@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
@@ -8,6 +8,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { SpringUnderline } from '@/components/spring-underline'
 import { PageEnter } from '@/components/page-motion'
+import { HomeIntro, shouldSkipHomeIntro } from '@/components/home-intro'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -15,6 +16,7 @@ const RESTING_OPACITY = 1
 const IDLE_MS = 2500
 const FADE_OUT_S = 1.6
 const FADE_IN_SPRING = { type: 'spring' as const, stiffness: 260, damping: 30, mass: 0.75 }
+const CHROME_REVEAL = { duration: 1.35, ease: [0.22, 1, 0.36, 1] as const }
 
 function SponsorLink() {
     return (
@@ -33,8 +35,25 @@ export function HeroSection() {
     const heroRef = useRef<HTMLElement>(null)
     const [contentVisible, setContentVisible] = useState(true)
     const [fadingOut, setFadingOut] = useState(false)
+    // null = hydrating / checking sessionStorage; avoid content flash
+    const [introActive, setIntroActive] = useState<boolean | null>(null)
+    const [chromeReady, setChromeReady] = useState(false)
 
     useEffect(() => {
+        const skip = shouldSkipHomeIntro()
+        setIntroActive(!skip)
+        if (skip) setChromeReady(true)
+    }, [])
+
+    const onIntroComplete = useCallback(() => {
+        setIntroActive(false)
+        // Slow reveal of header + hero copy after expand
+        window.setTimeout(() => setChromeReady(true), 80)
+    }, [])
+
+    useEffect(() => {
+        if (!chromeReady) return
+
         const hero = heroRef.current
         if (!hero) return
 
@@ -103,11 +122,29 @@ export function HeroSection() {
                 window.removeEventListener(event, onActivity)
             }
         }
-    }, [])
+    }, [chromeReady])
+
+    const showIntro = introActive === true
+    const awaitingIntroCheck = introActive === null
 
     return (
         <>
-            <SiteHeader />
+            {/* Solid hold while sessionStorage is checked — prevents hero flash */}
+            {awaitingIntroCheck && (
+                <div className="fixed inset-0 z-[90] bg-[#0a1218]" aria-hidden />
+            )}
+
+            {showIntro && <HomeIntro onComplete={onIntroComplete} />}
+
+            <motion.div
+                initial={false}
+                animate={{ opacity: chromeReady ? 1 : 0 }}
+                transition={CHROME_REVEAL}
+                style={{ pointerEvents: chromeReady ? 'auto' : 'none' }}
+            >
+                <SiteHeader />
+            </motion.div>
+
             <main className="overflow-x-hidden">
                 <section ref={heroRef} className="relative">
                     <div className="relative isolate min-h-[min(92vh,56rem)] overflow-hidden sm:min-h-[min(88vh,48rem)]">
@@ -116,6 +153,7 @@ export function HeroSection() {
                             loop
                             muted
                             playsInline
+                            preload="auto"
                             className="absolute inset-0 size-full scale-125 object-cover"
                             src="/videos/ucsdxcrs-v2.mp4"
                         />
@@ -125,65 +163,75 @@ export function HeroSection() {
                             aria-hidden
                             className="pointer-events-none absolute inset-0 z-[1] bg-black/45 backdrop-blur-[6px]"
                             animate={{
-                                opacity: contentVisible ? 1 : 0,
+                                opacity: chromeReady && contentVisible ? 1 : chromeReady ? 0 : 0.55,
                             }}
                             transition={
                                 fadingOut
                                     ? { duration: FADE_OUT_S, ease: 'easeOut' }
-                                    : FADE_IN_SPRING
+                                    : chromeReady
+                                      ? FADE_IN_SPRING
+                                      : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
                             }
                         />
                         <motion.div
                             aria-hidden
                             className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/35 via-transparent to-black/55"
                             animate={{
-                                opacity: contentVisible ? 1 : 0.35,
+                                opacity: chromeReady && contentVisible ? 1 : chromeReady ? 0.35 : 0.5,
                             }}
                             transition={
                                 fadingOut
                                     ? { duration: FADE_OUT_S, ease: 'easeOut' }
-                                    : FADE_IN_SPRING
+                                    : chromeReady
+                                      ? FADE_IN_SPRING
+                                      : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
                             }
                         />
 
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
-                            <PageEnter>
-                                <motion.div
-                                    className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left"
-                                    animate={{
-                                        opacity: contentVisible ? RESTING_OPACITY : 0,
-                                    }}
-                                    transition={
-                                        fadingOut
-                                            ? { duration: FADE_OUT_S, ease: 'easeOut' }
-                                            : FADE_IN_SPRING
-                                    }
-                                    style={{
-                                        pointerEvents: contentVisible ? 'auto' : 'none',
-                                    }}
-                                >
-                                    <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
-                                        <span className="block whitespace-nowrap">Engineering the future</span>
-                                        <span className="block">of collegiate motorsport</span>
-                                    </h1>
-                                    <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg">
-                                        Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
-                                    </p>
+                            <motion.div
+                                initial={false}
+                                animate={{ opacity: chromeReady ? 1 : 0 }}
+                                transition={{ ...CHROME_REVEAL, delay: chromeReady ? 0.15 : 0 }}
+                            >
+                                <PageEnter>
+                                    <motion.div
+                                        className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left"
+                                        animate={{
+                                            opacity: contentVisible ? RESTING_OPACITY : 0,
+                                        }}
+                                        transition={
+                                            fadingOut
+                                                ? { duration: FADE_OUT_S, ease: 'easeOut' }
+                                                : FADE_IN_SPRING
+                                        }
+                                        style={{
+                                            pointerEvents: contentVisible && chromeReady ? 'auto' : 'none',
+                                        }}
+                                    >
+                                        <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
+                                            <span className="block whitespace-nowrap">Engineering the future</span>
+                                            <span className="block">of collegiate motorsport</span>
+                                        </h1>
+                                        <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg">
+                                            Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
+                                        </p>
 
-                                    <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
-                                        <Button
-                                            asChild
-                                            size="lg"
-                                            className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base text-black shadow-none hover:bg-white/90 hover:text-black">
-                                            <Link href="/recruitment/">
-                                                <span className="text-nowrap">Join the team</span>
-                                                <ChevronRight className="ml-1" />
-                                            </Link>
-                                        </Button>
-                                        <SponsorLink />
-                                    </div>
-                                </motion.div>
-                            </PageEnter>
+                                        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
+                                            <Button
+                                                asChild
+                                                size="lg"
+                                                className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base text-black shadow-none hover:bg-white/90 hover:text-black">
+                                                <Link href="/recruitment/">
+                                                    <span className="text-nowrap">Join the team</span>
+                                                    <ChevronRight className="ml-1" />
+                                                </Link>
+                                            </Button>
+                                            <SponsorLink />
+                                        </div>
+                                    </motion.div>
+                                </PageEnter>
+                            </motion.div>
                         </div>
                     </div>
                 </section>
@@ -217,6 +265,7 @@ export function HeroSection() {
                                             width="auto"
                                         />
                                     </div>
+
                                     <div className="flex">
                                         <img
                                             className="mx-auto h-4 w-fit invert"
@@ -226,6 +275,7 @@ export function HeroSection() {
                                             width="auto"
                                         />
                                     </div>
+
                                     <div className="flex">
                                         <img
                                             className="mx-auto h-5 w-fit invert"
@@ -235,6 +285,7 @@ export function HeroSection() {
                                             width="auto"
                                         />
                                     </div>
+
                                     <div className="flex">
                                         <img
                                             className="mx-auto h-5 w-fit invert"
@@ -244,6 +295,7 @@ export function HeroSection() {
                                             width="auto"
                                         />
                                     </div>
+
                                     <div className="flex">
                                         <img
                                             className="mx-auto h-4 w-fit invert"
@@ -253,6 +305,7 @@ export function HeroSection() {
                                             width="auto"
                                         />
                                     </div>
+
                                     <div className="flex">
                                         <img
                                             className="mx-auto h-7 w-fit invert"
