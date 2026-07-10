@@ -31,7 +31,7 @@ export default function LoginPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="mt-12 space-y-5 rounded-[1.75rem] border border-white/12 bg-[#234a56]/90 p-7 shadow-sm md:p-9"
+            className="mt-12 space-y-5 rounded-[1.75rem] border border-white/12 bg-[#121a20]/90 p-7 shadow-sm md:p-9"
           >
             <div className="space-y-2.5">
               <label
@@ -50,7 +50,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@ucsd.edu"
                 className={cn(
-                  "w-full rounded-xl border-0 bg-[#2a5460] px-4 py-3.5 text-sm text-foreground",
+                  "w-full rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-sm text-foreground",
                   "placeholder:text-white/40 outline-none transition-[box-shadow]",
                   "focus:ring-2 focus:ring-white/20",
                 )}
@@ -82,7 +82,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className={cn(
-                  "w-full rounded-xl border-0 bg-[#2a5460] px-4 py-3.5 text-sm text-foreground",
+                  "w-full rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-sm text-foreground",
                   "placeholder:text-white/40 outline-none transition-[box-shadow]",
                   "focus:ring-2 focus:ring-white/20",
                 )}
@@ -92,7 +92,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               size="lg"
-              className="mt-3 h-12 w-full rounded-full bg-white text-base text-[#193c47] hover:bg-white/90"
+              className="mt-3 h-12 w-full rounded-full bg-white text-base text-[#0a1218] hover:bg-white/90"
             >
               Log in
             </Button>

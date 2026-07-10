@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
@@ -8,6 +8,11 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { SpringUnderline } from '@/components/spring-underline'
 import { ChevronRight } from 'lucide-react'
+
+const RESTING_OPACITY = 0.75
+const IDLE_MS = 5000
+const FADE_OUT_MS = 2500
+const FADE_IN_MS = 1500
 
 function SponsorLink() {
     return (
@@ -23,13 +28,85 @@ function SponsorLink() {
 }
 
 export function HeroSection() {
-    const [contentOpacity, setContentOpacity] = useState(1)
+    const heroRef = useRef<HTMLElement>(null)
+    const [contentVisible, setContentVisible] = useState(true)
+    const [fadingOut, setFadingOut] = useState(false)
+
+    useEffect(() => {
+        const hero = heroRef.current
+        if (!hero) return
+
+        let idleTimer: ReturnType<typeof setTimeout> | null = null
+        let inView = true
+
+        const clearIdle = () => {
+            if (idleTimer) {
+                clearTimeout(idleTimer)
+                idleTimer = null
+            }
+        }
+
+        const startIdle = () => {
+            clearIdle()
+            if (!inView) return
+            idleTimer = setTimeout(() => {
+                setFadingOut(true)
+                setContentVisible(false)
+            }, IDLE_MS)
+        }
+
+        const onActivity = () => {
+            if (!inView) return
+            setContentVisible(true)
+            setFadingOut(false)
+            startIdle()
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                inView = entry.isIntersecting
+                if (inView) {
+                    onActivity()
+                } else {
+                    clearIdle()
+                    setContentVisible(true)
+                    setFadingOut(false)
+                }
+            },
+            { threshold: 0.25 }
+        )
+        observer.observe(hero)
+
+        const events = [
+            'mousemove',
+            'mousedown',
+            'keydown',
+            'touchstart',
+            'wheel',
+            'scroll',
+            'pointermove',
+        ] as const
+
+        for (const event of events) {
+            window.addEventListener(event, onActivity, { passive: true })
+        }
+
+        startIdle()
+
+        return () => {
+            observer.disconnect()
+            clearIdle()
+            for (const event of events) {
+                window.removeEventListener(event, onActivity)
+            }
+        }
+    }, [])
 
     return (
         <>
             <SiteHeader />
             <main className="overflow-x-hidden">
-                <section className="px-1 pt-1">
+                <section ref={heroRef} className="px-1 pt-1">
                     <div className="relative isolate min-h-[min(92vh,56rem)] overflow-hidden rounded-3xl border border-black/10 sm:min-h-[min(88vh,48rem)] lg:rounded-[3rem] dark:border-white/5">
                         <video
                             autoPlay
@@ -41,45 +118,35 @@ export function HeroSection() {
                         />
 
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-20 pt-32 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-24 lg:pt-40">
-                            <div className="mx-auto flex w-full max-w-3xl items-stretch gap-4 text-center sm:max-w-4xl sm:gap-6 lg:ml-0 lg:max-w-full lg:text-left">
-                                <div
-                                    className="min-w-0 flex-1"
-                                    style={{ opacity: contentOpacity }}
-                                >
-                                    <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
-                                        <span className="block whitespace-nowrap">Engineering the future</span>
-                                        <span className="block">of collegiate motorsport</span>
-                                    </h1>
-                                    <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg">
-                                        Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
-                                    </p>
+                            <div
+                                className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left"
+                                style={{
+                                    opacity: contentVisible ? RESTING_OPACITY : 0,
+                                    transition: fadingOut
+                                        ? `opacity ${FADE_OUT_MS}ms ease-out`
+                                        : `opacity ${FADE_IN_MS}ms ease`,
+                                    pointerEvents: contentVisible ? 'auto' : 'none',
+                                }}
+                            >
+                                <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
+                                    <span className="block whitespace-nowrap">Engineering the future</span>
+                                    <span className="block">of collegiate motorsport</span>
+                                </h1>
+                                <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-white mix-blend-difference md:mt-6 md:max-w-2xl md:text-lg">
+                                    Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
+                                </p>
 
-                                    <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
-                                        <Button
-                                            asChild
-                                            size="lg"
-                                            className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base text-black shadow-none hover:bg-white/90 hover:text-black">
-                                            <Link href="/recruitment/">
-                                                <span className="text-nowrap">Join the team</span>
-                                                <ChevronRight className="ml-1" />
-                                            </Link>
-                                        </Button>
-                                        <SponsorLink />
-                                    </div>
-                                </div>
-
-                                <div className="flex shrink-0 items-stretch self-stretch py-1">
-                                    <input
-                                        type="range"
-                                        min={0}
-                                        max={1}
-                                        step={0.01}
-                                        value={contentOpacity}
-                                        onChange={(e) => setContentOpacity(Number(e.target.value))}
-                                        aria-label="Content transparency"
-                                        aria-orientation="vertical"
-                                        className="hero-content-opacity"
-                                    />
+                                <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-12 lg:justify-start">
+                                    <Button
+                                        asChild
+                                        size="lg"
+                                        className="h-12 rounded-full border-0 bg-white pl-5 pr-3 text-base text-black shadow-none hover:bg-white/90 hover:text-black">
+                                        <Link href="/recruitment/">
+                                            <span className="text-nowrap">Join the team</span>
+                                            <ChevronRight className="ml-1" />
+                                        </Link>
+                                    </Button>
+                                    <SponsorLink />
                                 </div>
                             </div>
                         </div>

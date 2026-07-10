@@ -50,7 +50,7 @@ function PillButton({
       className={cn(
         "rounded-full border px-4 py-2 text-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-white bg-white text-[#193c47]"
+          ? "border-white bg-white text-[#0a1218]"
           : "border-white/25 bg-transparent text-white/80 hover:border-white/50 hover:text-white"
       )}
     >
@@ -66,7 +66,7 @@ function SoftInput({
   return (
     <input
       className={cn(
-        "w-full rounded-xl border-0 bg-[#2a5460] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none ring-0 transition-[box-shadow] focus:bg-[#346270] focus:ring-2 focus:ring-white/15",
+        "w-full rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none ring-0 transition-[box-shadow] focus:bg-[#243038] focus:ring-2 focus:ring-white/15",
         className
       )}
       {...props}
@@ -237,14 +237,14 @@ export default function ContactPage() {
               placeholder="Message (optional)"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="mt-4 w-full resize-y rounded-xl border-0 bg-[#2a5460] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none transition-[box-shadow] focus:bg-[#346270] focus:ring-2 focus:ring-white/15"
+              className="mt-4 w-full resize-y rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-sm text-foreground placeholder:text-white/40 outline-none transition-[box-shadow] focus:bg-[#243038] focus:ring-2 focus:ring-white/15"
             />
 
             <div className="relative mt-4">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full items-center justify-between rounded-xl border-0 bg-[#2a5460] px-4 py-3.5 text-left text-sm text-white/40 transition-colors hover:bg-[#346270]"
+                className="flex w-full items-center justify-between rounded-xl border-0 bg-[#1a242c] px-4 py-3.5 text-left text-sm text-white/40 transition-colors hover:bg-[#243038]"
               >
                 <span className={cn(fileName && "text-foreground")}>
                   {fileName ?? "Attachments (optional)"}
@@ -288,7 +288,7 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-white px-6 py-3 text-sm font-medium text-[#193c47] transition-colors hover:bg-white/90 sm:self-auto"
+              className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-white px-6 py-3 text-sm font-medium text-[#0a1218] transition-colors hover:bg-white/90 sm:self-auto"
             >
               Submit
               <ArrowUpRight className="size-4" />
