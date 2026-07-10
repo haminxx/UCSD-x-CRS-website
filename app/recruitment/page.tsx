@@ -69,7 +69,7 @@ export default function RecruitmentPage() {
                   href={JOIN_FORM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-[#32292f] transition hover:bg-white/90"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-[#193c47] transition hover:bg-white/90"
                 >
                   JOIN US
                   <ArrowRight className="size-4" aria-hidden="true" />

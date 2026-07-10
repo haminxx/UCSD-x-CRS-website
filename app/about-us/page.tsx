@@ -172,7 +172,7 @@ function MemberPortrait({ member }: { member: TeamMember }) {
   }
 
   return (
-    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#463c43] via-[#3c3339] to-[#524850] text-3xl font-semibold tracking-wide text-white/80">
+    <div className="flex aspect-square w-full items-center justify-center bg-gradient-to-br from-[#2a5460] via-[#234a56] to-[#346270] text-3xl font-semibold tracking-wide text-white/80">
       {initials}
     </div>
   );
@@ -181,7 +181,7 @@ function MemberPortrait({ member }: { member: TeamMember }) {
 function TeamProfileCard({ member }: { member: TeamMember }) {
   return (
     <article className="flex flex-col items-center text-center">
-      <div className="w-full overflow-hidden bg-[#3c3339]">
+      <div className="w-full overflow-hidden bg-[#234a56]">
         <MemberPortrait member={member} />
       </div>
       <h3 className="mt-5 text-lg font-bold text-foreground md:text-xl">
@@ -237,7 +237,7 @@ export default function AboutUsPage() {
             <div
               role="tablist"
               aria-label="Team filters"
-              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#3c3339]/70 p-2.5 md:gap-3"
+              className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#234a56]/70 p-2.5 md:gap-3"
             >
               {teamFilters.map((filter) => {
                 const isActive = activeFilter === filter;
@@ -252,7 +252,7 @@ export default function AboutUsPage() {
                     className={cn(
                       "rounded-xl px-4 py-2 text-sm md:px-5",
                       isActive
-                        ? "bg-white text-[#32292f] hover:bg-white/90"
+                        ? "bg-white text-[#193c47] hover:bg-white/90"
                         : "text-white/65 hover:bg-white/5 hover:text-white",
                     )}
                   >

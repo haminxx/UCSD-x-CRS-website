@@ -18,19 +18,10 @@ const menuItems = [
   { name: "Contact", href: "/contact/" },
 ];
 
-type SiteHeaderProps = {
-  theme?: "light" | "dark";
-};
-
 function normalizePath(pathname: string | null) {
   if (!pathname) return "/";
   if (pathname === "/") return "/";
   return pathname.endsWith("/") ? pathname : `${pathname}/`;
-}
-
-function isHomePath(pathname: string | null) {
-  const path = normalizePath(pathname);
-  return path === "/";
 }
 
 function isActivePath(pathname: string | null, href: string) {
@@ -41,7 +32,6 @@ function isActivePath(pathname: string | null, href: string) {
 
 function NavItem({
   item,
-  isDark,
   active,
   onHover,
   onLeave,
@@ -49,7 +39,6 @@ function NavItem({
   showUnderline,
 }: {
   item: (typeof menuItems)[number];
-  isDark: boolean;
   active: boolean;
   onHover: () => void;
   onLeave: () => void;
@@ -62,12 +51,8 @@ function NavItem({
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       className={cn(
-        "relative block py-1 font-medium duration-200",
-        active || showUnderline ? "font-bold" : "hover:font-semibold",
-        isDark
-          ? "text-white/65 hover:text-white"
-          : "text-black hover:text-neutral-700",
-        (active || showUnderline) && (isDark ? "text-white" : "text-black"),
+        "relative block py-1 font-medium text-white/65 duration-200 hover:text-white",
+        active || showUnderline ? "font-bold text-white" : "hover:font-semibold",
       )}
     >
       <motion.span
@@ -80,10 +65,7 @@ function NavItem({
       {showUnderline && (
         <motion.span
           layoutId={layoutId}
-          className={cn(
-            "absolute inset-x-0 -bottom-0.5 h-[2px]",
-            isDark ? "bg-white" : "bg-black",
-          )}
+          className="absolute inset-x-0 -bottom-0.5 h-[2px] bg-white"
           transition={springTransition}
         />
       )}
@@ -91,7 +73,7 @@ function NavItem({
   );
 }
 
-function DesktopNav({ isDark }: { isDark: boolean }) {
+function DesktopNav() {
   const pathname = usePathname();
   const [hoveredHref, setHoveredHref] = React.useState<string | null>(null);
 
@@ -105,7 +87,6 @@ function DesktopNav({ isDark }: { isDark: boolean }) {
         <li key={item.href}>
           <NavItem
             item={item}
-            isDark={isDark}
             active={isActivePath(pathname, item.href)}
             layoutId="desktop-nav-underline"
             showUnderline={underlineHref === item.href}
@@ -118,7 +99,7 @@ function DesktopNav({ isDark }: { isDark: boolean }) {
   );
 }
 
-function MobileNav({ isDark }: { isDark: boolean }) {
+function MobileNav() {
   const pathname = usePathname();
   const [hoveredHref, setHoveredHref] = React.useState<string | null>(null);
 
@@ -132,7 +113,6 @@ function MobileNav({ isDark }: { isDark: boolean }) {
         <li key={item.href}>
           <NavItem
             item={item}
-            isDark={isDark}
             active={isActivePath(pathname, item.href)}
             layoutId="mobile-nav-underline"
             showUnderline={underlineHref === item.href}
@@ -145,18 +125,16 @@ function MobileNav({ isDark }: { isDark: boolean }) {
   );
 }
 
-/** Plain text Login — no Button, no border, no pill. Bold on hover only. */
-function LoginLink({ isDark, className }: { isDark: boolean; className?: string }) {
+/** White rounded-rectangle Login button — black text, solid fill. */
+function LoginButton({ className }: { className?: string }) {
   return (
     <Link
       href="/login/"
       className={cn(
-        "border-0 bg-transparent p-0 text-sm font-medium shadow-none outline-none ring-0",
-        "rounded-none focus:outline-none focus-visible:outline-none focus-visible:ring-0",
-        "transition-[font-weight,color] duration-200 hover:font-bold",
-        isDark
-          ? "text-white/80 hover:text-white"
-          : "text-black hover:text-neutral-900",
+        "inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-black",
+        "border-0 shadow-none outline-none ring-0",
+        "transition-[opacity,transform] duration-200 hover:opacity-90 active:scale-[0.98]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
       )}
     >
@@ -165,14 +143,11 @@ function LoginLink({ isDark, className }: { isDark: boolean; className?: string 
   );
 }
 
-export function SiteHeader({ theme = "dark" }: SiteHeaderProps) {
+export function SiteHeader() {
   const pathname = usePathname();
-  const showLogin = isHomePath(pathname);
   const [menuState, setMenuState] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { scrollYProgress } = useScroll();
-  // Site canvas is Wine Ash (dark). Default to light text / white logo.
-  const isDark = theme !== "light";
 
   React.useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
@@ -189,21 +164,14 @@ export function SiteHeader({ theme = "dark" }: SiteHeaderProps) {
     <header>
       <nav
         data-state={menuState && "active"}
-        className={cn(
-          "group fixed inset-x-0 top-0 z-50 w-full pt-4 lg:pt-6",
-          isDark && "text-white",
-        )}
+        className="group fixed inset-x-0 top-0 z-50 w-full pt-4 text-white lg:pt-6"
       >
         <div
           className={cn(
             "mx-auto max-w-7xl rounded-3xl px-6 transition-all duration-300 lg:px-12",
             scrolled
-              ? isDark
-                ? "bg-black/55 shadow-lg shadow-black/20 backdrop-blur-2xl"
-                : "bg-background/70 shadow-lg shadow-black/5 backdrop-blur-2xl"
-              : isDark
-                ? "bg-black/20 backdrop-blur-md"
-                : "bg-background/30 backdrop-blur-md",
+              ? "bg-black/55 shadow-lg shadow-black/20 backdrop-blur-2xl"
+              : "bg-black/20 backdrop-blur-md",
           )}
         >
           <motion.div
@@ -218,13 +186,8 @@ export function SiteHeader({ theme = "dark" }: SiteHeaderProps) {
                 aria-label="UCSD x CRS home"
                 className="flex items-center"
               >
-                {/* White mark on Wine Ash / dark chrome */}
                 <Image
-                  src={
-                    isDark
-                      ? "/images/ucsd-x-crs-logo-footer.png"
-                      : "/images/ucsd-x-crs-logo.png"
-                  }
+                  src="/images/ucsd-x-crs-logo-footer.png"
                   alt="UCSD x CRS"
                   width={1024}
                   height={639}
@@ -244,18 +207,14 @@ export function SiteHeader({ theme = "dark" }: SiteHeaderProps) {
               </button>
 
               <div className="hidden lg:block">
-                <DesktopNav isDark={isDark} />
+                <DesktopNav />
               </div>
             </div>
 
-            {/* Desktop Login — completely outside the mobile bordered panel */}
-            {showLogin && (
-              <div className="hidden lg:block lg:ml-4">
-                <LoginLink isDark={isDark} />
-              </div>
-            )}
+            <div className="hidden lg:block lg:ml-4">
+              <LoginButton />
+            </div>
 
-            {/* Mobile menu panel only — never shown as a desktop Login wrapper */}
             <AnimatePresence>
               {menuState && (
                 <motion.div
@@ -263,15 +222,10 @@ export function SiteHeader({ theme = "dark" }: SiteHeaderProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.18 }}
-                  className={cn(
-                    "mb-6 w-full space-y-8 rounded-3xl p-6 shadow-2xl lg:hidden",
-                    isDark
-                      ? "border border-white/15 bg-zinc-950 shadow-black/40"
-                      : "border border-black/10 bg-background shadow-zinc-300/20",
-                  )}
+                  className="mb-6 w-full space-y-8 rounded-3xl border border-white/15 bg-zinc-950 p-6 shadow-2xl shadow-black/40 lg:hidden"
                 >
-                  <MobileNav isDark={isDark} />
-                  {showLogin && <LoginLink isDark={isDark} />}
+                  <MobileNav />
+                  <LoginButton className="w-full" />
                 </motion.div>
               )}
             </AnimatePresence>

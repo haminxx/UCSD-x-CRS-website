@@ -76,24 +76,24 @@
 
 :root {
   --radius: 0.625rem;
-  /* Wine Ash — brand canvas */
-  --background: #32292f;
+  /* Deep teal — brand canvas */
+  --background: #193c47;
   --foreground: #f5f2ef;
-  --card: #3c3339;
+  --card: #234a56;
   --card-foreground: #f5f2ef;
-  --popover: #3c3339;
+  --popover: #234a56;
   --popover-foreground: #f5f2ef;
   --primary: #f5f2ef;
-  --primary-foreground: #32292f;
-  --secondary: #463c43;
+  --primary-foreground: #193c47;
+  --secondary: #2a5460;
   --secondary-foreground: #f5f2ef;
-  --muted: #463c43;
-  --muted-foreground: #c4bbb8;
-  --accent: #463c43;
+  --muted: #2a5460;
+  --muted-foreground: #b8c9ce;
+  --accent: #2a5460;
   --accent-foreground: #f5f2ef;
   --destructive: oklch(0.577 0.245 27.325);
   --border: rgb(255 255 255 / 14%);
-  --input: #463c43;
+  --input: #2a5460;
   --ring: rgb(255 255 255 / 28%);
   --font-sans: "Paperlogy", ui-sans-serif, system-ui, sans-serif;
 }
@@ -149,9 +149,68 @@
   border-color: var(--border);
 }
 
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / old Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome / Safari / Edge */
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Super-thin vertical hero content opacity slider */
+.hero-content-opacity {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 3px;
+  min-height: 10rem;
+  height: 100%;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  accent-color: rgb(255 255 255 / 85%);
+}
+
+.hero-content-opacity::-webkit-slider-runnable-track {
+  width: 2px;
+  background: rgb(255 255 255 / 35%);
+  border-radius: 999px;
+}
+
+.hero-content-opacity::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  margin-left: -4px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 90%);
+  border: none;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 20%);
+}
+
+.hero-content-opacity::-moz-range-track {
+  width: 2px;
+  background: rgb(255 255 255 / 35%);
+  border-radius: 999px;
+}
+
+.hero-content-opacity::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: none;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 20%);
 }
