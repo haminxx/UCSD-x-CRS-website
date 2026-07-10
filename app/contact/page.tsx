@@ -19,7 +19,20 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { AnimatedGradientBackground } from "@/components/ui/animated-gradient-background";
 import { cn } from "@/lib/utils";
+
+/** Soft steel / teal radial — readable under dark Contact typography. */
+const CONTACT_GRADIENT_COLORS = [
+  "#f8fafb",
+  "#eef3f6",
+  "#e2e9ee",
+  "#d4dee6",
+  "#c5d4d8",
+  "#b6c2c8",
+  "#a8b4bb",
+];
+const CONTACT_GRADIENT_STOPS = [35, 50, 60, 70, 80, 90, 100];
 
 const SERVICES = ["Brand", "Digital", "Campaign", "Other"] as const;
 const BUDGETS = [
@@ -198,8 +211,20 @@ export default function ContactPage() {
   return (
     <>
       <SiteHeader />
-      <main className="bg-white text-[#0a1218]">
-        <form onSubmit={handleSubmit} className="relative">
+      <main className="relative text-[#0a1218]">
+        <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+          <AnimatedGradientBackground
+            Breathing
+            startingGap={125}
+            animationSpeed={0.008}
+            breathingRange={3.5}
+            topOffset={8}
+            gradientColors={CONTACT_GRADIENT_COLORS}
+            gradientStops={CONTACT_GRADIENT_STOPS}
+            containerClassName="bg-[#f8fafb]"
+          />
+        </div>
+        <form onSubmit={handleSubmit} className="relative z-10">
           <div
             ref={scrollerRef}
             className="contact-snap h-dvh snap-y snap-mandatory overflow-y-auto scroll-smooth pt-20 md:pt-24"
