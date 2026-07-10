@@ -218,3 +218,22 @@ html[data-theme="light"] body {
 html[data-theme="light"] body::before {
   opacity: 0;
 }
+
+/* Custom tire cursor — hide system cursor on fine pointers */
+html.tire-cursor-active,
+html.tire-cursor-active * {
+  cursor: none !important;
+}
+
+@keyframes tire-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-tire-spin {
+  animation: tire-spin 0.7s linear infinite;
+}

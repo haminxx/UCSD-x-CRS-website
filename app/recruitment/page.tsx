@@ -1,6 +1,9 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageEnter } from "@/components/page-motion";
 
 const JOIN_FORM_URL = "https://form.typeform.com/to/hQtOGGHW";
 
@@ -45,37 +48,39 @@ export default function RecruitmentPage() {
         </div>
 
         <section className="relative z-10 flex min-h-dvh flex-col justify-center px-6 pb-20 pt-32 md:px-10 md:pb-28 md:pt-40 lg:px-16">
-          <div className="mx-auto w-full max-w-7xl">
-            <h1 className="flex flex-col items-center gap-5 text-center text-[clamp(2.25rem,6.5vw,5.5rem)] font-light leading-[1.05] tracking-tight md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
-              <span className="md:max-w-[42%] md:flex-1">life is a creative</span>
-              <FloralMark className="size-8 shrink-0 text-black/60 md:size-10 lg:size-12" />
-              <span className="md:max-w-[42%] md:flex-1 md:text-right">
-                Join the team
-              </span>
-            </h1>
+          <PageEnter>
+            <div className="mx-auto w-full max-w-7xl">
+              <h1 className="flex flex-col items-center gap-5 text-center text-[clamp(2.25rem,6.5vw,5.5rem)] font-light leading-[1.05] tracking-tight md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
+                <span className="md:max-w-[42%] md:flex-1">life is a creative</span>
+                <FloralMark className="size-8 shrink-0 text-black/60 md:size-10 lg:size-12" />
+                <span className="md:max-w-[42%] md:flex-1 md:text-right">
+                  Join the team
+                </span>
+              </h1>
 
-            <div className="mt-10 flex flex-col gap-9 md:mt-12 md:ml-auto md:max-w-[42%] md:gap-11">
-              <div className="h-px w-16 bg-black/40 md:ml-auto" />
+              <div className="mt-10 flex flex-col gap-9 md:mt-12 md:ml-auto md:max-w-[42%] md:gap-11">
+                <div className="h-px w-16 bg-black/40 md:ml-auto" />
 
-              <div className="flex flex-col items-start gap-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
-                <p className="max-w-sm text-left text-sm leading-relaxed text-black/55 md:text-[0.95rem]">
-                  Build, race, and grow with UCSD x CRS. Bring your craft to a
-                  team that turns late nights into lap times — and purpose into
-                  every mile.
-                </p>
+                <div className="flex flex-col items-start gap-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+                  <p className="max-w-sm text-left text-sm leading-relaxed text-black/55 md:text-[0.95rem]">
+                    Build, race, and grow with UCSD x CRS. Bring your craft to a
+                    team that turns late nights into lap times — and purpose into
+                    every mile.
+                  </p>
 
-                <a
-                  href={JOIN_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#0a1218] px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-black"
-                >
-                  JOIN US
-                  <ArrowRight className="size-4" aria-hidden="true" />
-                </a>
+                  <a
+                    href={JOIN_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#0a1218] px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-black"
+                  >
+                    JOIN US
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          </PageEnter>
         </section>
       </main>
       <SiteFooter />

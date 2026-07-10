@@ -9,6 +9,7 @@ import {
   type OrbitStackItem,
 } from "@/components/ui/orbit-card-stack";
 import { Button } from "@/components/ui/button";
+import { PageEnter } from "@/components/page-motion";
 import { cn } from "@/lib/utils";
 
 const orbitLeaders: OrbitStackItem[] = [
@@ -206,6 +207,7 @@ export default function AboutUsPage() {
     <>
       <SiteHeader />
       <main className="overflow-x-hidden bg-white text-[#0a1218]">
+        <PageEnter>
         <section className="relative px-6 pb-12 pt-32 md:pt-40">
           <div className="mx-auto max-w-7xl text-center">
             <div className="relative mx-auto flex min-h-[5.5rem] items-center justify-center md:min-h-[7rem]">
@@ -278,6 +280,7 @@ export default function AboutUsPage() {
             )}
           </div>
         </section>
+        </PageEnter>
       </main>
       <SiteFooter />
     </>

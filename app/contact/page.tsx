@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ArrowUpRight, Paperclip } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageEnter } from "@/components/page-motion";
 import { cn } from "@/lib/utils";
 
 const SERVICES = ["Brand", "Digital", "Campaign", "Other"] as const;
@@ -115,6 +116,7 @@ export default function ContactPage() {
     <>
       <SiteHeader />
       <main className="min-h-screen bg-white text-[#0a1218]">
+        <PageEnter>
         <form
           onSubmit={handleSubmit}
           className="mx-auto max-w-3xl px-6 pb-24 pt-32 md:px-10 md:pb-32 md:pt-40"
@@ -289,6 +291,7 @@ export default function ContactPage() {
             </button>
           </div>
         </form>
+        </PageEnter>
       </main>
       <SiteFooter />
     </>

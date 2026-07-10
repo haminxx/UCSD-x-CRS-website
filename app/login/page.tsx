@@ -1,15 +1,39 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { PageEnter } from "@/components/page-motion";
 import { cn } from "@/lib/utils";
 
+/**
+ * Login page — compact card UI (cn + useState pattern) over a blurred
+ * home-video background that gently follows the cursor.
+ */
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const frame = useRef(0);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      cancelAnimationFrame(frame.current);
+      frame.current = requestAnimationFrame(() => {
+        const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+        // subtle parallax — a few percent of viewport
+        setOffset({ x: nx * 18, y: ny * 12 });
+      });
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(frame.current);
+    };
+  }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,36 +43,53 @@ export default function LoginPage() {
   return (
     <>
       <SiteHeader />
-      <main className="flex min-h-screen items-center justify-center bg-background px-6 pb-20 pt-32 text-foreground md:pt-40">
-        <form
-          onSubmit={handleSubmit}
-          className="m-auto h-fit w-full max-w-sm overflow-hidden rounded-2xl border border-white/12 bg-[#121a20] p-0.5 shadow-md shadow-black/40"
-        >
-          <div className="p-8 pb-7 md:p-9 md:pb-8">
-            <div>
-              <Link
-                href="/"
-                aria-label="UCSD x CRS home"
-                className="mx-auto block w-fit"
-              >
-                <Image
-                  src="/images/ucsd-x-crs-logo-footer.png"
-                  alt="UCSD x CRS"
-                  width={1024}
-                  height={588}
-                  className="h-9 w-auto object-contain"
-                  priority
-                />
-              </Link>
-              <h1 className="mt-6 text-center text-xl font-semibold tracking-tight">
-                Sign in to UCSD x CRS
-              </h1>
-              <p className="mt-2 text-center text-sm text-muted-foreground">
-                Welcome back! Sign in to continue
-              </p>
-            </div>
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-20 pt-32 text-foreground md:pt-40">
+        {/* Blurred home video — follows cursor slightly */}
+        <div className="absolute inset-0 overflow-hidden" aria-hidden>
+          <div
+            className="absolute inset-[-8%] will-change-transform transition-transform duration-500 ease-out"
+            style={{
+              transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(1.12)`,
+            }}
+          >
+            <video
+              className="size-full object-cover"
+              src="/videos/ucsdxcrs.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
+          <div className="absolute inset-0 bg-[#0a1218]/55 backdrop-blur-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
+        </div>
 
-            <div className="mt-8 space-y-5">
+        <PageEnter className="relative z-10 w-full max-w-sm">
+          <form
+            onSubmit={handleSubmit}
+            className={cn(
+              "flex w-full flex-col items-center gap-4 rounded-2xl border border-white/12",
+              "bg-[#121a20]/88 p-6 shadow-2xl shadow-black/40 backdrop-blur-md md:p-8",
+            )}
+          >
+            <Link href="/" aria-label="UCSD x CRS home" className="mb-1">
+              <Image
+                src="/images/ucsd-x-crs-logo-footer.png"
+                alt="UCSD x CRS"
+                width={1024}
+                height={588}
+                className="h-8 w-auto object-contain"
+                priority
+              />
+            </Link>
+
+            <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
+            <p className="-mt-2 text-center text-sm text-muted-foreground">
+              Sign in to continue to UCSD x CRS
+            </p>
+
+            <div className="mt-2 w-full space-y-4">
               <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -66,9 +107,9 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@ucsd.edu"
                   className={cn(
-                    "w-full rounded-xl border-0 bg-[#1a242c] px-4 py-3 text-sm text-foreground",
-                    "placeholder:text-white/40 outline-none transition-[box-shadow]",
-                    "focus:ring-2 focus:ring-white/20",
+                    "w-full rounded-lg border-0 bg-white/8 px-4 py-3 text-sm text-foreground",
+                    "placeholder:text-white/35 outline-none transition-[box-shadow]",
+                    "focus:ring-2 focus:ring-white/25",
                   )}
                 />
               </div>
@@ -85,7 +126,7 @@ export default function LoginPage() {
                     href="#"
                     className="text-xs text-white/45 underline-offset-4 hover:text-white/80 hover:underline"
                   >
-                    Forgot your Password?
+                    Forgot password?
                   </Link>
                 </div>
                 <input
@@ -98,9 +139,9 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className={cn(
-                    "w-full rounded-xl border-0 bg-[#1a242c] px-4 py-3 text-sm text-foreground",
-                    "placeholder:text-white/40 outline-none transition-[box-shadow]",
-                    "focus:ring-2 focus:ring-white/20",
+                    "w-full rounded-lg border-0 bg-white/8 px-4 py-3 text-sm text-foreground",
+                    "placeholder:text-white/35 outline-none transition-[box-shadow]",
+                    "focus:ring-2 focus:ring-white/25",
                   )}
                 />
               </div>
@@ -108,27 +149,27 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="mt-1 h-11 w-full rounded-full bg-white text-base text-[#0a1218] hover:bg-white/90"
+                className="mt-1 h-11 w-full rounded-lg bg-white text-base font-semibold text-[#0a1218] hover:bg-white/90"
               >
                 Log in
               </Button>
             </div>
-          </div>
 
-          <div className="border-t border-white/10 bg-[#0e161c] px-8 py-5 text-center md:px-9">
-            <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?
-            </p>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="mt-3 h-11 w-full rounded-full border-white/20 bg-transparent text-base text-foreground hover:bg-white/5"
-            >
-              <Link href="#">Create an Account</Link>
-            </Button>
-          </div>
-        </form>
+            <div className="mt-2 w-full border-t border-white/10 pt-5 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don&apos;t have an account?
+              </p>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="mt-3 h-11 w-full rounded-lg border-white/20 bg-transparent text-base hover:bg-white/5"
+              >
+                <Link href="#">Create an Account</Link>
+              </Button>
+            </div>
+          </form>
+        </PageEnter>
       </main>
     </>
   );
