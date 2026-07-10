@@ -88,8 +88,8 @@ export function LetterTitle({ title, as: Tag = "h1", className }: LetterTitlePro
   return (
     <Tag
       className={cn(
-        "text-balance font-bold tracking-[-0.04em] text-[#0a1218]",
-        "text-[clamp(3.25rem,7.5vw,6.75rem)]",
+        "whitespace-nowrap font-bold tracking-[-0.04em] text-[#0a1218]",
+        "text-[clamp(1.65rem,6.5vw,6.75rem)]",
         "leading-[1.05]",
         className,
       )}
@@ -97,7 +97,7 @@ export function LetterTitle({ title, as: Tag = "h1", className }: LetterTitlePro
       {words.map((word, wordIndex) => (
         <span
           key={`${word}-${wordIndex}`}
-          className="mr-3 inline-block last:mr-0 md:mr-4"
+          className="mr-2 inline-block last:mr-0 md:mr-4"
         >
           {word.split("").map((letter, letterIndex) => (
             <motion.span

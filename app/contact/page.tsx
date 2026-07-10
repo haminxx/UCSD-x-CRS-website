@@ -156,7 +156,7 @@ function ContactSection({
   return (
     <div
       className={cn(
-        "flex min-h-dvh w-full items-center justify-center px-6 py-16 md:px-10 md:py-20",
+        "flex min-h-dvh w-full items-center justify-center overflow-x-hidden px-6 py-16 md:px-10 md:py-20",
         className,
       )}
     >
@@ -429,7 +429,7 @@ export default function ContactPage() {
           {/* Section 2 — organization type & inquiry focus */}
           <section data-contact-section={1} className="snap-start snap-always">
             <ContactSection active={activeSection === 1}>
-              <h2 className="whitespace-nowrap text-center text-[clamp(0.95rem,3.6vw,2.25rem)] font-semibold leading-none tracking-tight md:text-3xl lg:text-4xl">
+              <h2 className="mx-auto w-full text-center text-[clamp(0.95rem,3.2vw,2.25rem)] font-semibold leading-snug tracking-tight md:text-3xl lg:text-4xl">
                 How would you categorize your organization
               </h2>
               <p className="mt-4 text-center text-sm text-[#F2F0EF]/50">
@@ -605,8 +605,8 @@ export default function ContactPage() {
                       transition={{ duration: 0.45, ease: easePremium }}
                       className="flex max-w-md flex-col items-center gap-4"
                     >
-                      <div className="flex size-12 items-center justify-center rounded-full bg-[#F2F0EF] text-[#0a1218]">
-                        <Check className="size-5" strokeWidth={2.5} />
+                      <div className="flex size-16 items-center justify-center rounded-full bg-[#F2F0EF] text-[#0a1218]">
+                        <Check className="size-9" strokeWidth={3.25} />
                       </div>
                       <p className="text-base font-medium leading-relaxed text-[#F2F0EF] md:text-lg">
                         Submission Successful. Our team will review your details
@@ -621,7 +621,7 @@ export default function ContactPage() {
                       exit={{ opacity: 0 }}
                       className="flex flex-col items-center gap-8"
                     >
-                      <p className="max-w-md text-xl font-bold text-[#F2F0EF] md:text-2xl">
+                      <p className="max-w-lg text-2xl font-extrabold leading-snug tracking-tight text-[#F2F0EF] md:text-3xl lg:text-4xl">
                         We look forward to building something great together!
                       </p>
 
