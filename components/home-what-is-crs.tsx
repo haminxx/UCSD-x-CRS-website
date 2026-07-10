@@ -3,18 +3,14 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
-import { Flag, UserPlus, Wrench } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const FEATURES: {
-  icon: LucideIcon;
   title: string;
   body: ReactNode;
 }[] = [
   {
-    icon: UserPlus,
     title: "Join & onboard",
     body: (
       <>
@@ -28,7 +24,6 @@ const FEATURES: {
     ),
   },
   {
-    icon: Wrench,
     title: "Train across roles",
     body: (
       <>
@@ -38,7 +33,6 @@ const FEATURES: {
     ),
   },
   {
-    icon: Flag,
     title: "Race & deliver",
     body: (
       <>
@@ -112,41 +106,37 @@ export function HomeWhatIsCrs() {
               How it works?
             </h3>
 
-            <ul className="mt-10 space-y-8 md:mt-12 md:space-y-10">
-              {FEATURES.map((feature, i) => {
-                const Icon = feature.icon;
-                return (
-                  <motion.li
-                    key={feature.title}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-5% 0px" }}
-                    transition={{
-                      duration: 0.6,
-                      delay: 0.1 + i * 0.08,
-                      ease: EASE,
-                    }}
-                    className="flex gap-4 md:gap-5"
+            <ol className="mt-10 space-y-8 md:mt-12 md:space-y-10">
+              {FEATURES.map((feature, i) => (
+                <motion.li
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-5% 0px" }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.1 + i * 0.08,
+                    ease: EASE,
+                  }}
+                  className="flex gap-4 md:gap-5"
+                >
+                  <span
+                    className="shrink-0 pt-0.5 text-lg font-bold tabular-nums tracking-tight text-[#F2F0EF] md:text-xl"
+                    aria-hidden
                   >
-                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#F2F0EF] md:size-12">
-                      <Icon
-                        className="size-5 text-[#182B49] md:size-[1.35rem]"
-                        strokeWidth={2}
-                        aria-hidden
-                      />
-                    </div>
-                    <div className="min-w-0 pt-0.5">
-                      <h4 className="text-lg font-bold tracking-tight text-[#F2F0EF] md:text-xl">
-                        {feature.title}
-                      </h4>
-                      <p className="mt-1.5 text-[0.95rem] leading-relaxed text-[#F2F0EF]/55 md:text-base">
-                        {feature.body}
-                      </p>
-                    </div>
-                  </motion.li>
-                );
-              })}
-            </ul>
+                    {i + 1}.
+                  </span>
+                  <div className="min-w-0">
+                    <h4 className="text-lg font-bold tracking-tight text-[#F2F0EF] md:text-xl">
+                      {feature.title}
+                    </h4>
+                    <p className="mt-1.5 text-[0.95rem] leading-relaxed text-[#F2F0EF]/55 md:text-base">
+                      {feature.body}
+                    </p>
+                  </div>
+                </motion.li>
+              ))}
+            </ol>
           </motion.div>
         </div>
       </div>

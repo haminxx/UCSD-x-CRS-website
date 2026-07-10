@@ -349,6 +349,17 @@ export function HeroSection() {
                 </motion.section>
 
                 <HomeWhatIsCrs />
+
+                <section
+                    aria-label="Home placeholder section 1"
+                    data-home-slot="1"
+                    className="min-h-[50vh] w-full border-t border-black/[0.06] bg-[#F2F0EF]"
+                />
+                <section
+                    aria-label="Home placeholder section 2"
+                    data-home-slot="2"
+                    className="min-h-[50vh] w-full border-t border-white/[0.06] bg-background"
+                />
             </main>
             <SiteFooter />
         </>
