@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { SpringUnderline } from "@/components/spring-underline";
 import { motion, useReducedMotion, type Transition } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
@@ -12,6 +13,8 @@ export interface OrbitStackItem {
   initials?: string;
   stat?: string;
   image?: string;
+  /** Optional LinkedIn (or other) profile URL — only the name is linked. */
+  href?: string;
 }
 
 interface OrbitCardStackProps {
@@ -113,24 +116,60 @@ function Portrait({ item }: { item: OrbitStackItem }) {
     );
   }
 
+  // Named member without a photo — clean initials (no cartoon / invented face)
+  const initials =
+    item.initials?.trim() ||
+    item.name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("");
+
   return (
     <div
-      className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.45rem] border border-black/[0.08] bg-black/[0.045]"
+      className="relative flex aspect-[1.36] w-full items-center justify-center overflow-hidden rounded-[1.45rem] border border-black/[0.08] bg-gradient-to-br from-[#ebe8e1] via-[#e3dfd6] to-[#d8d3c8]"
       style={{ "--accent": item.accent ?? "#f3f1ea" } as CSSProperties}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_20%,var(--accent),transparent_24%),radial-gradient(circle_at_85%_72%,rgba(255,255,255,0.5),transparent_28%)] opacity-45" />
-      <div className="absolute inset-x-8 bottom-0 h-[72%] rounded-t-[999px] border-2 border-zinc-950 bg-[#f7f5ef]" />
-      <div className="absolute left-1/2 top-[22%] size-24 -translate-x-1/2 rounded-[45%_55%_48%_52%] border-2 border-zinc-950 bg-[#f5f2eb]">
-        <div className="absolute left-1/2 top-[42%] h-2 w-10 -translate-x-1/2 rounded-full bg-zinc-950 opacity-80" />
-        <div className="absolute left-[27%] top-[34%] size-2 rounded-full bg-zinc-950" />
-        <div className="absolute right-[27%] top-[34%] size-2 rounded-full bg-zinc-950" />
-        <div className="absolute left-1/2 top-[52%] h-6 w-4 -translate-x-1/2 rounded-b-full border-b-2 border-zinc-950" />
-        <div
-          className="absolute -top-5 left-1/2 h-9 w-24 -translate-x-1/2 rounded-t-full border-2 border-b-0 border-zinc-950"
-          style={{ backgroundColor: item.accent ?? "#f3f1ea" }}
-        />
-      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,var(--accent),transparent_42%)] opacity-40" />
+      <span className="relative text-5xl font-semibold tracking-[-0.06em] text-zinc-950/80">
+        {initials}
+      </span>
     </div>
+  );
+}
+
+function OrbitCardName({ item }: { item: OrbitStackItem }) {
+  const nameClass =
+    "mt-2 min-h-[2rem] text-balance text-[1.7rem] font-semibold leading-[1.08] tracking-[-0.04em] text-zinc-950 sm:text-[1.85rem]";
+
+  if (!item.name.trim()) {
+    return <h3 className={nameClass}>{item.name}</h3>;
+  }
+
+  if (item.href) {
+    return (
+      <h3 className={nameClass}>
+        <SpringUnderline className="max-w-full">
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="outline-none focus-visible:opacity-80"
+            onClick={(event) => event.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            {item.name}
+          </a>
+        </SpringUnderline>
+      </h3>
+    );
+  }
+
+  return (
+    <h3 className={nameClass}>
+      <SpringUnderline>{item.name}</SpringUnderline>
+    </h3>
   );
 }
 
@@ -285,9 +324,7 @@ export function OrbitCardStack({
                   <p className="min-h-[1rem] text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
                     {item.role}
                   </p>
-                  <h3 className="mt-2 min-h-[2rem] text-[2rem] font-semibold leading-none tracking-[-0.04em] text-zinc-950">
-                    {item.name}
-                  </h3>
+                  <OrbitCardName item={item} />
                 </div>
                 <p className="mt-4 min-h-[4.5rem] max-w-[17rem] text-[0.98rem] font-medium leading-[1.42] tracking-[-0.01em] text-zinc-700">
                   {item.description}

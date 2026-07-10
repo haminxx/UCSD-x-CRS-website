@@ -21,19 +21,29 @@ const emptyOrbitCard = (accent: string): OrbitStackItem => ({
   stat: "",
 });
 
-/** Center card (index 2) is Christian Lee; side cards stay empty for now. */
+/** Index 1 = Stephanie (left-of-center), index 2 = Christian (center). */
 const orbitLeaders: OrbitStackItem[] = [
   emptyOrbitCard("#f8d66d"),
-  emptyOrbitCard("#78dcca"),
+  {
+    name: "Stephanie Kovalchuk-Lum",
+    role: "CogSci - Design & Interaction",
+    description:
+      "Co-founded UCSD × CRS and helps shape the team’s design and interaction direction.",
+    accent: "#78dcca",
+    initials: "SK",
+    stat: "Eight College",
+    href: "https://www.linkedin.com/in/stephaniekovalchuk-lum/",
+  },
   {
     name: "Christian Lee",
-    role: "Cognitive Science",
+    role: "CogSci - Design & Interaction",
     description:
       "Founded UCSD × CRS and sets the direction for the collegiate racing team.",
     accent: "#f3f1ea",
     initials: "CL",
-    stat: "Revelle College",
+    stat: "Eight College",
     image: "/images/team/christian-lee.jpg",
+    href: "https://www.linkedin.com/in/christian-j-l/",
   },
   emptyOrbitCard("#b9a7ff"),
   emptyOrbitCard("#ff9d77"),
@@ -136,9 +146,10 @@ export default function AboutUsPage() {
             defaultActiveIndex={2}
             className="-mt-6 md:-mt-4"
             onActiveChange={(item) => {
-              // Center founder card → "Founder"; empty side cards keep default
               if (item.name === "Christian Lee") {
                 setHeadline("Founder");
+              } else if (item.name === "Stephanie Kovalchuk-Lum") {
+                setHeadline("Co-founder");
               } else if (item.name.trim()) {
                 setHeadline(item.name);
               } else {
