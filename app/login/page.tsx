@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
-import { Button } from "@/components/ui/button";
 import { PageEnter } from "@/components/page-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * Login page — compact card UI (cn + useState pattern) over a blurred
- * home-video background that gently follows the cursor.
+ * Login — line-based “neural access” layout (no card), over a lightly
+ * blurred home video that follows the cursor.
  */
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -24,7 +22,6 @@ export default function LoginPage() {
       frame.current = requestAnimationFrame(() => {
         const nx = (e.clientX / window.innerWidth - 0.5) * 2;
         const ny = (e.clientY / window.innerHeight - 0.5) * 2;
-        // subtle parallax — a few percent of viewport
         setOffset({ x: nx * 18, y: ny * 12 });
       });
     };
@@ -43,8 +40,7 @@ export default function LoginPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-20 pt-32 text-foreground md:pt-40">
-        {/* Blurred home video — follows cursor slightly */}
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-28 text-white md:pt-32">
         <div className="absolute inset-0 overflow-hidden" aria-hidden>
           <div
             className="absolute inset-[-8%] will-change-transform transition-transform duration-500 ease-out"
@@ -61,42 +57,32 @@ export default function LoginPage() {
               playsInline
             />
           </div>
-          <div className="absolute inset-0 bg-[#0a1218]/55 backdrop-blur-2xl" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
+          {/* Lighter blur so the video stays more visible */}
+          <div className="absolute inset-0 bg-black/45 backdrop-blur-[6px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55" />
         </div>
 
-        <PageEnter className="relative z-10 w-full max-w-sm">
-          <form
-            onSubmit={handleSubmit}
-            className={cn(
-              "flex w-full flex-col items-center gap-4 rounded-2xl border border-white/12",
-              "bg-[#121a20]/88 p-6 shadow-2xl shadow-black/40 backdrop-blur-md md:p-8",
-            )}
-          >
-            <Link href="/" aria-label="UCSD x CRS home" className="mb-1">
-              <Image
-                src="/images/ucsd-x-crs-logo-footer.png"
-                alt="UCSD x CRS"
-                width={1024}
-                height={588}
-                className="h-8 w-auto object-contain"
-                priority
-              />
-            </Link>
+        {/* Soft ambient blob behind the form */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-[42%] h-[28rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.06] blur-3xl"
+        />
 
-            <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="-mt-2 text-center text-sm text-muted-foreground">
-              Sign in to continue to UCSD x CRS
+        <PageEnter className="relative z-10 w-full max-w-md">
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <p className="font-mono text-[11px] tracking-[0.22em] text-white/45 uppercase">
+              System node: UCSDxCRS
             </p>
+            <h1 className="mt-4 text-5xl font-bold leading-[0.95] tracking-tight md:text-6xl">
+              <span className="block">TEAM</span>
+              <span className="block">ACCESS</span>
+            </h1>
 
-            <div className="mt-2 w-full space-y-4">
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-white/90"
-                >
-                  Email
-                </label>
+            <div className="mt-16 space-y-10">
+              <label className="block">
+                <span className="font-mono text-[11px] tracking-[0.2em] text-white/45 uppercase">
+                  User identity
+                </span>
                 <input
                   id="email"
                   name="email"
@@ -107,28 +93,17 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@ucsd.edu"
                   className={cn(
-                    "w-full rounded-lg border-0 bg-white/8 px-4 py-3 text-sm text-foreground",
-                    "placeholder:text-white/35 outline-none transition-[box-shadow]",
-                    "focus:ring-2 focus:ring-white/25",
+                    "mt-3 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3",
+                    "font-mono text-sm text-white/90 placeholder:text-white/30",
+                    "outline-none ring-0 focus:border-white/80",
                   )}
                 />
-              </div>
+              </label>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <label
-                    htmlFor="password"
-                    className="text-sm font-medium text-white/90"
-                  >
-                    Password
-                  </label>
-                  <Link
-                    href="#"
-                    className="text-xs text-white/45 underline-offset-4 hover:text-white/80 hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+              <label className="block">
+                <span className="font-mono text-[11px] tracking-[0.2em] text-white/45 uppercase">
+                  Sequence key
+                </span>
                 <input
                   id="password"
                   name="password"
@@ -137,36 +112,30 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="••••••••••••"
                   className={cn(
-                    "w-full rounded-lg border-0 bg-white/8 px-4 py-3 text-sm text-foreground",
-                    "placeholder:text-white/35 outline-none transition-[box-shadow]",
-                    "focus:ring-2 focus:ring-white/25",
+                    "mt-3 w-full border-0 border-b border-white/35 bg-transparent px-0 pb-3",
+                    "font-mono text-sm text-white/90 placeholder:text-white/30",
+                    "outline-none ring-0 focus:border-white/80",
                   )}
                 />
-              </div>
-
-              <Button
-                type="submit"
-                size="lg"
-                className="mt-1 h-11 w-full rounded-lg bg-white text-base font-semibold text-[#0a1218] hover:bg-white/90"
-              >
-                Log in
-              </Button>
+              </label>
             </div>
 
-            <div className="mt-2 w-full border-t border-white/10 pt-5 text-center">
-              <p className="text-sm text-muted-foreground">
-                Don&apos;t have an account?
-              </p>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="mt-3 h-11 w-full rounded-lg border-white/20 bg-transparent text-base hover:bg-white/5"
-              >
-                <Link href="#">Create an Account</Link>
-              </Button>
+            <button
+              type="submit"
+              className="mt-12 w-full rounded-full bg-white py-4 text-sm font-bold tracking-[0.14em] text-black uppercase transition hover:bg-white/90"
+            >
+              Initialize stream
+            </button>
+
+            <div className="mt-10 flex items-center justify-between gap-4 font-mono text-[11px] tracking-[0.16em] text-white/45 uppercase">
+              <Link href="#" className="transition hover:text-white/80">
+                Encrypted recovery
+              </Link>
+              <Link href="#" className="transition hover:text-white/80">
+                Create an Account
+              </Link>
             </div>
           </form>
         </PageEnter>

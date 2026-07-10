@@ -98,7 +98,7 @@ function ContactSection({
   return (
     <div
       className={cn(
-        "flex min-h-[calc(100dvh-5.5rem)] w-full items-center justify-center px-6 py-16 md:min-h-[calc(100dvh-6rem)] md:px-10",
+        "flex min-h-[calc(100dvh-5.5rem)] w-full items-center justify-center px-6 pb-16 pt-28 md:min-h-[calc(100dvh-6rem)] md:px-10 md:pb-20 md:pt-36",
         className,
       )}
     >
@@ -202,7 +202,7 @@ export default function ContactPage() {
         <form onSubmit={handleSubmit} className="relative">
           <div
             ref={scrollerRef}
-            className="h-dvh snap-y snap-mandatory overflow-y-auto scroll-smooth pt-20 md:pt-24"
+            className="contact-snap h-dvh snap-y snap-mandatory overflow-y-auto scroll-smooth pt-20 md:pt-24"
           >
             {/* Section 1 — personal */}
             <section
