@@ -341,7 +341,7 @@ export function RecruitmentChatModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[90] flex items-center justify-center px-4 py-8"
+          className="fixed inset-0 z-[110] flex items-center justify-center px-4 py-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
