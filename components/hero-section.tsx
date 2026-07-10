@@ -12,6 +12,34 @@ import { motion } from 'motion/react'
 
 const HERO_VIDEO_SRC = '/videos/ucsdxcrs-v4.mp4'
 
+const PARTNER_LOGOS = [
+    {
+        src: '/images/logos/rady-school.png',
+        alt: 'Rady School of Management',
+        className: 'h-8 w-auto max-w-[9.5rem] object-contain md:h-9 md:max-w-[11rem]',
+    },
+    {
+        src: '/images/logos/mazda-motorsports.png',
+        alt: 'Mazda Motorsports',
+        className: 'h-10 w-auto max-w-[8.5rem] object-contain md:h-11 md:max-w-[9.5rem]',
+    },
+    {
+        src: '/images/logos/uc-san-diego.png',
+        alt: 'UC San Diego',
+        className: 'h-7 w-auto max-w-[11rem] object-contain md:h-8 md:max-w-[13rem]',
+    },
+    {
+        src: '/images/logos/crs.png',
+        alt: 'Collegiate Racing Series',
+        className: 'h-11 w-auto max-w-[7.5rem] object-contain md:h-12 md:max-w-[8.5rem]',
+    },
+    {
+        src: '/images/logos/jacobs-school.png',
+        alt: 'Jacobs School of Engineering',
+        className: 'h-9 w-auto max-w-[11rem] object-contain md:h-10 md:max-w-[13rem]',
+    },
+] as const
+
 const RESTING_OPACITY = 1
 const IDLE_MS = 2500
 const FADE_OUT_S = 1.6
@@ -279,86 +307,23 @@ export function HeroSection() {
                                 <InfiniteSlider
                                     speedOnHover={20}
                                     speed={40}
-                                    gap={112}>
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-5 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/nvidia.svg"
-                                            alt="Nvidia Logo"
-                                            height="20"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-4 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/column.svg"
-                                            alt="Column Logo"
-                                            height="16"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-4 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/github.svg"
-                                            alt="GitHub Logo"
-                                            height="16"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-5 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/nike.svg"
-                                            alt="Nike Logo"
-                                            height="20"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-5 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg"
-                                            alt="Lemon Squeezy Logo"
-                                            height="20"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-4 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/laravel.svg"
-                                            alt="Laravel Logo"
-                                            height="16"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-7 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/lilly.svg"
-                                            alt="Lilly Logo"
-                                            height="28"
-                                            width="auto"
-                                        />
-                                    </div>
-
-                                    <div className="flex">
-                                        <img
-                                            className="mx-auto h-6 w-fit invert"
-                                            src="https://html.tailus.io/blocks/customers/openai.svg"
-                                            alt="OpenAI Logo"
-                                            height="24"
-                                            width="auto"
-                                        />
-                                    </div>
+                                    gap={88}
+                                    className="py-1"
+                                >
+                                    {PARTNER_LOGOS.map((logo) => (
+                                        <div
+                                            key={logo.src}
+                                            className="flex h-14 items-center justify-center md:h-16"
+                                        >
+                                            <img
+                                                className={logo.className}
+                                                src={logo.src}
+                                                alt={logo.alt}
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    ))}
                                 </InfiniteSlider>
 
                                 <div className="bg-linear-to-r from-background absolute inset-y-0 left-0 w-20"></div>

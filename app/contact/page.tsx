@@ -20,7 +20,12 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { SiteHeader } from "@/components/site-header";
 import { cn } from "@/lib/utils";
+
+/** Shared solid field surface — readable over blurred video. */
+const fieldSurface =
+  "rounded-xl border border-black/10 bg-[#f5f6f7] text-[#0a1218] shadow-[0_8px_28px_-16px_rgba(0,0,0,0.55)] outline-none transition-[box-shadow,border-color,background-color] placeholder:text-[#0a1218]/40 focus:border-black/25 focus:bg-white focus:ring-2 focus:ring-white/50";
 
 const ORGANIZATION_TYPES = [
   "Student Organization",
@@ -116,10 +121,10 @@ function PillButton({
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        "rounded-full border px-4 py-2 text-sm transition-colors md:px-5 md:py-2.5",
+        "rounded-full border px-4 py-2 text-sm font-medium shadow-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-white bg-white text-[#0a1218]"
-          : "border-white/30 bg-transparent text-white/75 hover:border-white/55 hover:text-white",
+          ? "border-white bg-white text-[#0a1218] shadow-md shadow-black/25"
+          : "border-black/10 bg-[#f5f6f7] text-[#0a1218]/75 hover:border-black/20 hover:bg-white hover:text-[#0a1218]",
       )}
     >
       {label}
@@ -133,10 +138,7 @@ function SoftInput({
 }: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      className={cn(
-        "w-full rounded-xl border-0 bg-white/12 px-4 py-3.5 text-sm text-white placeholder:text-white/40 outline-none ring-0 transition-[box-shadow,background-color] focus:bg-white/18 focus:ring-2 focus:ring-white/25",
-        className,
-      )}
+      className={cn("w-full px-4 py-3.5 text-sm", fieldSurface, className)}
       {...props}
     />
   );
@@ -354,11 +356,14 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <main className="fixed inset-0 z-0 overflow-hidden text-white">
+    <>
+      {/* Dark-page header (isLightPage excludes /contact) — z-[100], above video */}
+      <SiteHeader />
+      <main className="fixed inset-0 z-0 overflow-hidden text-white">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <video
           className="size-full scale-110 object-cover"
-          src="/videos/ucsdxcrs-contact.mp4"
+          src="/videos/ucsdxcrs-contact-v2.mp4"
           autoPlay
           muted
           loop
@@ -375,7 +380,10 @@ export default function ContactPage() {
         >
           {/* Section 1 — personal */}
           <section data-contact-section={0} className="snap-start snap-always">
-            <ContactSection active={activeSection === 0}>
+            <ContactSection
+              active={activeSection === 0}
+              className="pt-28 md:pt-32"
+            >
               <h1 className="text-center text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-[4rem]">
                 Get in touch!
               </h1>
@@ -511,7 +519,10 @@ export default function ContactPage() {
                 placeholder="Share a bit more context (optional)"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="mt-4 w-full resize-y rounded-xl border-0 bg-white/12 px-4 py-3.5 text-sm text-white placeholder:text-white/40 outline-none transition-[box-shadow,background-color] focus:bg-white/18 focus:ring-2 focus:ring-white/25"
+                className={cn(
+                  "mt-4 w-full resize-y px-4 py-3.5 text-sm",
+                  fieldSurface,
+                )}
               />
 
               <div className="relative mt-4">
@@ -520,18 +531,19 @@ export default function ContactPage() {
                   onClick={() => fileInputRef.current?.click()}
                   disabled={attachments.length >= MAX_ATTACHMENTS}
                   className={cn(
-                    "flex w-full items-center justify-between rounded-xl border-0 bg-white/12 px-4 py-3.5 text-left text-sm transition-colors",
+                    "flex w-full items-center justify-between px-4 py-3.5 text-left text-sm",
+                    fieldSurface,
                     attachments.length >= MAX_ATTACHMENTS
-                      ? "cursor-not-allowed text-white/30"
-                      : "text-white/45 hover:bg-white/18",
+                      ? "cursor-not-allowed opacity-50"
+                      : "hover:bg-white",
                   )}
                 >
-                  <span>
+                  <span className="text-[#0a1218]/55">
                     {attachments.length > 0
                       ? `Attachments (${attachments.length}/${MAX_ATTACHMENTS})`
                       : `Attachments (optional, up to ${MAX_ATTACHMENTS})`}
                   </span>
-                  <Paperclip className="size-4 shrink-0 text-white/50" />
+                  <Paperclip className="size-4 shrink-0 text-[#0a1218]/45" />
                 </button>
                 <input
                   ref={fileInputRef}
@@ -548,14 +560,17 @@ export default function ContactPage() {
                   {attachments.map((item) => (
                     <li
                       key={item.id}
-                      className="flex items-center justify-between gap-3 rounded-xl bg-white/12 px-4 py-2.5 text-sm text-white"
+                      className={cn(
+                        "flex items-center justify-between gap-3 px-4 py-2.5 text-sm",
+                        fieldSurface,
+                      )}
                     >
                       <span className="truncate">{item.file.name}</span>
                       <button
                         type="button"
                         aria-label={`Remove ${item.file.name}`}
                         onClick={() => removeAttachment(item.id)}
-                        className="shrink-0 rounded-full p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                        className="shrink-0 rounded-full p-1 text-[#0a1218]/45 transition-colors hover:bg-black/5 hover:text-[#0a1218]"
                       >
                         <X className="size-3.5" />
                       </button>
@@ -683,5 +698,6 @@ export default function ContactPage() {
         </div>
       </form>
     </main>
+    </>
   );
 }
