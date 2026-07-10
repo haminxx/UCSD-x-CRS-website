@@ -166,7 +166,7 @@ export function BackgroundPaths({
         </motion.div>
       )}
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 scale-[1.55] md:scale-100">
         <FloatingPaths position={1} />
       </div>
 

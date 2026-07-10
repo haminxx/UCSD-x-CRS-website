@@ -154,21 +154,58 @@ function DesktopNav({ light }: { light: boolean }) {
   );
 }
 
-function MobileNav({ light }: { light: boolean }) {
-  const { underlineHref, onHover, onLeave, pathname } = useNavUnderline();
+function MobileNavItem({
+  item,
+  active,
+  light,
+  onNavigate,
+}: {
+  item: (typeof menuItems)[number];
+  active: boolean;
+  light: boolean;
+  onNavigate: () => void;
+}) {
+  return (
+    <Link
+      href={item.href}
+      onClick={onNavigate}
+      className={cn(
+        "block w-full rounded-xl px-4 py-3 text-center text-base font-medium transition-colors duration-150",
+        "no-underline outline-none ring-0",
+        light
+          ? cn(
+              "text-[#0a1218]/75 hover:bg-black/[0.07] hover:text-[#0a1218] active:bg-black/[0.1]",
+              active && "bg-black/[0.08] font-bold text-[#0a1218]",
+            )
+          : cn(
+              "text-[#F2F0EF]/70 hover:bg-[#F2F0EF]/12 hover:text-[#F2F0EF] active:bg-[#F2F0EF]/18",
+              active && "bg-[#F2F0EF]/14 font-bold text-[#F2F0EF]",
+            ),
+      )}
+    >
+      {item.name}
+    </Link>
+  );
+}
+
+function MobileNav({
+  light,
+  onNavigate,
+}: {
+  light: boolean;
+  onNavigate: () => void;
+}) {
+  const pathname = usePathname();
 
   return (
-    <ul className="space-y-6 text-base font-medium">
+    <ul className="flex w-full flex-col items-stretch gap-1 text-base font-medium">
       {menuItems.map((item) => (
-        <li key={item.href}>
-          <NavItem
+        <li key={item.href} className="w-full">
+          <MobileNavItem
             item={item}
             active={isActivePath(pathname, item.href)}
-            layoutId="mobile-nav-underline"
-            showUnderline={underlineHref === item.href}
-            onHover={() => onHover(item.href)}
-            onLeave={onLeave}
             light={light}
+            onNavigate={onNavigate}
           />
         </li>
       ))}
@@ -353,15 +390,15 @@ export function SiteHeader() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.18 }}
-                  className={cn(
-                    "mb-6 w-full space-y-8 rounded-3xl border p-6 shadow-2xl lg:hidden",
-                    light
-                      ? "border-black/10 bg-[#F2F0EF] shadow-black/12"
-                      : "border-[#F2F0EF]/15 bg-zinc-950 shadow-black/40",
-                  )}
+                  className="mb-4 w-full space-y-5 py-2 lg:hidden"
                 >
-                  <MobileNav light={light} />
-                  <LoginButton className="w-full" light={light} />
+                  <MobileNav
+                    light={light}
+                    onNavigate={() => setMenuState(false)}
+                  />
+                  <div className="flex justify-center px-4 pt-1">
+                    <LoginButton className="w-full max-w-xs" light={light} />
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

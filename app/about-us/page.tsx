@@ -152,6 +152,7 @@ export default function AboutUsPage() {
           <OrbitCardStack
             items={orbitLeaders}
             defaultActiveIndex={2}
+            mobileOrder={[2, 1, 3, 0, 4]}
             className="-mt-6 md:-mt-4"
             onActiveChange={(item) => {
               if (item.name === "Christian Lee") {

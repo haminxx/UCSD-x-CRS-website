@@ -15,6 +15,36 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const frame = useRef(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.setAttribute("muted", "");
+
+    const tryPlay = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          /* Autoplay policy — muted inline usually recovers */
+        });
+      }
+    };
+
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+    return () => {
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
+    };
+  }, []);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -49,12 +79,16 @@ export default function LoginPage() {
             }}
           >
             <video
-              className="size-full object-cover"
+              ref={videoRef}
+              className="size-full object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-start-playback-button]:hidden [&::-webkit-media-controls-enclosure]:hidden"
               src="/videos/ucsdxcrs-v4.mp4"
               autoPlay
               muted
               loop
               playsInline
+              preload="auto"
+              controls={false}
+              disablePictureInPicture
             />
           </div>
           {/* Lighter blur so the video stays more visible */}

@@ -13,7 +13,8 @@ import { FALL_2026_APPLICATION_URL } from '@/lib/recruitment'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
-const INFO_DOCUMENT_URL = 'https://www.instagram.com/ucsd_crs/'
+const INFO_DOCUMENT_URL =
+    'https://docs.google.com/document/d/1nappaO5u9fxUdxcEaWnx4cOIRSnC_yncf1SFctz-6hI/edit?usp=sharing'
 
 const HERO_VIDEO_SRC = '/videos/ucsdxcrs-v4.mp4'
 
@@ -110,8 +111,39 @@ function JoinTeamButton() {
 
 export function HeroSection() {
     const heroRef = useRef<HTMLElement>(null)
+    const videoRef = useRef<HTMLVideoElement>(null)
     const [contentVisible, setContentVisible] = useState(true)
     const [fadingOut, setFadingOut] = useState(false)
+
+    useEffect(() => {
+        const video = videoRef.current
+        if (!video) return
+
+        video.muted = true
+        video.defaultMuted = true
+        video.playsInline = true
+        video.setAttribute('playsinline', '')
+        video.setAttribute('webkit-playsinline', '')
+        video.setAttribute('muted', '')
+
+        const tryPlay = () => {
+            const playPromise = video.play()
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    /* Autoplay blocked — muted + playsInline usually recovers on next gesture */
+                })
+            }
+        }
+
+        tryPlay()
+        video.addEventListener('loadeddata', tryPlay)
+        video.addEventListener('canplay', tryPlay)
+
+        return () => {
+            video.removeEventListener('loadeddata', tryPlay)
+            video.removeEventListener('canplay', tryPlay)
+        }
+    }, [])
 
     useEffect(() => {
         const hero = heroRef.current
@@ -193,12 +225,16 @@ export function HeroSection() {
                     {/* Full viewport stage; video meets logo cloud with no gap or bottom crop */}
                     <div className="relative isolate min-h-dvh w-full overflow-hidden bg-[#0a1218]">
                         <video
+                            ref={videoRef}
                             autoPlay
                             loop
                             muted
                             playsInline
                             preload="auto"
-                            className="absolute inset-0 h-full w-full object-cover object-center"
+                            controls={false}
+                            disablePictureInPicture
+                            controlsList="nodownload nofullscreen noremoteplayback"
+                            className="absolute inset-0 h-full w-full object-cover object-center [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-start-playback-button]:hidden [&::-webkit-media-controls-enclosure]:hidden"
                             src={HERO_VIDEO_SRC}
                         />
 
@@ -360,7 +396,7 @@ export function HeroSection() {
                 >
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute inset-0 scale-105 bg-cover bg-center bg-no-repeat blur-sm"
+                        className="pointer-events-none absolute inset-0 scale-105 bg-cover bg-center bg-no-repeat blur-[2px]"
                         style={{
                             backgroundImage:
                                 "url('/images/fall-2026-banner.png')",
@@ -368,11 +404,11 @@ export function HeroSection() {
                     />
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute inset-0 bg-[#F2F0EF]/78"
+                        className="pointer-events-none absolute inset-0 bg-black/40"
                     />
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#F2F0EF]/55 via-[#F2F0EF]/35 to-[#F2F0EF]/65"
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45"
                     />
 
                     <motion.div
@@ -382,9 +418,9 @@ export function HeroSection() {
                         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                         className="relative z-10 flex w-full max-w-3xl flex-col items-center text-center"
                     >
-                        <h2 className="text-[clamp(1.85rem,4.5vw,3.25rem)] font-bold leading-[1.12] tracking-tight text-[#0a1218]">
+                        <h2 className="text-[clamp(1.85rem,4.5vw,3.25rem)] font-bold leading-[1.12] tracking-tight text-[#F2F0EF]">
                             Fall 2026 Application{' '}
-                            <span className="text-[#182B49]">is now open!</span>
+                            <span className="text-[#F2F0EF]/85">is now open!</span>
                         </h2>
 
                         <Button
@@ -401,13 +437,13 @@ export function HeroSection() {
                             </a>
                         </Button>
 
-                        <p className="mt-6 text-base text-[#0a1218]/70 md:mt-8 md:text-lg">
+                        <p className="mt-6 text-base text-[#F2F0EF]/75 md:mt-8 md:text-lg">
                             <HoverPeek url={INFO_DOCUMENT_URL}>
                                 <Link
                                     href={INFO_DOCUMENT_URL}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex text-[#0a1218] transition-colors hover:text-black"
+                                    className="inline-flex text-[#F2F0EF] transition-colors hover:text-white"
                                 >
                                     <SpringUnderline className="pb-0.5 font-medium">
                                         Check this info document for more

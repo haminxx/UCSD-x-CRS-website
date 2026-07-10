@@ -181,6 +181,7 @@ function ContactSection({
 export default function ContactPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [activeSection, setActiveSection] = useState(0);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -331,6 +332,35 @@ export default function ContactPage() {
   }, []);
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.setAttribute("muted", "");
+
+    const tryPlay = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          /* Autoplay policy — muted inline usually recovers */
+        });
+      }
+    };
+
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+    return () => {
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
+    };
+  }, []);
+
+  useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
@@ -362,12 +392,16 @@ export default function ContactPage() {
       <main className="fixed inset-0 z-0 overflow-hidden text-[#F2F0EF]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <video
-          className="size-full scale-110 object-cover"
+          ref={videoRef}
+          className="size-full scale-110 object-cover [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-start-playback-button]:hidden [&::-webkit-media-controls-enclosure]:hidden"
           src="/videos/ucsdxcrs-contact-v2.mp4"
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
+          controls={false}
+          disablePictureInPicture
         />
         <div className="absolute inset-0 bg-black/50 backdrop-blur-[6px]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
@@ -446,7 +480,7 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              <p className="mt-12 text-center text-sm text-[#F2F0EF]/80 md:text-base">
+              <p className="mt-6 text-center text-sm text-[#F2F0EF]/80 md:mt-12 md:text-base">
                 What is the primary focus of your inquiry?
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-2.5">
@@ -584,11 +618,6 @@ export default function ContactPage() {
                   {attachmentError}
                 </p>
               )}
-
-              <p className="mt-3 text-center text-xs text-[#F2F0EF]/40">
-                PDF, DOC/DOCX, PNG, JPG, GIF, WEBP, PPT/PPTX, XLS/XLSX, TXT,
-                ZIP — max {MAX_ATTACHMENTS} files, {MAX_FILE_SIZE_MB}MB each
-              </p>
             </ContactSection>
           </section>
 
