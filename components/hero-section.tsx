@@ -8,9 +8,12 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { HomeWhatIsCrs } from '@/components/home-what-is-crs'
 import { BoldHoverText, SpringUnderline } from '@/components/spring-underline'
+import { HoverPeek } from '@/components/ui/hover-peek'
 import { FALL_2026_APPLICATION_URL } from '@/lib/recruitment'
 import { ChevronRight } from 'lucide-react'
 import { motion } from 'motion/react'
+
+const INFO_DOCUMENT_URL = 'https://www.instagram.com/ucsd_crs/'
 
 const HERO_VIDEO_SRC = '/videos/ucsdxcrs-v4.mp4'
 
@@ -353,28 +356,65 @@ export function HeroSection() {
 
                 <section
                     aria-label="Fall 2026 Application"
-                    className="flex min-h-[40vh] w-full items-center justify-center border-t border-black/[0.06] bg-[#F2F0EF] px-6 py-20 md:min-h-[45vh] md:px-10 md:py-24 lg:px-12"
+                    className="relative flex min-h-[55vh] w-full items-center justify-center overflow-hidden px-6 py-24 md:min-h-[60vh] md:px-10 md:py-28 lg:min-h-[65vh] lg:px-12"
                 >
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 scale-105 bg-cover bg-center bg-no-repeat blur-sm"
+                        style={{
+                            backgroundImage:
+                                "url('/images/fall-2026-banner.png')",
+                        }}
+                    />
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 bg-[#F2F0EF]/78"
+                    />
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#F2F0EF]/55 via-[#F2F0EF]/35 to-[#F2F0EF]/65"
+                    />
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-8% 0px' }}
                         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                        className="flex w-full max-w-3xl flex-col items-center text-center"
+                        className="relative z-10 flex w-full max-w-3xl flex-col items-center text-center"
                     >
+                        <h2 className="text-[clamp(1.85rem,4.5vw,3.25rem)] font-bold leading-[1.12] tracking-tight text-[#0a1218]">
+                            Fall 2026 Application{' '}
+                            <span className="text-[#182B49]">is now open!</span>
+                        </h2>
+
                         <Button
                             asChild
                             size="lg"
-                            className="h-14 rounded-full border-0 bg-[#182B49] px-8 text-base font-semibold text-[#F2F0EF] shadow-none hover:bg-[#121F38] hover:text-[#F2F0EF] md:h-16 md:px-10 md:text-lg"
+                            className="mt-8 h-14 rounded-full border-0 bg-[#182B49] px-10 text-base font-semibold text-[#F2F0EF] shadow-none hover:bg-[#121F38] hover:text-[#F2F0EF] md:mt-10 md:h-16 md:px-12 md:text-lg"
                         >
                             <a
                                 href={FALL_2026_APPLICATION_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Fall 2026 Application is now open!
+                                Apply Now
                             </a>
                         </Button>
+
+                        <p className="mt-6 text-base text-[#0a1218]/70 md:mt-8 md:text-lg">
+                            <HoverPeek url={INFO_DOCUMENT_URL}>
+                                <Link
+                                    href={INFO_DOCUMENT_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex text-[#0a1218] transition-colors hover:text-black"
+                                >
+                                    <SpringUnderline className="pb-0.5 font-medium">
+                                        Check this info document for more
+                                    </SpringUnderline>
+                                </Link>
+                            </HoverPeek>
+                        </p>
                     </motion.div>
                 </section>
             </main>
