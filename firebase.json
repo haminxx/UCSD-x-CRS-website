@@ -24,12 +24,6 @@
       "**/node_modules/**"
     ],
     "trailingSlash": true,
-    "cleanUrls": false,
-    "rewrites": [
-      {
-        "source": "/api/recruitment-chat",
-        "function": "recruitmentChat"
-      }
-    ]
+    "cleanUrls": false
   }
 }

@@ -1,8 +1,7 @@
 # UCSD × CRS — Recruitment FAQ (chat knowledge base)
 
-Update this file when recruitment facts change. The Firebase chat function
-loads a copy at deploy time (`functions/knowledge.md`). Keep them in sync
-(or run the functions predeploy copy step).
+Update this file when recruitment facts change, then copy it to
+`chat-server/knowledge.md` and redeploy the Render chat service.
 
 ## Organization
 
@@ -25,9 +24,8 @@ loads a copy at deploy time (`functions/knowledge.md`). Keep them in sync
 ## Fall 2026 Application
 
 - Primary CTA on the Recruitment page: **Fall 2026 Application**
-- Applicants should use the application survey linked from the Recruitment page.
-- If the chat does not have the live survey URL, direct people to the
-  Recruitment page CTA or the Contact page.
+- Application survey (Typeform): https://form.typeform.com/to/hQtOGGHW
+- Direct applicants to that link or the Recruitment page CTA / Contact page.
 
 ## Roles / teams
 
