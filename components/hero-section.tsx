@@ -157,15 +157,15 @@ export function HeroSection() {
 
             <main className="overflow-x-hidden">
                 <section ref={heroRef} className="relative">
-                    {/* Slightly under full viewport so the logo cloud peeks into the first screen */}
-                    <div className="relative isolate min-h-[88dvh] w-full overflow-hidden bg-[#0a1218]">
+                    {/* Full viewport stage; video meets logo cloud with no gap or bottom crop */}
+                    <div className="relative isolate min-h-dvh w-full overflow-hidden bg-[#0a1218]">
                         <video
                             autoPlay
                             loop
                             muted
                             playsInline
                             preload="auto"
-                            className="absolute inset-0 h-full w-full origin-bottom scale-[1.06] object-cover object-[center_bottom] -translate-y-[2vh] sm:scale-[1.08] sm:-translate-y-[2.5vh] md:scale-[1.1] md:-translate-y-[3vh] lg:scale-[1.12] lg:-translate-y-[3.5vh]"
+                            className="absolute inset-0 h-full w-full object-cover object-center"
                             src={HERO_VIDEO_SRC}
                         />
 
@@ -196,7 +196,7 @@ export function HeroSection() {
                         />
 
                         {/* Same max-w-7xl + px rhythm as SiteHeader so copy shares the header column on xl/2xl */}
-                        <div className="relative z-10 mx-auto flex min-h-[88dvh] w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
+                        <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-32 lg:px-12 lg:pb-24 lg:pt-40">
                             {/* Centered on mobile/tablet/narrow desktop; left-aligned to header edge from xl up */}
                             <motion.div
                                 className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl xl:mx-0 xl:max-w-[min(100%,42rem)] xl:text-left 2xl:max-w-[min(100%,48rem)]"
@@ -265,7 +265,7 @@ export function HeroSection() {
                     </div>
                 </section>
                 <motion.section
-                    className="bg-background pb-4 pt-2"
+                    className="bg-background pb-4 pt-0"
                     initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={LOGO_REVEAL}

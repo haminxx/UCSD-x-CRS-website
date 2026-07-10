@@ -59,7 +59,8 @@ type BoldHoverTextProps = {
 };
 
 /**
- * Font-weight hover without layout shift: invisible bold twin reserves width/height.
+ * Font-weight hover without layout shift: invisible bold twin reserves width.
+ * Instant weight swap — no spring/scale/motion that would nudge the button.
  */
 export function BoldHoverText({
   children,
@@ -77,14 +78,12 @@ export function BoldHoverText({
       >
         {children}
       </span>
-      <motion.span
+      <span
         className="col-start-1 row-start-1"
-        initial={false}
-        animate={{ fontWeight: active ? to : from }}
-        transition={springTransition}
+        style={{ fontWeight: active ? to : from }}
       >
         {children}
-      </motion.span>
+      </span>
     </span>
   );
 }
