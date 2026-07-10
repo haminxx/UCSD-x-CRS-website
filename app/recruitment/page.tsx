@@ -2,13 +2,14 @@
 
 import { useEffect, useId, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Eye, X } from "lucide-react";
+import { ArrowUpRight, Eye, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AIInputWithSearch } from "@/components/ui/ai-input-with-search";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { RecruitmentChatModal } from "@/components/recruitment-chat-modal";
+import { FALL_2026_APPLICATION_URL } from "@/lib/recruitment";
 import { cn } from "@/lib/utils";
 
 type TeamRole = {
@@ -74,7 +75,7 @@ function TeamRoleCard({
         className="group relative w-full overflow-hidden rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-label={`View ${role.title}`}
       >
-        <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#eef1f3] lg:aspect-[2/3]">
+        <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#eef1f3] sm:aspect-[2/3] lg:aspect-[5/7] xl:aspect-[3/4] 2xl:aspect-[5/6]">
           <div
             className="absolute inset-0"
             style={{
@@ -108,7 +109,7 @@ function TeamRoleCard({
           </span>
         </div>
 
-        <p className="mt-2 text-center text-[11px] font-medium tracking-wide text-[#0a1218] sm:text-xs md:text-[0.8rem]">
+        <p className="mt-1.5 text-center text-[11px] font-medium tracking-wide text-[#0a1218] sm:mt-2 sm:text-xs md:text-[0.8rem]">
           {role.title}
         </p>
       </button>
@@ -143,7 +144,7 @@ function TeamRoleModal({
     <AnimatePresence>
       {role && (
         <motion.div
-          className="fixed inset-0 z-[90] flex items-center justify-center px-4 py-8"
+          className="fixed inset-0 z-[90] flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -163,7 +164,14 @@ function TeamRoleModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative z-10 flex max-h-[min(90dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+            className={cn(
+              "relative z-10 flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl",
+              "max-h-[min(86dvh,36rem)] max-w-[min(94vw,42rem)]",
+              "sm:max-h-[min(78dvh,28rem)] sm:max-w-[min(92vw,52rem)]",
+              "md:max-h-[min(72dvh,30rem)] md:max-w-[min(90vw,58rem)]",
+              "lg:max-h-[min(68dvh,32rem)] lg:max-w-[min(88vw,64rem)]",
+              "sm:flex-row",
+            )}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -173,12 +181,12 @@ function TeamRoleModal({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-[#0a1218] shadow-sm transition hover:bg-white"
+              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-[#0a1218] shadow-sm transition hover:bg-white sm:bg-black/[0.04] sm:shadow-none sm:hover:bg-black/[0.08]"
             >
               <X className="size-4" aria-hidden="true" />
             </button>
 
-            <div className="relative aspect-[2/3] max-h-[52%] w-full shrink-0 overflow-hidden bg-[#eef1f3]">
+            <div className="relative h-[min(38vw,11rem)] w-full shrink-0 overflow-hidden bg-[#eef1f3] sm:h-auto sm:w-[42%] sm:max-w-[20rem] lg:w-[40%]">
               <div
                 className="absolute inset-0"
                 style={{
@@ -194,15 +202,18 @@ function TeamRoleModal({
               />
             </div>
 
-            <div className="flex min-h-0 flex-1 flex-col px-6 pb-6 pt-5">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col border-t border-black/[0.06] px-5 pb-5 pt-4 sm:border-t-0 sm:border-l sm:px-7 sm:pb-7 sm:pt-6">
               <h2
                 id={titleId}
-                className="text-xl font-semibold tracking-tight text-[#0a1218]"
+                className="pr-10 text-xl font-semibold tracking-tight text-[#0a1218] sm:text-2xl"
               >
                 {role.title}
               </h2>
+              <p className="mt-1.5 text-xs text-black/40 sm:text-sm">
+                Role overview — details coming soon
+              </p>
               <div
-                className="mt-4 min-h-[7.5rem] flex-1 rounded-xl border border-dashed border-black/10 bg-[#f7f8f9]"
+                className="mt-4 min-h-[6.5rem] flex-1 rounded-xl border border-dashed border-black/10 bg-[#f7f8f9] sm:mt-5 sm:min-h-[8rem]"
                 aria-hidden="true"
               />
             </div>
@@ -241,41 +252,80 @@ export default function RecruitmentPage() {
           />
         </div>
 
-        <section className="relative z-10 px-6 pb-5 pt-28 md:px-10 md:pb-6 md:pt-32 lg:px-16 lg:pt-36">
-          <div className="mx-auto max-w-3xl text-center">
-            <BlurFade delay={0.05}>
-              <h1 className="text-balance text-4xl font-semibold tracking-tight text-[#0a1218] md:text-5xl lg:text-6xl">
-                Join the team
-              </h1>
-            </BlurFade>
-            <BlurFade delay={0.12}>
-              <p className="mt-3 text-sm text-black/55 md:text-base">
-                Feel free to ask me any question
-              </p>
-            </BlurFade>
+        {/* One-screen composition on laptop/desktop: header + content before footer */}
+        <div className="relative z-10 flex min-h-[100dvh] flex-col">
+          <section
+            className="flex flex-1 flex-col justify-center px-5 md:px-10 lg:px-16 xl:px-[clamp(2rem,6vw,5rem)]"
+            style={{
+              paddingTop: "clamp(5.5rem, 10vh, 8.5rem)",
+              paddingBottom: "clamp(1rem, 2.5vh, 2rem)",
+            }}
+          >
+            <div className="mx-auto w-full max-w-3xl text-center xl:max-w-4xl">
+              <BlurFade delay={0.05}>
+                <h1 className="text-balance text-[clamp(2.15rem,5.5vw,3.75rem)] font-semibold tracking-tight text-[#0a1218]">
+                  Join the team.
+                </h1>
+              </BlurFade>
 
-            <BlurFade delay={0.2} className="mx-auto mt-6 max-w-xl md:mt-8">
-              <AIInputWithSearch
-                onSubmit={(value) => {
-                  openChat(value);
-                }}
-              />
-            </BlurFade>
-          </div>
-        </section>
+              <BlurFade delay={0.1} className="mt-[clamp(1.1rem,2.8vh,2rem)]">
+                <div className="flex justify-center">
+                  <a
+                    href={FALL_2026_APPLICATION_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "inline-flex items-center gap-2 rounded-full bg-[#0a1218] px-5 py-2.5",
+                      "text-sm font-medium tracking-wide text-white",
+                      "shadow-[0_10px_28px_-14px_rgba(10,18,24,0.55)]",
+                      "transition hover:bg-black focus-visible:outline-none",
+                      "focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2",
+                      "sm:px-6 sm:py-3 sm:text-[0.95rem]",
+                    )}
+                  >
+                    Fall 2026 Application
+                    <ArrowUpRight className="size-4 opacity-80" aria-hidden="true" />
+                  </a>
+                </div>
+              </BlurFade>
 
-        <section className="relative z-10 px-4 pb-16 pt-2 md:px-8 md:pb-20 md:pt-3 lg:px-12">
-          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:gap-5 lg:grid-cols-6 lg:gap-4">
-            {TEAM_ROLES.map((role, index) => (
-              <TeamRoleCard
-                key={role.id}
-                role={role}
-                index={index}
-                onOpen={setSelected}
-              />
-            ))}
-          </div>
-        </section>
+              <BlurFade delay={0.16} className="mt-[clamp(1.35rem,3.2vh,2.35rem)]">
+                <p className="text-sm text-black/55 md:text-base">
+                  Feel free to ask me any question
+                </p>
+              </BlurFade>
+
+              <BlurFade
+                delay={0.22}
+                className="mx-auto mt-[clamp(0.85rem,2vh,1.35rem)] w-full max-w-xl xl:max-w-2xl"
+              >
+                <AIInputWithSearch
+                  onSubmit={(value) => {
+                    openChat(value);
+                  }}
+                />
+              </BlurFade>
+            </div>
+          </section>
+
+          <section
+            className="px-3 pb-[clamp(1.25rem,3vh,2.5rem)] md:px-8 lg:px-12 xl:px-[clamp(1.5rem,4vw,3rem)]"
+            style={{
+              paddingTop: "clamp(1.25rem, 3.5vh, 2.75rem)",
+            }}
+          >
+            <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3.5 md:gap-4 lg:grid-cols-6 lg:gap-3 xl:max-w-[90rem] xl:gap-3.5 2xl:max-w-[96rem] 2xl:gap-4">
+              {TEAM_ROLES.map((role, index) => (
+                <TeamRoleCard
+                  key={role.id}
+                  role={role}
+                  index={index}
+                  onOpen={setSelected}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
       </main>
 
       <TeamRoleModal role={selected} onClose={() => setSelected(null)} />

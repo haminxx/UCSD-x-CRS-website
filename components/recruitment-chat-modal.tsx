@@ -11,6 +11,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUp, X } from "lucide-react";
 import { getCookie, setCookie } from "@/lib/cookies";
+import { CHAT_API_URL } from "@/lib/recruitment";
 import { cn } from "@/lib/utils";
 
 export type ChatRole = "user" | "assistant";
@@ -58,34 +59,45 @@ function persistMessages(messages: ChatMessage[]) {
   setCookie(COOKIE_KEY, payload, 30);
 }
 
-/**
- * Stub assistant — replace with real LLM API later.
- * Keep signature async so the call site can swap to fetch() cleanly.
- */
-async function stubAssistantReply(
+async function fetchAssistantReply(
   userText: string,
   history: ChatMessage[],
 ): Promise<string> {
-  void history;
-  await new Promise((r) => setTimeout(r, 450 + Math.random() * 350));
+  const prior = history
+    .slice(0, -1)
+    .slice(-12)
+    .map((m) => ({ role: m.role, content: m.content }));
 
-  const lower = userText.toLowerCase();
-  if (/(driver|drive|racing)/.test(lower)) {
-    return "Drivers train race craft and consistency for Collegiate Racing Series weekends. Tell me your experience level (none / karting / track) and I’ll point you to the right next step. (Stub reply — API not wired yet.)";
+  const res = await fetch(CHAT_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: userText,
+      history: prior,
+    }),
+  });
+
+  let data: { reply?: string; error?: string } = {};
+  try {
+    data = (await res.json()) as { reply?: string; error?: string };
+  } catch {
+    /* non-JSON body */
   }
-  if (/(engineer|engineering|aero|chassis)/.test(lower)) {
-    return "Engineering covers chassis, powertrain, aero, and systems on the car. Share your major or skills and what you want to work on first. (Stub reply — API not wired yet.)";
+
+  if (!res.ok) {
+    throw new Error(
+      data.error ||
+        `Chat unavailable (${res.status}). Try again shortly, or use Contact / Fall 2026 Application.`,
+    );
   }
-  if (/(pit|crew)/.test(lower)) {
-    return "Pit crew runs timed stops — tires, fuel, safety checks. No prior experience required if you’re ready to drill. Ask about tryouts or practice nights. (Stub reply — API not wired yet.)";
+
+  if (!data.reply?.trim()) {
+    throw new Error(
+      "No reply from the assistant. Please try again, or use Contact / Fall 2026 Application.",
+    );
   }
-  if (/(media|content|ops|operation)/.test(lower)) {
-    return "Media, content, and ops keep race weekends and sponsors moving. Say which lane interests you and I’ll outline how to join. (Stub reply — API not wired yet.)";
-  }
-  if (/(join|apply|recruit|how)/.test(lower)) {
-    return "To join CRS: pick a role below, come to an info session, and talk to a lead. Ask about timelines, tryouts, or any role — I’m here to help. (Stub reply — API not wired yet.)";
-  }
-  return `Thanks for asking about CRS. I can help with roles (Driver, Engineer, PIT Crew, Media, Content, Ops), how to join, and what a season looks like. (Stub reply — API not wired yet.) You said: “${userText.slice(0, 120)}${userText.length > 120 ? "…" : ""}”`;
+
+  return data.reply.trim();
 }
 
 function MessageBubble({ message }: { message: ChatMessage }) {
@@ -125,6 +137,7 @@ export function RecruitmentChatModal({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const pendingInitial = useRef<string | null>(null);
   const lastSeedKey = useRef(-1);
@@ -159,7 +172,7 @@ export function RecruitmentChatModal({
   useEffect(() => {
     if (!listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [messages, open, busy]);
+  }, [messages, open, busy, error]);
 
   const send = useCallback(async (text: string) => {
     const trimmed = text.trim();
@@ -167,6 +180,7 @@ export function RecruitmentChatModal({
 
     busyRef.current = true;
     setBusy(true);
+    setError(null);
     setDraft("");
 
     const userMsg: ChatMessage = {
@@ -183,8 +197,7 @@ export function RecruitmentChatModal({
     });
 
     try {
-      // Swap stubAssistantReply for a real LLM fetch later.
-      const reply = await stubAssistantReply(trimmed, historyForApi);
+      const reply = await fetchAssistantReply(trimmed, historyForApi);
       const assistantMsg: ChatMessage = {
         id: uid(),
         role: "assistant",
@@ -192,6 +205,12 @@ export function RecruitmentChatModal({
         createdAt: Date.now(),
       };
       setMessages((prev) => [...prev, assistantMsg]);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.";
+      setError(message);
     } finally {
       busyRef.current = false;
       setBusy(false);
@@ -274,7 +293,7 @@ export function RecruitmentChatModal({
               ref={listRef}
               className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4"
             >
-              {messages.length === 0 && !busy && (
+              {messages.length === 0 && !busy && !error && (
                 <p className="my-auto text-center text-sm text-black/40">
                   Ask anything about joining UCSD × CRS — drivers, engineers,
                   pit crew, media, and ops.
@@ -288,6 +307,11 @@ export function RecruitmentChatModal({
                   <div className="rounded-2xl bg-black/[0.05] px-3.5 py-2.5 text-sm text-black/40">
                     Thinking…
                   </div>
+                </div>
+              )}
+              {error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-800">
+                  {error}
                 </div>
               )}
             </div>
