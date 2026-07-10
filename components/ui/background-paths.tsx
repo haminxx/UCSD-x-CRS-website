@@ -11,7 +11,7 @@ type FloatingPathsProps = {
 
 function FloatingPaths({ position }: FloatingPathsProps) {
   const paths = Array.from({ length: 36 }, (_, i) => {
-    const scale = 200 + i * 10 + position * 8;
+    const scale = 110 + i * 6 + position * 5;
     const offsetX = 348;
     const offsetY = 158;
 
@@ -75,6 +75,52 @@ function FloatingPaths({ position }: FloatingPathsProps) {
   );
 }
 
+type LetterTitleProps = {
+  title: string;
+  as?: "h1" | "h2";
+  className?: string;
+};
+
+/** Per-character spring slide-up title used on Sponsors / Program heroes. */
+export function LetterTitle({ title, as: Tag = "h1", className }: LetterTitleProps) {
+  const words = title.split(" ");
+
+  return (
+    <Tag
+      className={cn(
+        "text-balance font-bold tracking-[-0.04em] text-[#0a1218]",
+        "text-[clamp(3.25rem,7.5vw,6.75rem)]",
+        "leading-[1.05]",
+        className,
+      )}
+    >
+      {words.map((word, wordIndex) => (
+        <span
+          key={`${word}-${wordIndex}`}
+          className="mr-3 inline-block last:mr-0 md:mr-4"
+        >
+          {word.split("").map((letter, letterIndex) => (
+            <motion.span
+              key={`${wordIndex}-${letterIndex}`}
+              initial={{ y: 80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                delay: wordIndex * 0.1 + letterIndex * 0.03,
+                type: "spring",
+                stiffness: 150,
+                damping: 25,
+              }}
+              className="inline-block"
+            >
+              {letter}
+            </motion.span>
+          ))}
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
 type BackgroundPathsProps = {
   title?: string;
   /** Subtitle / CTA content rendered below the letter-animated title (keeps links interactive). */
@@ -89,8 +135,6 @@ export function BackgroundPaths({
   showGradientOrb = true,
   className,
 }: BackgroundPathsProps) {
-  const words = title.split(" ");
-
   return (
     <div
       className={cn(
@@ -133,48 +177,27 @@ export function BackgroundPaths({
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="mx-auto max-w-4xl"
         >
-          <h1
+          <div
             className={cn(
-              "text-balance font-bold tracking-[-0.04em] text-[#0a1218]",
-              "text-[clamp(3.25rem,7.5vw,6.75rem)]",
-              "leading-[1.05]",
+              "rounded-3xl border border-white/55",
+              "bg-white/45 px-8 py-10 shadow-[0_8px_40px_rgba(10,18,24,0.06)]",
+              "backdrop-blur-2xl backdrop-saturate-150",
+              "md:px-12 md:py-14",
             )}
           >
-            {words.map((word, wordIndex) => (
-              <span
-                key={`${word}-${wordIndex}`}
-                className="mr-3 inline-block last:mr-0 md:mr-4"
-              >
-                {word.split("").map((letter, letterIndex) => (
-                  <motion.span
-                    key={`${wordIndex}-${letterIndex}`}
-                    initial={{ y: 80, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      delay: wordIndex * 0.1 + letterIndex * 0.03,
-                      type: "spring",
-                      stiffness: 150,
-                      damping: 25,
-                    }}
-                    className="inline-block"
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </span>
-            ))}
-          </h1>
+            <LetterTitle title={title} />
 
-          {children ? (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.75, duration: 0.7 }}
-              className="mt-8 md:mt-10"
-            >
-              {children}
-            </motion.div>
-          ) : null}
+            {children ? (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75, duration: 0.7 }}
+                className="mt-8 md:mt-10"
+              >
+                {children}
+              </motion.div>
+            ) : null}
+          </div>
 
           <motion.div
             className="mx-auto mt-8 h-px max-w-md bg-gradient-to-r from-transparent via-[#182B49]/35 to-transparent md:mt-10"
