@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useScroll, motion, AnimatePresence } from "motion/react";
-import { SpringUnderline, springTransition } from "@/components/spring-underline";
+import { springTransition } from "@/components/spring-underline";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -145,6 +145,26 @@ function MobileNav({ isDark }: { isDark: boolean }) {
   );
 }
 
+/** Plain text Login — no Button, no border, no pill. Bold on hover only. */
+function LoginLink({ isDark, className }: { isDark: boolean; className?: string }) {
+  return (
+    <Link
+      href="/login/"
+      className={cn(
+        "border-0 bg-transparent p-0 text-sm font-medium shadow-none outline-none ring-0",
+        "rounded-none focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+        "transition-[font-weight,color] duration-200 hover:font-bold",
+        isDark
+          ? "text-white/80 hover:text-white"
+          : "text-black hover:text-neutral-900",
+        className,
+      )}
+    >
+      Login
+    </Link>
+  );
+}
+
 export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
   const pathname = usePathname();
   const showLogin = isHomePath(pathname);
@@ -195,22 +215,28 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
               <Link
                 href="/"
                 aria-label="UCSD x CRS home"
-                className="flex items-center space-x-2"
+                className="flex items-center"
               >
+                {/* Home/video & dark theme: white mark. Light pages: black mark. */}
                 <Image
-                  src="/images/ucsd-x-crs-logo.png"
+                  src={
+                    isDark || isHomePath(pathname)
+                      ? "/images/ucsd-x-crs-logo-light.png"
+                      : "/images/ucsd-x-crs-logo.png"
+                  }
                   alt="UCSD x CRS"
-                  width={160}
-                  height={84}
-                  className="h-7 w-auto md:h-8"
+                  width={171}
+                  height={256}
+                  className="h-7 w-auto object-contain md:h-8"
                   priority
                 />
               </Link>
 
               <button
+                type="button"
                 onClick={() => setMenuState(!menuState)}
                 aria-label={menuState ? "Close Menu" : "Open Menu"}
-                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
+                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer border-0 bg-transparent p-2.5 shadow-none outline-none ring-0 lg:hidden"
               >
                 <Menu className="group-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
                 <X className="group-data-[state=active]:rotate-0 group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
@@ -221,43 +247,33 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
               </div>
             </div>
 
-            <div
-              className={cn(
-                "group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl md:flex-nowrap lg:m-0 lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none",
-                showLogin ? "lg:flex" : "lg:hidden",
-                isDark
-                  ? "border-white/15 bg-zinc-950 shadow-black/40"
-                  : "bg-background shadow-zinc-300/20 dark:shadow-none dark:lg:bg-transparent",
-              )}
-            >
-              <div className="lg:hidden">
-                <MobileNav isDark={isDark} />
+            {/* Desktop Login — completely outside the mobile bordered panel */}
+            {showLogin && (
+              <div className="hidden lg:block lg:ml-4">
+                <LoginLink isDark={isDark} />
               </div>
-              <AnimatePresence>
-                {showLogin && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex w-full items-center md:w-fit lg:ml-4"
-                  >
-                    <Link
-                      href="/login/"
-                      className={cn(
-                        "relative inline-block border-0 bg-transparent p-0 text-sm font-medium shadow-none outline-none ring-0",
-                        "rounded-none focus:outline-none focus-visible:outline-none focus-visible:ring-0",
-                        "transition-[font-weight,color] duration-200",
-                        isDark
-                          ? "text-white/80 hover:font-bold hover:text-white"
-                          : "text-black hover:font-bold hover:text-neutral-900",
-                      )}
-                    >
-                      <SpringUnderline className="pb-0.5">Login</SpringUnderline>
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            )}
+
+            {/* Mobile menu panel only — never shown as a desktop Login wrapper */}
+            <AnimatePresence>
+              {menuState && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18 }}
+                  className={cn(
+                    "mb-6 w-full space-y-8 rounded-3xl p-6 shadow-2xl lg:hidden",
+                    isDark
+                      ? "border border-white/15 bg-zinc-950 shadow-black/40"
+                      : "border border-black/10 bg-background shadow-zinc-300/20",
+                  )}
+                >
+                  <MobileNav isDark={isDark} />
+                  {showLogin && <LoginLink isDark={isDark} />}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </nav>

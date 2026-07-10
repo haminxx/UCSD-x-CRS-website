@@ -39,11 +39,11 @@ export function HeroSection() {
 
                         <div className="relative z-10 mx-auto flex min-h-[min(92vh,56rem)] max-w-7xl flex-col justify-center px-6 pb-16 pt-28 sm:min-h-[min(88vh,48rem)] lg:px-12 lg:pb-20 lg:pt-36">
                             <div className="mx-auto w-full max-w-3xl text-center sm:max-w-4xl lg:ml-0 lg:max-w-full lg:text-left">
-                                <h1 className="max-w-none text-[clamp(2.1rem,6.5vw,4.5rem)] font-black leading-[1.1] tracking-tight text-white mix-blend-difference md:text-6xl xl:text-7xl">
+                                <h1 className="max-w-2xl text-[clamp(1.75rem,4.2vw,3.25rem)] font-black leading-[1.12] tracking-tight text-white mix-blend-difference md:text-5xl xl:text-[3.35rem]">
                                     <span className="block whitespace-nowrap">Engineering the future</span>
                                     <span className="block">of collegiate motorsport</span>
                                 </h1>
-                                <p className="mt-6 max-w-2xl text-balance text-lg text-white mix-blend-difference md:mt-8">
+                                <p className="mt-3 max-w-2xl text-balance text-lg text-white mix-blend-difference md:mt-4">
                                     Learning by doing. We run a fully structured, student-led organization applying hands-on knowledge to compete in the Collegiate Racing Series.
                                 </p>
 
