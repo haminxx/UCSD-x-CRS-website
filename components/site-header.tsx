@@ -239,15 +239,17 @@ export function SiteHeader({ theme = "light" }: SiteHeaderProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:ml-4"
+                    className="flex w-full items-center md:w-fit lg:ml-4"
                   >
                     <Link
                       href="/login/"
                       className={cn(
-                        "inline-flex items-center text-sm font-medium outline-none ring-0 focus:outline-none focus-visible:outline-none",
+                        "relative inline-block border-0 bg-transparent p-0 text-sm font-medium shadow-none outline-none ring-0",
+                        "rounded-none focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                        "transition-[font-weight,color] duration-200",
                         isDark
-                          ? "text-white/80 hover:text-white"
-                          : "text-black hover:text-neutral-900",
+                          ? "text-white/80 hover:font-bold hover:text-white"
+                          : "text-black hover:font-bold hover:text-neutral-900",
                       )}
                     >
                       <SpringUnderline className="pb-0.5">Login</SpringUnderline>
