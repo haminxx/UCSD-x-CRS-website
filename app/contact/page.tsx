@@ -359,7 +359,7 @@ export default function ContactPage() {
             topOffset={8}
             gradientColors={CONTACT_GRADIENT_COLORS}
             gradientStops={CONTACT_GRADIENT_STOPS}
-            containerClassName="bg-[#f8fafb]"
+            containerClassName="bg-[#f5f6f7]"
           />
         </div>
         <form onSubmit={handleSubmit} className="relative z-10">

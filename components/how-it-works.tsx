@@ -24,7 +24,7 @@ export function HowItWorks() {
   return (
     <section
       aria-label="How it works"
-      className="bg-white px-4 pb-24 pt-8 md:px-8 md:pb-32 md:pt-12 lg:px-12"
+      className="bg-[#f5f6f7] px-4 pb-24 pt-8 md:px-8 md:pb-32 md:pt-12 lg:px-12"
     >
       <motion.div
         initial={{ opacity: 0, y: 32 }}

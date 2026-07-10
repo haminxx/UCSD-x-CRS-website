@@ -121,7 +121,7 @@ export default function AboutUsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="overflow-x-clip bg-white text-[#0a1218]">
+      <main className="overflow-x-clip bg-[#f5f6f7] text-[#0a1218]">
         <PageEnter>
         <section className="relative z-0 px-6 pb-4 pt-32 md:pb-6 md:pt-40">
           <div className="mx-auto max-w-7xl text-center">
@@ -160,7 +160,7 @@ export default function AboutUsPage() {
           />
         </section>
 
-        <section className="relative z-0 bg-white px-6 pb-28 pt-6 md:pt-8">
+        <section className="relative z-0 bg-[#f5f6f7] px-6 pb-28 pt-6 md:pt-8">
           <div className="mx-auto max-w-7xl">
             <div
               role="tablist"

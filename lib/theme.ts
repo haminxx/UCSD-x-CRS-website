@@ -1,4 +1,4 @@
-/** Informational routes use a white page + dark header. Home/login stay dark. */
+/** Informational routes use an off-white page + dark header. Home/login stay dark. */
 export const LIGHT_PAGE_PREFIXES = [
   "/about-us",
   "/contact",

@@ -188,11 +188,11 @@ body::before {
   background-size: 180px 180px;
 }
 
-/* Informational pages: white canvas, dark text, no grain/vignette */
+/* Informational pages: soft off-white canvas, dark text, no grain/vignette */
 html[data-theme="light"] {
-  --background: #ffffff;
+  --background: #f5f6f7;
   --foreground: #0a1218;
-  --card: #f4f6f7;
+  --card: #ffffff;
   --card-foreground: #0a1218;
   --popover: #ffffff;
   --popover-foreground: #0a1218;
@@ -210,7 +210,7 @@ html[data-theme="light"] {
 }
 
 html[data-theme="light"] body {
-  background-color: #ffffff;
+  background-color: #f5f6f7;
   background-image: none;
   color: #0a1218;
 }

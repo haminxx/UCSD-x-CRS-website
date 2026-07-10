@@ -8,7 +8,7 @@ export default function ProgramPage() {
   return (
     <>
       <SiteHeader />
-      <main className="bg-white text-[#0a1218]">
+      <main className="bg-[#f5f6f7] text-[#0a1218]">
         <section className="px-6 pb-6 pt-32 md:px-10 md:pb-10 md:pt-40 lg:px-16">
           <PageEnter className="mx-auto max-w-7xl">
             <p className="font-mono text-[11px] tracking-[0.22em] text-black/40 uppercase">

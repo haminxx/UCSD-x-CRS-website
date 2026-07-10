@@ -10,7 +10,7 @@ export default function SponsorsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-white text-[#0a1218]">
+      <main className="min-h-screen bg-[#f5f6f7] text-[#0a1218]">
         <PageEnter>
           <section className="px-6 pb-24 pt-32 md:px-10 md:pt-40 lg:px-16">
             <div className="mx-auto max-w-7xl">

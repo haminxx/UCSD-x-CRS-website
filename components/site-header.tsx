@@ -51,8 +51,8 @@ function NavItem({
         "relative block py-1 font-medium duration-200",
         light
           ? cn(
-              "text-black/55 hover:text-black",
-              (active || showUnderline) && "font-bold text-black",
+              "text-[#0a1218]/72 hover:text-[#0a1218]",
+              (active || showUnderline) && "font-bold text-[#0a1218]",
             )
           : cn(
               "text-white/65 hover:text-white",
@@ -196,7 +196,7 @@ function LoginButton({
         "border-0 shadow-none outline-none ring-0",
         "transition-[opacity,transform,background-color,color] duration-200 active:scale-[0.98]",
         light
-          ? "bg-black text-white hover:bg-black/90 focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          ? "bg-[#0a1218] text-white hover:bg-[#0a1218]/90 focus-visible:ring-2 focus-visible:ring-[#0a1218]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f6f7]"
           : "bg-white text-black hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         className,
       )}
@@ -289,7 +289,7 @@ export function SiteHeader() {
         }
         className={cn(
           "group fixed inset-x-0 top-0 z-[100] w-full pt-4 lg:pt-6",
-          light ? "text-black" : "text-white",
+          light ? "text-[#0a1218]" : "text-white",
         )}
       >
         <div
@@ -297,8 +297,8 @@ export function SiteHeader() {
             "mx-auto max-w-7xl rounded-3xl px-6 transition-all duration-300 lg:px-12",
             light
               ? scrolled
-                ? "bg-white/85 shadow-lg shadow-black/5 backdrop-blur-2xl"
-                : "bg-white/70 backdrop-blur-md"
+                ? "border border-black/[0.08] bg-white/90 shadow-md shadow-black/10 backdrop-blur-2xl"
+                : "border border-black/[0.06] bg-white/78 shadow-sm shadow-black/[0.06] backdrop-blur-xl"
               : scrolled
                 ? "bg-black/55 shadow-lg shadow-black/20 backdrop-blur-2xl"
                 : "bg-black/20 backdrop-blur-md",
@@ -325,7 +325,12 @@ export function SiteHeader() {
                   alt="UCSD x CRS"
                   width={866}
                   height={454}
-                  className="h-8 w-auto object-contain md:h-9"
+                  className={cn(
+                    "w-auto object-contain",
+                    light
+                      ? "h-9 brightness-[0.92] contrast-[1.08] md:h-10"
+                      : "h-8 md:h-9",
+                  )}
                   priority
                   unoptimized
                 />
@@ -360,7 +365,7 @@ export function SiteHeader() {
                   className={cn(
                     "mb-6 w-full space-y-8 rounded-3xl border p-6 shadow-2xl lg:hidden",
                     light
-                      ? "border-black/10 bg-white shadow-black/10"
+                      ? "border-black/10 bg-white shadow-black/12"
                       : "border-white/15 bg-zinc-950 shadow-black/40",
                   )}
                 >
