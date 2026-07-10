@@ -82,7 +82,7 @@ function NavItem({
 }
 
 /** Delay before underline settles back to the active page after leaving nav items. */
-const NAV_UNDERLINE_SETTLE_MS = 1200;
+const NAV_UNDERLINE_SETTLE_MS = 500;
 
 function useNavUnderline() {
   const pathname = usePathname();

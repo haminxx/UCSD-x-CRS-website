@@ -20,22 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
-import { AnimatedGradientBackground } from "@/components/ui/animated-gradient-background";
 import { cn } from "@/lib/utils";
-
-/** Soft steel / teal radial — readable under dark Contact typography. */
-const CONTACT_GRADIENT_COLORS = [
-  "#f8fafb",
-  "#eef3f6",
-  "#e2e9ee",
-  "#d4dee6",
-  "#c5d4d8",
-  "#b6c2c8",
-  "#a8b4bb",
-];
-const CONTACT_GRADIENT_STOPS = [35, 50, 60, 70, 80, 90, 100];
 
 const ORGANIZATION_TYPES = [
   "Student Organization",
@@ -133,8 +118,8 @@ function PillButton({
       className={cn(
         "rounded-full border px-4 py-2 text-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-[#0a1218] bg-[#0a1218] text-white"
-          : "border-black/20 bg-transparent text-black/70 hover:border-black/40 hover:text-black",
+          ? "border-white bg-white text-[#0a1218]"
+          : "border-white/30 bg-transparent text-white/75 hover:border-white/55 hover:text-white",
       )}
     >
       {label}
@@ -149,7 +134,7 @@ function SoftInput({
   return (
     <input
       className={cn(
-        "w-full rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-sm text-[#0a1218] placeholder:text-black/40 outline-none ring-0 transition-[box-shadow] focus:bg-[#e4e8eb] focus:ring-2 focus:ring-black/15",
+        "w-full rounded-xl border-0 bg-white/12 px-4 py-3.5 text-sm text-white placeholder:text-white/40 outline-none ring-0 transition-[box-shadow,background-color] focus:bg-white/18 focus:ring-2 focus:ring-white/25",
         className,
       )}
       {...props}
@@ -169,7 +154,7 @@ function ContactSection({
   return (
     <div
       className={cn(
-        "flex min-h-[calc(100dvh-5.5rem)] w-full items-center justify-center px-6 pb-16 pt-28 md:min-h-[calc(100dvh-6rem)] md:px-10 md:pb-20 md:pt-36",
+        "flex min-h-dvh w-full items-center justify-center px-6 py-16 md:px-10 md:py-20",
         className,
       )}
     >
@@ -321,6 +306,28 @@ export default function ContactPage() {
     setActiveSection(next);
   }, []);
 
+  // Lock document scroll — only the snap scroller may scroll.
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevHtmlOverscroll = html.style.overscrollBehavior;
+    const prevBodyOverscroll = body.style.overscrollBehavior;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overscrollBehavior = "none";
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      html.style.overscrollBehavior = prevHtmlOverscroll;
+      body.style.overscrollBehavior = prevBodyOverscroll;
+    };
+  }, []);
+
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -347,353 +354,334 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <>
-      <SiteHeader />
-      <main className="relative text-[#0a1218]">
-        <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-          <AnimatedGradientBackground
-            Breathing
-            startingGap={125}
-            animationSpeed={0.008}
-            breathingRange={3.5}
-            topOffset={8}
-            gradientColors={CONTACT_GRADIENT_COLORS}
-            gradientStops={CONTACT_GRADIENT_STOPS}
-            containerClassName="bg-[#f5f6f7]"
-          />
-        </div>
-        <form onSubmit={handleSubmit} className="relative z-10">
-          <div
-            ref={scrollerRef}
-            className="contact-snap h-dvh snap-y snap-mandatory overflow-y-auto scroll-smooth pt-20 md:pt-24"
-          >
-            {/* Section 1 — personal */}
-            <section
-              data-contact-section={0}
-              className="snap-start snap-always"
-            >
-              <ContactSection active={activeSection === 0}>
-                <h1 className="text-center text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-[4rem]">
-                  Get in touch!
-                </h1>
-                <div className="mt-12 space-y-4">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <SoftInput
-                      name="firstName"
-                      autoComplete="given-name"
-                      placeholder="First name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                    <SoftInput
-                      name="lastName"
-                      autoComplete="family-name"
-                      placeholder="Last name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
+    <main className="fixed inset-0 z-0 overflow-hidden text-white">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <video
+          className="size-full scale-110 object-cover"
+          src="/videos/ucsdxcrs-contact.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[6px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+      </div>
+
+      <form onSubmit={handleSubmit} className="relative z-10 h-full">
+        <div
+          ref={scrollerRef}
+          className="contact-snap h-full snap-y snap-mandatory overflow-y-auto overscroll-contain scroll-smooth"
+        >
+          {/* Section 1 — personal */}
+          <section data-contact-section={0} className="snap-start snap-always">
+            <ContactSection active={activeSection === 0}>
+              <h1 className="text-center text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-[4rem]">
+                Get in touch!
+              </h1>
+              <div className="mt-12 space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <SoftInput
-                    name="organization"
-                    autoComplete="organization"
-                    placeholder="Organization / Company Name"
-                    value={organization}
-                    onChange={(e) => setOrganization(e.target.value)}
+                    name="firstName"
+                    autoComplete="given-name"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
                   />
                   <SoftInput
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    name="lastName"
+                    autoComplete="family-name"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                     required
                   />
                 </div>
-              </ContactSection>
-            </section>
+                <SoftInput
+                  name="organization"
+                  autoComplete="organization"
+                  placeholder="Organization / Company Name"
+                  value={organization}
+                  onChange={(e) => setOrganization(e.target.value)}
+                />
+                <SoftInput
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </ContactSection>
+          </section>
 
-            {/* Section 2 — organization type & inquiry focus */}
-            <section
-              data-contact-section={1}
-              className="snap-start snap-always"
-            >
-              <ContactSection active={activeSection === 1}>
-                <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
-                  How would you categorize your organization
-                </h2>
-                <p className="mt-4 text-center text-sm text-black/50">
-                  Select all that apply
-                </p>
-                <div className="mt-6 flex flex-wrap justify-center gap-2.5">
-                  {ORGANIZATION_TYPES.map((type) => (
-                    <PillButton
-                      key={type}
-                      label={type}
-                      selected={organizationTypes.includes(type)}
-                      onClick={() => toggleOrganizationType(type)}
+          {/* Section 2 — organization type & inquiry focus */}
+          <section data-contact-section={1} className="snap-start snap-always">
+            <ContactSection active={activeSection === 1}>
+              <h2 className="whitespace-nowrap text-center text-[clamp(0.95rem,3.6vw,2.25rem)] font-semibold leading-none tracking-tight md:text-3xl lg:text-4xl">
+                How would you categorize your organization
+              </h2>
+              <p className="mt-4 text-center text-sm text-white/50">
+                Select all that apply
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-2.5">
+                {ORGANIZATION_TYPES.map((type) => (
+                  <PillButton
+                    key={type}
+                    label={type}
+                    selected={organizationTypes.includes(type)}
+                    onClick={() => toggleOrganizationType(type)}
+                  />
+                ))}
+              </div>
+
+              <p className="mt-12 text-center text-sm text-white/80 md:text-base">
+                What is the primary focus of your inquiry?
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+                {INQUIRY_FOCUSES.map((option) => (
+                  <PillButton
+                    key={option}
+                    label={option}
+                    selected={inquiryFocus === option}
+                    onClick={() => handleInquiryFocusSelect(option)}
+                  />
+                ))}
+              </div>
+
+              <AnimatePresence>
+                {showBudgetCheckbox && (
+                  <motion.label
+                    key="budget-checkbox"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.35, ease: easePremium }}
+                    className="mt-10 flex cursor-pointer items-start justify-center gap-3 text-left text-sm text-white/70"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={budgetAllocated}
+                      onChange={(e) => setBudgetAllocated(e.target.checked)}
+                      className="mt-0.5 size-4 shrink-0 rounded border-white/40 accent-white"
                     />
-                  ))}
-                </div>
+                    <span>Is there a budget allocated for this initiative?</span>
+                  </motion.label>
+                )}
+              </AnimatePresence>
+            </ContactSection>
+          </section>
 
-                <p className="mt-12 text-center text-sm text-black/80 md:text-base">
-                  What is the primary focus of your inquiry?
-                </p>
-                <div className="mt-5 flex flex-wrap justify-center gap-2.5">
-                  {INQUIRY_FOCUSES.map((option) => (
-                    <PillButton
-                      key={option}
-                      label={option}
-                      selected={inquiryFocus === option}
-                      onClick={() => handleInquiryFocusSelect(option)}
-                    />
-                  ))}
-                </div>
+          {/* Section 3 — details */}
+          <section data-contact-section={2} className="snap-start snap-always">
+            <ContactSection active={activeSection === 2}>
+              <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
+                What are the details?
+              </h2>
+              <p className="mt-7 text-center text-sm text-white/80 md:text-base">
+                What is your target timeframe for this?
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+                {TIMEFRAMES.map((option) => (
+                  <PillButton
+                    key={option}
+                    label={option}
+                    selected={timeframe === option}
+                    onClick={() =>
+                      setTimeframe((prev) => (prev === option ? null : option))
+                    }
+                  />
+                ))}
+              </div>
 
-                <AnimatePresence>
-                  {showBudgetCheckbox && (
-                    <motion.label
-                      key="budget-checkbox"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.35, ease: easePremium }}
-                      className="mt-10 flex cursor-pointer items-start justify-center gap-3 text-left text-sm text-black/70"
+              <label
+                htmlFor="message"
+                className="mt-12 block text-center text-sm text-white/80 md:text-base"
+              >
+                Tell us more about your proposal, goals, or how we can
+                collaborate!
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={5}
+                placeholder="Share a bit more context (optional)"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="mt-4 w-full resize-y rounded-xl border-0 bg-white/12 px-4 py-3.5 text-sm text-white placeholder:text-white/40 outline-none transition-[box-shadow,background-color] focus:bg-white/18 focus:ring-2 focus:ring-white/25"
+              />
+
+              <div className="relative mt-4">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={attachments.length >= MAX_ATTACHMENTS}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-xl border-0 bg-white/12 px-4 py-3.5 text-left text-sm transition-colors",
+                    attachments.length >= MAX_ATTACHMENTS
+                      ? "cursor-not-allowed text-white/30"
+                      : "text-white/45 hover:bg-white/18",
+                  )}
+                >
+                  <span>
+                    {attachments.length > 0
+                      ? `Attachments (${attachments.length}/${MAX_ATTACHMENTS})`
+                      : `Attachments (optional, up to ${MAX_ATTACHMENTS})`}
+                  </span>
+                  <Paperclip className="size-4 shrink-0 text-white/50" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept={ACCEPTED_ACCEPT_ATTR}
+                  className="sr-only"
+                  onChange={(e) => handleFilesSelected(e.target.files)}
+                />
+              </div>
+
+              {attachments.length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {attachments.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex items-center justify-between gap-3 rounded-xl bg-white/12 px-4 py-2.5 text-sm text-white"
                     >
-                      <input
-                        type="checkbox"
-                        checked={budgetAllocated}
-                        onChange={(e) => setBudgetAllocated(e.target.checked)}
-                        className="mt-0.5 size-4 shrink-0 rounded border-black/30 accent-black"
-                      />
-                      <span>Is there a budget allocated for this initiative?</span>
-                    </motion.label>
+                      <span className="truncate">{item.file.name}</span>
+                      <button
+                        type="button"
+                        aria-label={`Remove ${item.file.name}`}
+                        onClick={() => removeAttachment(item.id)}
+                        className="shrink-0 rounded-full p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {attachmentError && (
+                <p className="mt-3 text-center text-sm text-red-300" role="alert">
+                  {attachmentError}
+                </p>
+              )}
+
+              <p className="mt-3 text-center text-xs text-white/40">
+                PDF, DOC/DOCX, PNG, JPG, GIF, WEBP, PPT/PPTX, XLS/XLSX, TXT,
+                ZIP — max {MAX_ATTACHMENTS} files, {MAX_FILE_SIZE_MB}MB each
+              </p>
+            </ContactSection>
+          </section>
+
+          {/* Section 4 — submit */}
+          <section data-contact-section={3} className="snap-start snap-always">
+            <ContactSection active={activeSection === 3}>
+              <div className="flex flex-col items-center gap-8 text-center">
+                <AnimatePresence mode="wait">
+                  {submitState === "success" ? (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.45, ease: easePremium }}
+                      className="flex max-w-md flex-col items-center gap-4"
+                    >
+                      <div className="flex size-12 items-center justify-center rounded-full bg-white text-[#0a1218]">
+                        <Check className="size-5" strokeWidth={2.5} />
+                      </div>
+                      <p className="text-base font-medium leading-relaxed text-white md:text-lg">
+                        Submission Successful. Our team will review your details
+                        and be in touch within 48 hours.
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="form-actions"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex flex-col items-center gap-8"
+                    >
+                      <p className="max-w-md text-xl font-bold text-white md:text-2xl">
+                        We look forward to building something great together!
+                      </p>
+
+                      <label className="flex max-w-md cursor-pointer items-start gap-3 text-left text-sm text-white/50">
+                        <input
+                          type="checkbox"
+                          checked={privacyAgreed}
+                          onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                          required
+                          className="mt-0.5 size-4 shrink-0 rounded border-white/40 accent-white"
+                        />
+                        <span>
+                          I have read and agree to the{" "}
+                          <Link
+                            href="#"
+                            className="underline underline-offset-2 hover:text-white"
+                          >
+                            Privacy Policy ↗
+                          </Link>
+                        </span>
+                      </label>
+
+                      <button
+                        type="submit"
+                        disabled={submitState === "loading"}
+                        className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-medium text-[#0a1218] transition-colors hover:bg-white/90 disabled:cursor-wait disabled:opacity-90"
+                      >
+                        {submitState === "loading" ? (
+                          <>
+                            <Loader2 className="size-4 animate-spin" />
+                            Submitting
+                          </>
+                        ) : (
+                          <>
+                            Submit
+                            <ArrowUpRight className="size-4" />
+                          </>
+                        )}
+                      </button>
+                    </motion.div>
                   )}
                 </AnimatePresence>
-              </ContactSection>
-            </section>
+              </div>
+            </ContactSection>
+          </section>
+        </div>
 
-            {/* Section 3 — details */}
-            <section
-              data-contact-section={2}
-              className="snap-start snap-always"
-            >
-              <ContactSection active={activeSection === 2}>
-                <h2 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
-                  What are the details?
-                </h2>
-                <p className="mt-7 text-center text-sm text-black/80 md:text-base">
-                  What is your target timeframe for this?
-                </p>
-                <div className="mt-5 flex flex-wrap justify-center gap-2.5">
-                  {TIMEFRAMES.map((option) => (
-                    <PillButton
-                      key={option}
-                      label={option}
-                      selected={timeframe === option}
-                      onClick={() =>
-                        setTimeframe((prev) =>
-                          prev === option ? null : option,
-                        )
-                      }
-                    />
-                  ))}
-                </div>
-
-                <label
-                  htmlFor="message"
-                  className="mt-12 block text-center text-sm text-black/80 md:text-base"
-                >
-                  Tell us more about your proposal, goals, or how we can
-                  collaborate!
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={5}
-                  placeholder="Share a bit more context (optional)"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="mt-4 w-full resize-y rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-sm text-[#0a1218] placeholder:text-black/40 outline-none transition-[box-shadow] focus:bg-[#e4e8eb] focus:ring-2 focus:ring-black/15"
-                />
-
-                <div className="relative mt-4">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={attachments.length >= MAX_ATTACHMENTS}
-                    className={cn(
-                      "flex w-full items-center justify-between rounded-xl border-0 bg-[#eef1f3] px-4 py-3.5 text-left text-sm transition-colors",
-                      attachments.length >= MAX_ATTACHMENTS
-                        ? "cursor-not-allowed text-black/30"
-                        : "text-black/40 hover:bg-[#e4e8eb]",
-                    )}
-                  >
-                    <span>
-                      {attachments.length > 0
-                        ? `Attachments (${attachments.length}/${MAX_ATTACHMENTS})`
-                        : `Attachments (optional, up to ${MAX_ATTACHMENTS})`}
-                    </span>
-                    <Paperclip className="size-4 shrink-0 text-black/45" />
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    multiple
-                    accept={ACCEPTED_ACCEPT_ATTR}
-                    className="sr-only"
-                    onChange={(e) => handleFilesSelected(e.target.files)}
-                  />
-                </div>
-
-                {attachments.length > 0 && (
-                  <ul className="mt-3 space-y-2">
-                    {attachments.map((item) => (
-                      <li
-                        key={item.id}
-                        className="flex items-center justify-between gap-3 rounded-xl bg-[#eef1f3] px-4 py-2.5 text-sm text-[#0a1218]"
-                      >
-                        <span className="truncate">{item.file.name}</span>
-                        <button
-                          type="button"
-                          aria-label={`Remove ${item.file.name}`}
-                          onClick={() => removeAttachment(item.id)}
-                          className="shrink-0 rounded-full p-1 text-black/45 transition-colors hover:bg-black/5 hover:text-[#0a1218]"
-                        >
-                          <X className="size-3.5" />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {attachmentError && (
-                  <p className="mt-3 text-center text-sm text-red-600" role="alert">
-                    {attachmentError}
-                  </p>
-                )}
-
-                <p className="mt-3 text-center text-xs text-black/40">
-                  PDF, DOC/DOCX, PNG, JPG, GIF, WEBP, PPT/PPTX, XLS/XLSX, TXT,
-                  ZIP — max {MAX_ATTACHMENTS} files, {MAX_FILE_SIZE_MB}MB each
-                </p>
-              </ContactSection>
-            </section>
-
-            {/* Section 4 — submit */}
-            <section
-              data-contact-section={3}
-              className="snap-start snap-always"
-            >
-              <ContactSection active={activeSection === 3}>
-                <div className="flex flex-col items-center gap-8 text-center">
-                  <AnimatePresence mode="wait">
-                    {submitState === "success" ? (
-                      <motion.div
-                        key="success"
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.45, ease: easePremium }}
-                        className="flex max-w-md flex-col items-center gap-4"
-                      >
-                        <div className="flex size-12 items-center justify-center rounded-full bg-[#0a1218] text-white">
-                          <Check className="size-5" strokeWidth={2.5} />
-                        </div>
-                        <p className="text-base font-medium leading-relaxed text-[#0a1218] md:text-lg">
-                          Submission Successful. Our team will review your
-                          details and be in touch within 48 hours.
-                        </p>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="form-actions"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex flex-col items-center gap-8"
-                      >
-                        <p className="max-w-md text-xl font-bold text-[#0a1218] md:text-2xl">
-                          We look forward to building something great together!
-                        </p>
-
-                        <label className="flex max-w-md cursor-pointer items-start gap-3 text-left text-sm text-black/50">
-                          <input
-                            type="checkbox"
-                            checked={privacyAgreed}
-                            onChange={(e) =>
-                              setPrivacyAgreed(e.target.checked)
-                            }
-                            required
-                            className="mt-0.5 size-4 shrink-0 rounded border-black/30 accent-black"
-                          />
-                          <span>
-                            I have read and agree to the{" "}
-                            <Link
-                              href="#"
-                              className="underline underline-offset-2 hover:text-[#0a1218]"
-                            >
-                              Privacy Policy ↗
-                            </Link>
-                          </span>
-                        </label>
-
-                        <button
-                          type="submit"
-                          disabled={submitState === "loading"}
-                          className="inline-flex min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-[#0a1218] px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-black disabled:cursor-wait disabled:opacity-90"
-                        >
-                          {submitState === "loading" ? (
-                            <>
-                              <Loader2 className="size-4 animate-spin" />
-                              Submitting
-                            </>
-                          ) : (
-                            <>
-                              Submit
-                              <ArrowUpRight className="size-4" />
-                            </>
-                          )}
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </ContactSection>
-            </section>
-          </div>
-
-          {/* Up / down section controls */}
-          <div className="pointer-events-none fixed right-5 bottom-8 z-40 flex flex-col gap-2 md:right-8 md:bottom-10">
-            <button
-              type="button"
-              aria-label="Previous section"
-              disabled={activeSection === 0}
-              onClick={() => goToSection(activeSection - 1)}
-              className={cn(
-                "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-black/15 bg-white/90 text-[#0a1218] shadow-md backdrop-blur transition",
-                "hover:bg-white disabled:cursor-not-allowed disabled:opacity-35",
-              )}
-            >
-              <ArrowUp className="size-4" />
-            </button>
-            <button
-              type="button"
-              aria-label="Next section"
-              disabled={activeSection >= SECTION_COUNT - 1}
-              onClick={() => goToSection(activeSection + 1)}
-              className={cn(
-                "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-black/15 bg-white/90 text-[#0a1218] shadow-md backdrop-blur transition",
-                "hover:bg-white disabled:cursor-not-allowed disabled:opacity-35",
-              )}
-            >
-              <ArrowDown className="size-4" />
-            </button>
-          </div>
-        </form>
-      </main>
-      <SiteFooter />
-    </>
+        {/* Up / down section controls */}
+        <div className="pointer-events-none fixed right-5 bottom-8 z-40 flex flex-col gap-2 md:right-8 md:bottom-10">
+          <button
+            type="button"
+            aria-label="Previous section"
+            disabled={activeSection === 0}
+            onClick={() => goToSection(activeSection - 1)}
+            className={cn(
+              "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white shadow-md backdrop-blur transition",
+              "hover:bg-black/55 disabled:cursor-not-allowed disabled:opacity-35",
+            )}
+          >
+            <ArrowUp className="size-4" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next section"
+            disabled={activeSection >= SECTION_COUNT - 1}
+            onClick={() => goToSection(activeSection + 1)}
+            className={cn(
+              "pointer-events-auto flex size-11 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white shadow-md backdrop-blur transition",
+              "hover:bg-black/55 disabled:cursor-not-allowed disabled:opacity-35",
+            )}
+          >
+            <ArrowDown className="size-4" />
+          </button>
+        </div>
+      </form>
+    </main>
   );
 }
