@@ -163,10 +163,13 @@ app.post("/api/recruitment-chat", async (req, res) => {
     );
     res.status(200).json({ reply });
   } catch (err) {
-    console.error("recruitment-chat error", err);
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error("recruitment-chat error", detail);
     res.status(502).json({
       error:
         "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.",
+      // Safe diagnostic (Gemini messages never include the API key)
+      detail: detail.slice(0, 200),
     });
   }
 });
