@@ -137,7 +137,7 @@ async function fetchAssistantReplyOnce(
     if (data.kind === "invalid_key" || data.kind === "missing_key") {
       throw new Error(
         data.error ||
-          "Chat server Gemini API key is missing or invalid. Update GEMINI_API_KEY in Render Environment.",
+          "Gemini API key problem. AQ… keys are supported — if you see this, Google rejected the key (401). Recreate the key in the same AI Studio project or check credits at ai.studio/projects.",
       );
     }
     throw new Error(
