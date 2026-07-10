@@ -1,88 +1,271 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { useEffect, useId, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { Eye, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { PageEnter } from "@/components/page-motion";
+import { AIInputWithSearch } from "@/components/ui/ai-input-with-search";
+import { BlurFade } from "@/components/ui/blur-fade";
+import { DotPattern } from "@/components/ui/dot-pattern";
+import { cn } from "@/lib/utils";
 
-const JOIN_FORM_URL = "https://form.typeform.com/to/hQtOGGHW";
+type TeamRole = {
+  id: string;
+  title: string;
+  image: string;
+  accent: string;
+};
 
-function FloralMark({ className }: { className?: string }) {
+const TEAM_ROLES: TeamRole[] = [
+  {
+    id: "driver",
+    title: "Driver",
+    image: "https://picsum.photos/seed/crs-driver/600/900",
+    accent: "#1a3a4a",
+  },
+  {
+    id: "engineer",
+    title: "Engineer",
+    image: "https://picsum.photos/seed/crs-engineer/600/900",
+    accent: "#2a4a3a",
+  },
+  {
+    id: "pit-crew",
+    title: "PIT Crew",
+    image: "https://picsum.photos/seed/crs-pit/600/900",
+    accent: "#3a2a1a",
+  },
+  {
+    id: "media-team",
+    title: "Media Team",
+    image: "https://picsum.photos/seed/crs-media/600/900",
+    accent: "#2a2a4a",
+  },
+  {
+    id: "content-creator",
+    title: "Content Creator",
+    image: "https://picsum.photos/seed/crs-content/600/900",
+    accent: "#3a1a2a",
+  },
+  {
+    id: "operation-team",
+    title: "Operation Team",
+    image: "https://picsum.photos/seed/crs-ops/600/900",
+    accent: "#1a2a3a",
+  },
+];
+
+function TeamRoleCard({
+  role,
+  index,
+  onOpen,
+}: {
+  role: TeamRole;
+  index: number;
+  onOpen: (role: TeamRole) => void;
+}) {
   return (
-    <svg
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        d="M24 6C24.8 12.4 27.6 16.8 34 18C27.6 19.2 24.8 23.6 24 30C23.2 23.6 20.4 19.2 14 18C20.4 16.8 23.2 12.4 24 6Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      <path
-        d="M24 14C24.5 18.2 26.4 21.1 30.5 22C26.4 22.9 24.5 25.8 24 30C23.5 25.8 21.6 22.9 17.5 22C21.6 21.1 23.5 18.2 24 14Z"
-        fill="currentColor"
-        opacity="0.55"
-      />
-      <circle cx="24" cy="22" r="2.25" fill="currentColor" />
-    </svg>
+    <BlurFade delay={0.12 + index * 0.06} inView>
+      <button
+        type="button"
+        onClick={() => onOpen(role)}
+        className="group relative w-full overflow-hidden rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        aria-label={`View ${role.title}`}
+      >
+        <div className="relative aspect-[2/3] overflow-hidden rounded-2xl bg-[#eef1f3]">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(160deg, ${role.accent} 0%, #0a1218 100%)`,
+            }}
+            aria-hidden="true"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={role.image}
+            alt=""
+            className="absolute inset-0 size-full object-cover opacity-85 transition duration-500 group-hover:scale-105 group-hover:opacity-95"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+
+          <span
+            className={cn(
+              "absolute bottom-4 left-4 inline-flex items-center gap-1.5 overflow-hidden rounded-full",
+              "bg-white/95 text-[#0a1218] shadow-sm backdrop-blur-sm",
+              "max-w-9 transition-[max-width] duration-300 ease-out",
+              "group-hover:max-w-[7.5rem]",
+            )}
+          >
+            <span className="flex size-9 shrink-0 items-center justify-center">
+              <Eye className="size-4" aria-hidden="true" />
+            </span>
+            <span className="whitespace-nowrap pr-3.5 text-xs font-medium tracking-wide opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              View
+            </span>
+          </span>
+        </div>
+
+        <p className="mt-3 text-center text-sm font-medium tracking-wide text-[#0a1218] md:text-[0.95rem]">
+          {role.title}
+        </p>
+      </button>
+    </BlurFade>
+  );
+}
+
+function TeamRoleModal({
+  role,
+  onClose,
+}: {
+  role: TeamRole | null;
+  onClose: () => void;
+}) {
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!role) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [role, onClose]);
+
+  return (
+    <AnimatePresence>
+      {role && (
+        <motion.div
+          className="fixed inset-0 z-[90] flex items-center justify-center px-4 py-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <motion.button
+            type="button"
+            aria-label="Close dialog"
+            className="absolute inset-0 bg-black/45 backdrop-blur-[2px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          />
+
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            className="relative z-10 flex max-h-[min(90dvh,720px)] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.97 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-[#0a1218] shadow-sm transition hover:bg-white"
+            >
+              <X className="size-4" aria-hidden="true" />
+            </button>
+
+            <div className="relative aspect-[2/3] max-h-[52%] w-full shrink-0 overflow-hidden bg-[#eef1f3]">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(160deg, ${role.accent} 0%, #0a1218 100%)`,
+                }}
+                aria-hidden="true"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={role.image}
+                alt=""
+                className="absolute inset-0 size-full object-cover"
+              />
+            </div>
+
+            <div className="flex min-h-0 flex-1 flex-col px-6 pb-6 pt-5">
+              <h2
+                id={titleId}
+                className="text-xl font-semibold tracking-tight text-[#0a1218]"
+              >
+                {role.title}
+              </h2>
+              {/* Placeholder for future role description */}
+              <div
+                className="mt-4 min-h-[7.5rem] flex-1 rounded-xl border border-dashed border-black/10 bg-[#f7f8f9]"
+                aria-hidden="true"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
 export default function RecruitmentPage() {
+  const [selected, setSelected] = useState<TeamRole | null>(null);
+
   return (
     <>
       <SiteHeader />
-      <main className="relative min-h-dvh overflow-hidden bg-white text-[#0a1218]">
-        <div className="absolute inset-0" aria-hidden="true">
-          <video
-            className="absolute inset-0 size-full object-cover opacity-0"
-            muted
-            autoPlay
-            loop
-            playsInline
-            // src="/videos/recruitment-hero.mp4"
+      <main className="relative overflow-x-clip bg-white text-[#0a1218]">
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+        >
+          <DotPattern
+            className="opacity-40 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_20%,black,transparent)]"
+            width={18}
+            height={18}
+            cr={1}
           />
         </div>
 
-        <section className="relative z-10 flex min-h-dvh flex-col justify-center px-6 pb-20 pt-32 md:px-10 md:pb-28 md:pt-40 lg:px-16">
-          <PageEnter>
-            <div className="mx-auto w-full max-w-7xl">
-              <h1 className="flex flex-col items-center gap-5 text-center text-[clamp(2.25rem,6.5vw,5.5rem)] font-light leading-[1.05] tracking-tight md:flex-row md:items-center md:justify-between md:gap-8 md:text-left">
-                <span className="md:max-w-[42%] md:flex-1">life is a creative</span>
-                <FloralMark className="size-8 shrink-0 text-black/60 md:size-10 lg:size-12" />
-                <span className="md:max-w-[42%] md:flex-1 md:text-right">
-                  Join the team
-                </span>
+        <section className="relative z-10 px-6 pb-10 pt-32 md:px-10 md:pb-14 md:pt-40 lg:px-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <BlurFade delay={0.05}>
+              <h1 className="text-balance text-5xl font-semibold tracking-tight text-[#0a1218] md:text-6xl lg:text-7xl">
+                Join the team
               </h1>
+            </BlurFade>
+            <BlurFade delay={0.12}>
+              <p className="mt-4 text-base text-black/55 md:text-lg">
+                Feel free to ask me any question
+              </p>
+            </BlurFade>
 
-              <div className="mt-10 flex flex-col gap-9 md:mt-12 md:ml-auto md:max-w-[42%] md:gap-11">
-                <div className="h-px w-16 bg-black/40 md:ml-auto" />
+            <BlurFade delay={0.2} className="mx-auto mt-10 max-w-xl">
+              <AIInputWithSearch />
+            </BlurFade>
+          </div>
+        </section>
 
-                <div className="flex flex-col items-start gap-7 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
-                  <p className="max-w-sm text-left text-sm leading-relaxed text-black/55 md:text-[0.95rem]">
-                    Build, race, and grow with UCSD x CRS. Bring your craft to a
-                    team that turns late nights into lap times — and purpose into
-                    every mile.
-                  </p>
-
-                  <a
-                    href={JOIN_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#0a1218] px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-black"
-                  >
-                    JOIN US
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </PageEnter>
+        <section className="relative z-10 px-6 pb-28 pt-4 md:px-10 md:pt-6 lg:px-16">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-5 sm:gap-6 md:grid-cols-3 md:gap-8">
+            {TEAM_ROLES.map((role, index) => (
+              <TeamRoleCard
+                key={role.id}
+                role={role}
+                index={index}
+                onOpen={setSelected}
+              />
+            ))}
+          </div>
         </section>
       </main>
+
+      <TeamRoleModal role={selected} onClose={() => setSelected(null)} />
       <SiteFooter />
     </>
   );
