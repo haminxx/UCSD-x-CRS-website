@@ -48,7 +48,8 @@ function NavItem({
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       className={cn(
-        "relative block py-1 font-medium duration-200",
+        // inline-flex keeps the underline width matched to the label
+        "relative inline-flex py-1 font-medium duration-200",
         light
           ? cn(
               "text-black/55 hover:text-black",
@@ -61,22 +62,22 @@ function NavItem({
       )}
     >
       <motion.span
-        className="inline-block"
+        className="relative inline-block"
         animate={{ fontWeight: active || showUnderline ? 700 : 500 }}
         transition={{ duration: 0.2 }}
       >
         {item.name}
+        {showUnderline && (
+          <motion.span
+            layoutId={layoutId}
+            className={cn(
+              "absolute inset-x-0 -bottom-0.5 h-[2px]",
+              light ? "bg-black" : "bg-white",
+            )}
+            transition={springTransition}
+          />
+        )}
       </motion.span>
-      {showUnderline && (
-        <motion.span
-          layoutId={layoutId}
-          className={cn(
-            "absolute inset-x-0 -bottom-0.5 h-[2px]",
-            light ? "bg-black" : "bg-white",
-          )}
-          transition={springTransition}
-        />
-      )}
     </Link>
   );
 }
@@ -119,9 +120,9 @@ function MobileNav({ light }: { light: boolean }) {
   const underlineHref = hoveredHref ?? activeHref;
 
   return (
-    <ul className="space-y-6 text-base font-medium">
+    <ul className="flex flex-col items-center space-y-6 text-center text-base font-medium">
       {menuItems.map((item) => (
-        <li key={item.href}>
+        <li key={item.href} className="flex justify-center">
           <NavItem
             item={item}
             active={isActivePath(pathname, item.href)}
@@ -273,7 +274,9 @@ export function SiteHeader() {
                   )}
                 >
                   <MobileNav light={light} />
-                  <LoginButton className="w-full" light={light} />
+                  <div className="flex justify-center">
+                    <LoginButton className="min-w-[10rem]" light={light} />
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
