@@ -12,52 +12,31 @@ import { PageEnter } from "@/components/page-motion";
 import { springTransition } from "@/components/spring-underline";
 import { cn } from "@/lib/utils";
 
+const emptyOrbitCard = (accent: string): OrbitStackItem => ({
+  name: "",
+  role: "",
+  description: "",
+  accent,
+  initials: "",
+  stat: "",
+});
+
+/** Center card (index 2) is Christian Lee; side cards stay empty for now. */
 const orbitLeaders: OrbitStackItem[] = [
+  emptyOrbitCard("#f8d66d"),
+  emptyOrbitCard("#78dcca"),
   {
-    name: "Rhea Sheth",
-    role: "Co-Lead",
+    name: "Christian Lee",
+    role: "Cognitive Science",
     description:
-      "Guides the Technical Research team with clear priorities and a high bar for craft.",
-    accent: "#f8d66d",
-    initials: "RS",
-    stat: "TR",
-  },
-  {
-    name: "Nika Sabouri",
-    role: "Co-Lead",
-    description:
-      "Keeps SEDS aligned, moving fast, and focused on what matters for the season.",
-    accent: "#78dcca",
-    initials: "NS",
-    stat: "SEDS",
-  },
-  {
-    name: "Anusha Rao",
-    role: "Mentor",
-    description:
-      "Supports drivers and engineers with calm guidance when the pressure is highest.",
+      "Founded UCSD × CRS and sets the direction for the collegiate racing team.",
     accent: "#f3f1ea",
-    initials: "AR",
-    stat: "TR",
+    initials: "CL",
+    stat: "Founder",
+    image: "/images/team/christian-lee.jpg",
   },
-  {
-    name: "Sophie Phung",
-    role: "Mentor",
-    description:
-      "Helps the team turn ideas into clean execution across builds and race weekends.",
-    accent: "#b9a7ff",
-    initials: "SP",
-    stat: "TR",
-  },
-  {
-    name: "Ezra Moon",
-    role: "Operations",
-    description:
-      "Keeps logistics quiet, handoffs clean, and the whole crew moving without friction.",
-    accent: "#ff9d77",
-    initials: "EM",
-    stat: "Ops",
-  },
+  emptyOrbitCard("#b9a7ff"),
+  emptyOrbitCard("#ff9d77"),
 ];
 
 const teamFilters = [
@@ -154,8 +133,18 @@ export default function AboutUsPage() {
 
           <OrbitCardStack
             items={orbitLeaders}
+            defaultActiveIndex={2}
             className="-mt-6 md:-mt-4"
-            onActiveChange={(item) => setHeadline(item.name)}
+            onActiveChange={(item) => {
+              // Center founder card → "Founder"; empty side cards keep default
+              if (item.name === "Christian Lee") {
+                setHeadline("Founder");
+              } else if (item.name.trim()) {
+                setHeadline(item.name);
+              } else {
+                setHeadline("Meet our team!");
+              }
+            }}
             onCollapse={() => setHeadline("Meet our team!")}
           />
         </section>

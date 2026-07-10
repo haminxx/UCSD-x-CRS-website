@@ -23,7 +23,7 @@ The Gemini API key stays in Render Environment — never in the static site or G
 2. **New** → **Web Service**
 3. Connect the repo: `haminxx/UCSD-x-CRS-website` (or your fork)
 4. Settings:
-   - **Name:** `ucsdxcrs-recruitment-chat` (any name)
+   - **Name:** `ucsd-x-crs-recruitment-chatbot` (or any name)
    - **Region:** Oregon (or closest)
    - **Root Directory:** `chat-server`
    - **Runtime:** Node
@@ -35,7 +35,7 @@ The Gemini API key stays in Render Environment — never in the static site or G
    - Value: *(paste your Gemini key)*
    - Optional: `GEMINI_MODEL` = `gemini-2.0-flash`
 6. Click **Create Web Service** and wait until status is **Live**
-7. Copy your service URL, e.g. `https://ucsdxcrs-recruitment-chat.onrender.com`
+7. Copy your service URL, e.g. `https://ucsd-x-crs-recruitment-chatbot.onrender.com`
 
 ### C. Point the website at Render
 
@@ -44,10 +44,10 @@ In the website repo root, set the public chat URL (this is **not** a secret):
 Create or edit `.env.local` / use hosting build env:
 
 ```env
-NEXT_PUBLIC_CHAT_API_URL=https://YOUR-SERVICE.onrender.com/api/recruitment-chat
+NEXT_PUBLIC_CHAT_API_URL=https://ucsd-x-crs-recruitment-chatbot.onrender.com/api/recruitment-chat
 ```
 
-Or temporarily put that URL in `lib/recruitment.ts` as the default, then:
+The site default in `lib/recruitment.ts` already points at that URL. Override only if your Render hostname differs, then:
 
 ```bash
 npm run build

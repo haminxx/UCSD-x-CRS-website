@@ -98,18 +98,34 @@ function getInitials(item: OrbitStackItem) {
 
 function Portrait({ item }: { item: OrbitStackItem }) {
   const initials = getInitials(item);
+  const isEmpty = !item.name.trim() && !item.image;
 
   if (item.image) {
     return (
       <div className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.45rem] border border-black/[0.08] bg-black/[0.045]">
         <img
           src={item.image}
-          alt={item.name}
+          alt={item.name || "Team member"}
           className="h-full w-full object-cover"
         />
-        <div className="absolute bottom-4 right-4 rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white">
-          {initials}
-        </div>
+        {initials ? (
+          <div className="absolute bottom-4 right-4 rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white">
+            {initials}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  // Blank placeholder — no cartoon figure or fake initials
+  if (isEmpty) {
+    return (
+      <div
+        aria-hidden
+        className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.45rem] border border-black/[0.08] bg-gradient-to-br from-[#ebe8e1] via-[#e3dfd6] to-[#d8d3c8]"
+        style={{ "--accent": item.accent ?? "#f3f1ea" } as CSSProperties}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,var(--accent),transparent_40%)] opacity-35" />
       </div>
     );
   }
@@ -131,9 +147,11 @@ function Portrait({ item }: { item: OrbitStackItem }) {
           style={{ backgroundColor: item.accent ?? "#f3f1ea" }}
         />
       </div>
-      <div className="absolute bottom-4 right-4 rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white">
-        {initials}
-      </div>
+      {initials ? (
+        <div className="absolute bottom-4 right-4 rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white">
+          {initials}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -289,19 +307,19 @@ export function OrbitCardStack({
 
               <div className="px-2 pb-2 pt-6">
                 <div>
-                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                  <p className="min-h-[1rem] text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-zinc-500">
                     {item.role}
                   </p>
-                  <h3 className="mt-2 text-[2rem] font-semibold leading-none tracking-[-0.04em] text-zinc-950">
+                  <h3 className="mt-2 min-h-[2rem] text-[2rem] font-semibold leading-none tracking-[-0.04em] text-zinc-950">
                     {item.name}
                   </h3>
                 </div>
-                <p className="mt-4 max-w-[17rem] text-[0.98rem] font-medium leading-[1.42] tracking-[-0.01em] text-zinc-700">
+                <p className="mt-4 min-h-[4.5rem] max-w-[17rem] text-[0.98rem] font-medium leading-[1.42] tracking-[-0.01em] text-zinc-700">
                   {item.description}
                 </p>
                 <div className="mt-5 border-t border-black/10 pt-4">
                   <span className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-zinc-500">
-                    {item.stat ?? "Profile"}
+                    {item.stat || "\u00a0"}
                   </span>
                 </div>
               </div>
