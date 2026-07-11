@@ -23,9 +23,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
 import { cn } from "@/lib/utils";
 
-/** Shared cream field surface — ~70% opacity over blurred video. */
+/** Shared cream field surface — ~70% opacity over blurred video + inset depth. */
 const fieldSurface =
-  "rounded-xl border border-[#F2F0EF]/25 bg-[#F2F0EF]/70 text-[#0a1218] shadow-[0_8px_28px_-16px_rgba(0,0,0,0.45)] outline-none transition-[box-shadow,border-color,background-color] placeholder:text-[#0a1218]/40 focus:border-[#F2F0EF]/50 focus:bg-[#F2F0EF]/90 focus:ring-2 focus:ring-[#F2F0EF]/40";
+  "rounded-xl border border-[#F2F0EF]/25 bg-[#F2F0EF]/70 text-[#0a1218] shadow-[inset_0_2px_10px_rgba(10,18,24,0.12),0_8px_28px_-16px_rgba(0,0,0,0.45)] outline-none transition-[box-shadow,border-color,background-color] placeholder:text-[#0a1218]/40 focus:border-[#F2F0EF]/50 focus:bg-[#F2F0EF]/90 focus:shadow-[inset_0_2px_12px_rgba(10,18,24,0.14),0_8px_28px_-16px_rgba(0,0,0,0.45)] focus:ring-2 focus:ring-[#F2F0EF]/40";
 
 const ORGANIZATION_TYPES = [
   "Student Organization",
@@ -88,7 +88,7 @@ type ContactSubmissionPayload = {
   lastName: string;
   organization: string;
   email: string;
-  organizationTypes: OrganizationType[];
+  organizationType: OrganizationType | null;
   inquiryFocus: InquiryFocus | null;
   budgetAllocated: boolean | null;
   timeframe: Timeframe | null;
@@ -123,7 +123,7 @@ function PillButton({
       className={cn(
         "rounded-full border px-4 py-2 text-sm font-medium shadow-sm transition-colors md:px-5 md:py-2.5",
         selected
-          ? "border-[#F2F0EF] bg-[#F2F0EF] text-[#0a1218] shadow-md shadow-black/25"
+          ? "border-[#182B49] bg-[#182B49] text-[#F2F0EF] shadow-md shadow-black/25"
           : "border-[#F2F0EF]/30 bg-[#F2F0EF]/70 text-[#0a1218]/80 hover:border-[#F2F0EF]/50 hover:bg-[#F2F0EF]/85 hover:text-[#0a1218]",
       )}
     >
@@ -187,9 +187,8 @@ export default function ContactPage() {
   const [lastName, setLastName] = useState("");
   const [organization, setOrganization] = useState("");
   const [email, setEmail] = useState("");
-  const [organizationTypes, setOrganizationTypes] = useState<
-    OrganizationType[]
-  >([]);
+  const [organizationType, setOrganizationType] =
+    useState<OrganizationType | null>(null);
   const [inquiryFocus, setInquiryFocus] = useState<InquiryFocus | null>(null);
   const [budgetAllocated, setBudgetAllocated] = useState(false);
   const [timeframe, setTimeframe] = useState<Timeframe | null>(null);
@@ -204,12 +203,8 @@ export default function ContactPage() {
   const showBudgetCheckbox =
     inquiryFocus !== null && inquiryFocus !== "Other";
 
-  function toggleOrganizationType(type: OrganizationType) {
-    setOrganizationTypes((prev) =>
-      prev.includes(type)
-        ? prev.filter((item) => item !== type)
-        : [...prev, type],
-    );
+  function selectOrganizationType(type: OrganizationType) {
+    setOrganizationType((prev) => (prev === type ? null : type));
   }
 
   function handleInquiryFocusSelect(option: InquiryFocus) {
@@ -281,7 +276,7 @@ export default function ContactPage() {
       lastName,
       organization,
       email,
-      organizationTypes,
+      organizationType,
       inquiryFocus,
       budgetAllocated: showBudgetCheckbox ? budgetAllocated : null,
       timeframe,
@@ -464,18 +459,15 @@ export default function ContactPage() {
           <section data-contact-section={1} className="snap-start snap-always">
             <ContactSection active={activeSection === 1}>
               <h2 className="mx-auto w-full text-center text-[clamp(0.95rem,3.2vw,2.25rem)] font-semibold leading-snug tracking-tight md:text-3xl lg:text-4xl">
-                How would you categorize your organization
+                How would you categorize your organization?
               </h2>
-              <p className="mt-4 text-center text-sm text-[#F2F0EF]/50">
-                Select all that apply
-              </p>
               <div className="mt-6 flex flex-wrap justify-center gap-2.5">
                 {ORGANIZATION_TYPES.map((type) => (
                   <PillButton
                     key={type}
                     label={type}
-                    selected={organizationTypes.includes(type)}
-                    onClick={() => toggleOrganizationType(type)}
+                    selected={organizationType === type}
+                    onClick={() => selectOrganizationType(type)}
                   />
                 ))}
               </div>

@@ -244,17 +244,22 @@ html[data-theme="light"] body::before {
 /* Background autoplay videos — hide native play UI on iOS Safari */
 video.background-autoplay-video {
   pointer-events: none;
+  -webkit-touch-callout: none;
+  object-fit: cover;
 }
 
 video.background-autoplay-video::-webkit-media-controls,
 video.background-autoplay-video::-webkit-media-controls-start-playback-button,
 video.background-autoplay-video::-webkit-media-controls-enclosure,
 video.background-autoplay-video::-webkit-media-controls-panel,
-video.background-autoplay-video::-webkit-media-controls-overlay-play-button {
+video.background-autoplay-video::-webkit-media-controls-overlay-play-button,
+video.background-autoplay-video::-webkit-media-controls-play-button {
   display: none !important;
   -webkit-appearance: none;
   opacity: 0 !important;
   pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* No drag-select copy sitewide; allow typing in form fields */

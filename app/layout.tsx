@@ -27,6 +27,7 @@ export default function RootLayout({
           href="/videos/ucsdxcrs-v4.mp4"
           as="video"
           type="video/mp4"
+          fetchPriority="high"
         />
       </head>
       <body className="antialiased">
