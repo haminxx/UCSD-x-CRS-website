@@ -48,7 +48,7 @@ function NavItem({
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       className={cn(
-        "relative block py-1 font-medium duration-200",
+        "relative block cursor-grab py-1 font-medium duration-200 active:cursor-grabbing",
         light
           ? cn(
               "text-[#0a1218]/72 hover:text-[#0a1218]",
@@ -170,7 +170,7 @@ function MobileNavItem({
       href={item.href}
       onClick={onNavigate}
       className={cn(
-        "block w-full rounded-xl px-4 py-3 text-center text-base font-medium transition-colors duration-150",
+        "block w-full cursor-grab rounded-xl px-4 py-3 text-center text-base font-medium transition-colors duration-150 active:cursor-grabbing",
         "no-underline outline-none ring-0",
         light
           ? cn(
@@ -213,8 +213,8 @@ function MobileNav({
   );
 }
 
-/** Login button — navy fill with cream label. Bold weight on hover (box size fixed). */
-function LoginButton({
+/** Staff Portal button — navy fill with cream label. Bold weight on hover (box size fixed). */
+function StaffPortalButton({
   className,
   light,
 }: {
@@ -229,8 +229,8 @@ function LoginButton({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium",
-        "border-0 shadow-none outline-none ring-0",
+        "inline-flex cursor-grab items-center justify-center rounded-lg px-4 py-2 text-sm font-medium",
+        "border-0 shadow-none outline-none ring-0 active:cursor-grabbing",
         "transition-[opacity,background-color,color] duration-200",
         light
           ? "bg-[#182B49] text-[#F2F0EF] hover:bg-[#121F38] focus-visible:ring-2 focus-visible:ring-[#182B49]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F2F0EF]"
@@ -239,7 +239,7 @@ function LoginButton({
       )}
     >
       <BoldHoverText active={hovered} from={500} to={800}>
-        Login
+        Staff Portal
       </BoldHoverText>
     </Link>
   );
@@ -380,7 +380,7 @@ export function SiteHeader() {
             </div>
 
             <div className="hidden lg:block lg:ml-4">
-              <LoginButton light={light} />
+              <StaffPortalButton light={light} />
             </div>
 
             <AnimatePresence>
@@ -397,7 +397,7 @@ export function SiteHeader() {
                     onNavigate={() => setMenuState(false)}
                   />
                   <div className="flex justify-center px-4 pt-1">
-                    <LoginButton className="w-full max-w-xs" light={light} />
+                    <StaffPortalButton className="w-full max-w-xs" light={light} />
                   </div>
                 </motion.div>
               )}

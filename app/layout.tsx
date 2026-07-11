@@ -21,6 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preload"
+          href="/videos/ucsdxcrs-v4.mp4"
+          as="video"
+          type="video/mp4"
+        />
+      </head>
       <body className="antialiased">
         <PageTheme />
         {children}

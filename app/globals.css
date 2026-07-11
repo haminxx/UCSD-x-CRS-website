@@ -240,3 +240,64 @@ html[data-theme="light"] body::before {
 .contact-snap::-webkit-scrollbar {
   display: none;
 }
+
+/* Background autoplay videos — hide native play UI on iOS Safari */
+video.background-autoplay-video {
+  pointer-events: none;
+}
+
+video.background-autoplay-video::-webkit-media-controls,
+video.background-autoplay-video::-webkit-media-controls-start-playback-button,
+video.background-autoplay-video::-webkit-media-controls-enclosure,
+video.background-autoplay-video::-webkit-media-controls-panel,
+video.background-autoplay-video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* No drag-select copy sitewide; allow typing in form fields */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"],
+.select-text {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Grab cursor on interactive controls */
+a[href],
+button,
+[role="button"],
+[role="tab"],
+[role="link"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+label[for],
+summary {
+  cursor: grab;
+}
+
+a[href]:active,
+button:active,
+[role="button"]:active,
+[role="tab"]:active {
+  cursor: grabbing;
+}
+
+input:not([type="submit"]):not([type="button"]):not([type="reset"]),
+textarea {
+  cursor: text;
+}

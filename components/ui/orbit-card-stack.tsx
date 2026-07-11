@@ -251,7 +251,7 @@ function MobileSwipeStack({
 }) {
   const shouldReduceMotion = useReducedMotion();
   const [rotation, setRotation] = useState(0);
-  const lastActiveRef = useRef<number | null>(null);
+  const lastActiveRef = useRef<number>(order[0] ?? 0);
 
   const queue = useMemo(() => {
     const n = order.length;
@@ -262,10 +262,6 @@ function MobileSwipeStack({
   const frontItem = items[frontIndex]!;
 
   useEffect(() => {
-    if (lastActiveRef.current === null) {
-      lastActiveRef.current = frontIndex;
-      return;
-    }
     if (lastActiveRef.current === frontIndex) return;
     lastActiveRef.current = frontIndex;
     onActiveChange?.(frontItem, frontIndex);
@@ -298,7 +294,8 @@ function MobileSwipeStack({
 
   return (
     <div
-      className="relative mx-auto flex h-[540px] w-full max-w-[22rem] touch-pan-y items-center justify-center"
+      className="relative mx-auto flex h-[540px] w-full max-w-[22rem] items-center justify-center overscroll-contain"
+      style={{ touchAction: "pan-y" }}
       aria-roledescription="carousel"
       aria-label="Team leaders"
     >
@@ -320,7 +317,10 @@ function MobileSwipeStack({
               "focus-visible:ring-2 focus-visible:ring-zinc-950/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F2F0EF]",
               cardClassName,
             )}
-            style={{ zIndex: 30 - stackPos }}
+            style={{
+              zIndex: 30 - stackPos,
+              touchAction: isFront ? "pan-x" : "none",
+            }}
             initial={false}
             animate={{
               x: `calc(-50% + ${isFront ? 0 : behindX}px)`,
@@ -331,8 +331,10 @@ function MobileSwipeStack({
             }}
             transition={transition}
             drag={isFront ? "x" : false}
+            dragDirectionLock
+            dragPropagation={false}
             dragConstraints={{ left: -140, right: 140 }}
-            dragElastic={0.18}
+            dragElastic={0.12}
             onDragEnd={isFront ? onDragEnd : undefined}
             tabIndex={isFront ? 0 : -1}
             aria-hidden={!isFront}

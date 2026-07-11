@@ -119,7 +119,7 @@ function TeamProfileCard({ member }: { member: TeamMember }) {
 }
 
 export default function AboutUsPage() {
-  const [headline, setHeadline] = useState("Meet our team!");
+  const [headline, setHeadline] = useState("Founder");
   const [activeFilter, setActiveFilter] = useState<TeamFilter>("Driver");
 
   const filteredMembers = teamMembers.filter(
@@ -130,7 +130,6 @@ export default function AboutUsPage() {
     <>
       <SiteHeader />
       <main className="overflow-x-clip bg-[#F2F0EF] text-[#0a1218]">
-        <PageEnter>
         <section className="relative z-0 px-6 pb-4 pt-32 md:pb-6 md:pt-40">
           <div className="mx-auto max-w-7xl text-center">
             <div className="relative mx-auto flex min-h-[5.5rem] items-center justify-center md:min-h-[7rem]">
@@ -171,6 +170,7 @@ export default function AboutUsPage() {
           />
         </section>
 
+        <PageEnter>
         <section className="relative z-0 bg-[#F2F0EF] px-6 pb-28 pt-6 md:pt-8">
           <div className="mx-auto max-w-7xl">
             <div
@@ -188,7 +188,7 @@ export default function AboutUsPage() {
                     aria-selected={isActive}
                     onClick={() => setActiveFilter(filter)}
                     className={cn(
-                      "relative rounded-lg px-2.5 py-1.5 text-xs font-medium tracking-wide outline-none transition-colors md:px-3 md:py-1.5 md:text-sm",
+                      "relative cursor-grab rounded-lg px-2.5 py-1.5 text-xs font-medium tracking-wide outline-none transition-colors active:cursor-grabbing md:px-3 md:py-1.5 md:text-sm",
                       "focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F2F0EF]",
                       isActive
                         ? "text-[#F2F0EF]"

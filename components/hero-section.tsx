@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { BackgroundAutoplayVideo } from '@/components/background-autoplay-video'
 import { Button } from '@/components/ui/button'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
@@ -111,39 +112,8 @@ function JoinTeamButton() {
 
 export function HeroSection() {
     const heroRef = useRef<HTMLElement>(null)
-    const videoRef = useRef<HTMLVideoElement>(null)
     const [contentVisible, setContentVisible] = useState(true)
     const [fadingOut, setFadingOut] = useState(false)
-
-    useEffect(() => {
-        const video = videoRef.current
-        if (!video) return
-
-        video.muted = true
-        video.defaultMuted = true
-        video.playsInline = true
-        video.setAttribute('playsinline', '')
-        video.setAttribute('webkit-playsinline', '')
-        video.setAttribute('muted', '')
-
-        const tryPlay = () => {
-            const playPromise = video.play()
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    /* Autoplay blocked — muted + playsInline usually recovers on next gesture */
-                })
-            }
-        }
-
-        tryPlay()
-        video.addEventListener('loadeddata', tryPlay)
-        video.addEventListener('canplay', tryPlay)
-
-        return () => {
-            video.removeEventListener('loadeddata', tryPlay)
-            video.removeEventListener('canplay', tryPlay)
-        }
-    }, [])
 
     useEffect(() => {
         const hero = heroRef.current
@@ -224,19 +194,12 @@ export function HeroSection() {
                 <section ref={heroRef} className="relative">
                     {/* Full viewport stage; video meets logo cloud with no gap or bottom crop */}
                     <div className="relative isolate min-h-dvh w-full overflow-hidden bg-[#0a1218]">
-                        <video
-                            ref={videoRef}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="auto"
-                            controls={false}
-                            disablePictureInPicture
-                            controlsList="nodownload nofullscreen noremoteplayback"
-                            className="absolute inset-0 h-full w-full object-cover object-center [&::-webkit-media-controls]:hidden [&::-webkit-media-controls-start-playback-button]:hidden [&::-webkit-media-controls-enclosure]:hidden"
-                            src={HERO_VIDEO_SRC}
-                        />
+                        <div className="absolute inset-0 overflow-hidden" aria-hidden>
+                            <BackgroundAutoplayVideo
+                                src={HERO_VIDEO_SRC}
+                                className="size-full min-h-full min-w-full object-cover object-center"
+                            />
+                        </div>
 
                         {/* Blur while UI is visible; clears when idle (synced with text fade) */}
                         <motion.div
