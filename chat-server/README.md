@@ -3,6 +3,8 @@
 Small Express proxy: browser → this server → OpenAI Chat API.
 The OpenAI API key stays in Render Environment — never in the static site or GitHub.
 
+Knowledge for the chatbot is loaded from a **Google Drive folder** (when configured) and falls back to `knowledge.md` if Drive sync fails.
+
 ## Quick setup (you do this once)
 
 ### 1. Get an OpenAI API key
@@ -17,18 +19,74 @@ OpenAI does **not** have a permanent free API tier like Gemini. You need an acco
 
 New accounts sometimes receive starter credits — check your [Usage](https://platform.openai.com/usage) page.
 
-### 2. Update Render
+### 2. Google Drive knowledge sync
+
+The chatbot reads from this folder:
+
+- Folder: [CRS recruitment knowledge](https://drive.google.com/drive/folders/1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF?usp=sharing)
+- Folder ID: `1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF`
+
+Supported file types:
+
+| Type | Handling |
+| --- | --- |
+| Google Docs | Exported as plain text |
+| PDF | Text extracted with `pdf-parse` |
+| Other | Skipped with a warning in server logs |
+
+The server caches Drive content in memory (default **10 minutes**) and refreshes on startup and when the cache is stale.
+
+#### Option A — Service account (recommended)
+
+Most reliable for listing folder contents on Render.
+
+1. [Google Cloud Console](https://console.cloud.google.com/) → create or select a project
+2. **APIs & Services** → **Library** → enable **Google Drive API**
+3. **APIs & Services** → **Credentials** → **Create credentials** → **Service account**
+4. Create the account → **Keys** → **Add key** → **JSON** → download the JSON file
+5. Open the JSON and copy the `client_email` value (e.g. `ucsd-crs-chat@….iam.gserviceaccount.com`)
+6. In Google Drive, open the [knowledge folder](https://drive.google.com/drive/folders/1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF?usp=sharing) → **Share** → add the service account email as **Viewer**
+7. On Render, set `GOOGLE_SERVICE_ACCOUNT_JSON` to either:
+   - The full JSON string (paste as one line), or
+   - Base64-encoded JSON (easier for multiline paste issues)
+
+#### Option B — API key (public folder)
+
+May work if the folder and all files are shared as **Anyone with the link → Viewer**. Listing folders with only an API key is less reliable than a service account.
+
+1. Google Cloud Console → enable **Google Drive API**
+2. **Credentials** → **Create credentials** → **API key**
+3. Restrict the key to **Google Drive API** (recommended)
+4. On Render, set `GOOGLE_API_KEY`
+
+If listing fails with a 403/404, switch to Option A and share the folder with the service account.
+
+#### Render environment variables (Drive)
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `GOOGLE_DRIVE_FOLDER_ID` | No (has default) | `1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF` |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | One of these | Service account JSON (raw or base64) |
+| `GOOGLE_API_KEY` | One of these | Google API key for public folder access |
+| `DRIVE_KNOWLEDGE_TTL_MS` | No | Cache TTL in ms (default `600000` = 10 min) |
+| `DRIVE_KNOWLEDGE_MAX_CHARS` | No | Max knowledge chars (default `80000`) |
+
+Until Drive credentials are set, the server uses `knowledge.md` automatically.
+
+### 3. Update Render
 
 1. [Render Dashboard](https://dashboard.render.com) → **ucsd-x-crs-website**
 2. **Environment**:
    - **Delete** `GEMINI_API_KEY` and `GEMINI_MODEL` (no longer used)
    - **Add** `OPENAI_API_KEY` = your `sk-…` key (no quotes)
    - **Add** `OPENAI_MODEL` = `gpt-4o-mini` (optional — this is the default)
+   - **Add** `GOOGLE_DRIVE_FOLDER_ID` = `1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF` (optional — default in code)
+   - **Add** `GOOGLE_SERVICE_ACCOUNT_JSON` and/or `GOOGLE_API_KEY` (see above)
 3. **Settings** (confirm):
    - Root Directory = `chat-server`
    - Build Command = `npm install`
    - Start Command = `npm start`
-4. **Manual Deploy** → **Clear build cache & deploy**
+4. **Manual Deploy** → **Clear build cache & deploy** (after first Drive setup)
 5. Wait until **Live**, then open `/health` — expect:
 
 ```json
@@ -37,11 +95,26 @@ New accounts sometimes receive starter credits — check your [Usage](https://pl
   "provider": "openai",
   "hasKey": true,
   "keyFormatValid": true,
-  "model": "gpt-4o-mini"
+  "model": "gpt-4o-mini",
+  "knowledgeSource": "drive",
+  "driveKnowledgeLoaded": true,
+  "driveFileCount": 3,
+  "lastDriveSync": "2026-07-11T…",
+  "knowledgeChars": 12345
 }
 ```
 
-### 3. Test chat
+If Drive is not configured yet:
+
+```json
+{
+  "knowledgeSource": "file",
+  "driveKnowledgeLoaded": false,
+  "driveConfigured": false
+}
+```
+
+### 4. Test chat
 
 1. https://ucsdxcrs.web.app/recruitment/
 2. Send a message (first request after idle may take 30–60s on Render free tier)
@@ -52,12 +125,19 @@ New accounts sometimes receive starter credits — check your [Usage](https://pl
 cd chat-server
 npm install
 set OPENAI_API_KEY=sk-your_key_here
+set GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}
 npm start
 ```
 
 Then set `NEXT_PUBLIC_CHAT_API_URL=http://localhost:10000/api/recruitment-chat` for local Next.
 
+Check sync status: `http://localhost:10000/health`
+
 ## Update FAQ answers
+
+**With Drive sync (preferred):** edit or add files in the [Google Drive folder](https://drive.google.com/drive/folders/1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF?usp=sharing). Changes appear within the cache TTL (~10 minutes) without redeploying.
+
+**Fallback (no Drive credentials):**
 
 1. Edit `content/recruitment-faq.md`
 2. Copy to `chat-server/knowledge.md`
@@ -68,15 +148,18 @@ Then set `NEXT_PUBLIC_CHAT_API_URL=http://localhost:10000/api/recruitment-chat` 
 | Symptom | Fix |
 | --- | --- |
 | `/health` → `hasKey: false` | Set `OPENAI_API_KEY` on Render |
+| `knowledgeSource: "file"` with `driveConfigured: true` | Check `driveSyncError` in `/health`; verify folder is shared with service account |
+| `driveSyncError` mentions 403 / access | Share folder with service account email (Viewer) |
 | `invalid_key` | Wrong/revoked key — create a new one at platform.openai.com/api-keys |
 | `billing` / `insufficient_quota` | Add payment method + credits in OpenAI billing settings |
+| `knowledgeTruncated: true` | Large PDF — trim source doc or raise `DRIVE_KNOWLEDGE_MAX_CHARS` |
 | Slow first reply | Render free tier cold start — retry once |
 
 ## Security
 
-| Store here | OpenAI key? |
-| --- | --- |
-| GitHub | No |
-| `NEXT_PUBLIC_*` | No |
-| Render Environment | **Yes** |
-| Public chat API URL | OK (endpoint only) |
+| Store here | OpenAI key? | Google credentials? |
+| --- | --- | --- |
+| GitHub | No | No |
+| `NEXT_PUBLIC_*` | No | No |
+| Render Environment | **Yes** | **Yes** |
+| Public chat API URL | OK (endpoint only) | No |

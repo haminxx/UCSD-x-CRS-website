@@ -11,3 +11,9 @@ services:
         sync: false
       - key: OPENAI_MODEL
         value: gpt-4o-mini
+      - key: GOOGLE_DRIVE_FOLDER_ID
+        value: 1x1aL_4j-xgzGf7idPT1DWSgjzr1GN8CF
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
+        sync: false

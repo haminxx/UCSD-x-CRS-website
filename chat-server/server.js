@@ -1,7 +1,10 @@
-const fs = require("fs");
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
+const {
+  refreshKnowledge,
+  getKnowledge,
+  getHealthFields,
+} = require("./drive-knowledge");
 
 const PORT = Number(process.env.PORT) || 10000;
 
@@ -35,22 +38,6 @@ const ALLOWED_ORIGINS = new Set([
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ]);
-
-const KNOWLEDGE_FALLBACK =
-  "UCSD × CRS is a student-led Collegiate Racing Series team at UC San Diego.";
-
-function loadKnowledge() {
-  try {
-    const text = fs.readFileSync(path.join(__dirname, "knowledge.md"), "utf8");
-    return { text, loaded: true, chars: text.length };
-  } catch {
-    return {
-      text: KNOWLEDGE_FALLBACK,
-      loaded: false,
-      chars: KNOWLEDGE_FALLBACK.length,
-    };
-  }
-}
 
 function buildSystemPrompt(knowledge) {
   return [
@@ -183,15 +170,13 @@ app.get("/", (_req, res) => {
 });
 
 app.get("/health", (_req, res) => {
-  const knowledge = loadKnowledge();
   res.json({
     ok: true,
     provider: "openai",
     hasKey: Boolean(OPENAI_API_KEY),
     keyFormatValid: openAiKeyLooksValid(OPENAI_API_KEY),
     model: OPENAI_MODEL,
-    knowledgeLoaded: knowledge.loaded,
-    knowledgeChars: knowledge.chars,
+    ...getHealthFields(),
   });
 });
 
@@ -224,7 +209,7 @@ app.post("/api/recruitment-chat", async (req, res) => {
     .slice(-12);
 
   try {
-    const { text: knowledge } = loadKnowledge();
+    const { text: knowledge } = await getKnowledge();
     const reply = await callOpenAi(
       OPENAI_API_KEY,
       buildSystemPrompt(knowledge),
@@ -242,6 +227,13 @@ app.post("/api/recruitment-chat", async (req, res) => {
       detail: detail.slice(0, 240),
     });
   }
+});
+
+refreshKnowledge({ force: true }).catch((err) => {
+  console.warn(
+    "drive-knowledge: initial sync failed",
+    err instanceof Error ? err.message : err,
+  );
 });
 
 app.listen(PORT, () => {
