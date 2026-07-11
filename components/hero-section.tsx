@@ -304,7 +304,7 @@ export function HeroSection() {
                 >
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
-                            <div className="w-full shrink-0 max-md:translate-y-[2pt] md:max-w-44 md:border-r md:border-[#F2F0EF]/15 md:pr-6">
+                            <div className="w-full shrink-0 max-md:translate-y-[17pt] md:max-w-44 md:border-r md:border-[#F2F0EF]/15 md:pr-6">
                                 <p className="w-full text-center text-xs leading-none tracking-tight text-[#F2F0EF]/70 max-md:whitespace-nowrap md:text-end md:text-sm md:leading-snug md:tracking-normal">
                                     <span className="md:hidden">
                                         Powering by the best teams

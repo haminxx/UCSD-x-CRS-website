@@ -74,7 +74,7 @@ export default function ProgramPage() {
                   className="text-[clamp(2.75rem,12vw,6.75rem)] md:text-[clamp(1.65rem,6.5vw,6.75rem)]"
                 />
               </div>
-              <p className="-mt-[calc(1.75rem+27pt)] max-w-3xl text-base leading-relaxed text-black/55 md:-mt-[calc(1.5rem+27pt)] md:text-lg">
+              <p className="mt-4 max-w-3xl text-base leading-relaxed text-black/55 md:mt-5 md:text-lg">
                 For more details, visit{" "}
                 <HoverPeek url={CRS_URL}>
                   <Link
