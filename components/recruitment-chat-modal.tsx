@@ -373,7 +373,7 @@ export function RecruitmentChatModal({
                   id={titleId}
                   className="text-base font-semibold tracking-tight text-[#0a1218]"
                 >
-                  CRS recruitment
+                  UCSD x CRS
                 </h2>
                 <p className="mt-0.5 text-xs text-black/40">
                   Ask about roles, tryouts, and how to join
