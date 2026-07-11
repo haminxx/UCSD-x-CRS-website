@@ -57,16 +57,16 @@ function FloatingPaths({ position }: FloatingPathsProps) {
             strokeWidth={path.width}
             strokeOpacity={0.08 + path.id * 0.02}
             fill="none"
-            initial={{ pathLength: 0, opacity: 0 }}
+            initial={{ pathLength: 0, opacity: 0.12 }}
             animate={{
               pathLength: [0, 1, 1, 0],
-              opacity: [0, 0.55, 0.55, 0],
+              opacity: [0.12, 0.55, 0.55, 0.12],
             }}
             transition={{
-              duration: 15 + index * 0.5,
+              duration: 7 + index * 0.15,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-              delay: index * 0.2,
+              delay: index * 0.04,
             }}
           />
         ))}
@@ -145,12 +145,13 @@ export function BackgroundPaths({
       {showGradientOrb && (
         <motion.div
           className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full md:h-[640px] md:w-[640px]"
+          initial={{ opacity: 0.45, scale: 0.96 }}
           animate={{
-            scale: [1, 1.12, 1],
-            opacity: [0.55, 0.75, 0.55],
+            opacity: [0.45, 0.72, 0.45],
+            scale: [0.96, 1.08, 0.96],
           }}
           transition={{
-            duration: 18,
+            duration: 12,
             repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
@@ -172,27 +173,33 @@ export function BackgroundPaths({
 
       <div className="relative z-10 mx-auto w-full max-w-5xl px-6 text-center md:px-10 lg:px-16">
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
           className="mx-auto max-w-4xl"
         >
           <div
             className={cn(
-              "rounded-3xl border border-white/55",
-              "bg-white/45 px-8 py-10 shadow-[0_8px_40px_rgba(10,18,24,0.06)]",
+              "mx-auto w-full max-w-3xl overflow-hidden rounded-3xl",
+              "border border-white/35 bg-white/12 px-6 py-9",
+              "shadow-[0_12px_40px_rgba(10,18,24,0.08),inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(255,255,255,0.08)]",
               "backdrop-blur-2xl backdrop-saturate-150",
-              "md:px-12 md:py-14",
+              "md:px-10 md:py-12",
             )}
           >
-            <LetterTitle title={title} />
+            <div className="flex w-full flex-col items-center text-center">
+              <LetterTitle
+                title={title}
+                className="w-full max-w-full text-balance whitespace-normal sm:whitespace-nowrap"
+              />
+            </div>
 
             {children ? (
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.75, duration: 0.7 }}
-                className="mt-8 md:mt-10"
+                transition={{ delay: 0.35, duration: 0.45 }}
+                className="mt-7 text-center md:mt-8"
               >
                 {children}
               </motion.div>

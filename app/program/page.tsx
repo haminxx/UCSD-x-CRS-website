@@ -67,12 +67,12 @@ export default function ProgramPage() {
 
         <PageEnter>
           <section className="relative z-10 flex min-h-dvh items-center justify-center px-6 pb-24 pt-32 md:px-10 md:pb-28 md:pt-36 lg:px-16">
-            <div className="mx-auto flex max-w-4xl translate-y-8 flex-col items-center text-center md:translate-y-12 lg:translate-y-16">
+            <div className="mx-auto flex max-w-4xl translate-y-[calc(2rem-20pt)] flex-col items-center text-center md:translate-y-[calc(3rem-20pt)] lg:translate-y-[calc(4rem-20pt)]">
               <LetterTitle
                 title="Coming Soon"
                 className="text-[clamp(2.75rem,12vw,6.75rem)] md:text-[clamp(1.65rem,6.5vw,6.75rem)]"
               />
-              <p className="-mt-7 max-w-3xl text-base leading-relaxed text-black/55 md:-mt-6 md:text-lg">
+              <p className="-mt-[calc(1.75rem+12pt)] max-w-3xl text-base leading-relaxed text-black/55 md:-mt-[calc(1.5rem+12pt)] md:text-lg">
                 For more details, visit{" "}
                 <HoverPeek url={CRS_URL}>
                   <Link
