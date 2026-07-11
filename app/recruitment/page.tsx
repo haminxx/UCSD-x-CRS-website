@@ -17,6 +17,11 @@ type TeamRole = {
   title: string;
   image: string;
   accent: string;
+  tagline: string;
+  overview: string;
+  responsibilities: string[];
+  idealFor: string;
+  timeCommitment?: string;
 };
 
 const TEAM_ROLES: TeamRole[] = [
@@ -25,36 +30,132 @@ const TEAM_ROLES: TeamRole[] = [
     title: "Driver",
     image: "/images/recruitment/driver.png",
     accent: "#1a3a4a",
+    tagline: "Racecraft, fitness, and feedback at the limit.",
+    overview:
+      "Drivers represent UCSD x CRS on track in Collegiate Racing Series events. You will train in simulators, review telemetry and session data, and work with engineers and coaches to translate setup changes into consistent lap times and clean racecraft. Competition seats are earned through preparation, fitness, licensing compliance, and demonstrated performance in practice and qualifying.",
+    responsibilities: [
+      "Complete simulator and on-track training sessions aligned with CRS event calendars and team development goals",
+      "Review telemetry, lap data, and engineer briefings to provide actionable feedback on handling, balance, and tire behavior",
+      "Maintain race fitness, focus, and reaction standards required for safe wheel-to-wheel competition",
+      "Attend driver briefings, debriefs, and strategy discussions before and after every session",
+      "Meet licensing, safety gear, and eligibility requirements set by CRS and event organizers",
+      "Execute race starts, overtakes, and defensive lines within team strategy and sporting regulations",
+      "Communicate clearly with pit crew and race control during sessions, stops, and incident recovery",
+    ],
+    idealFor:
+      "Students with prior karting, sim racing, track day, or formula-style experience who are disciplined, coachable, and committed to data-driven improvement. You should be comfortable receiving technical feedback and representing the team professionally on and off track.",
+    timeCommitment:
+      "Typically 8–12 hours per week during the season, with additional event weekends for travel, practice, and competition.",
   },
   {
     id: "engineer",
     title: "Engineer",
     image: "/images/recruitment/engineer.png",
     accent: "#2a4a3a",
+    tagline: "Setup, simulation, and data that make the car faster.",
+    overview:
+      "Engineers translate vehicle dynamics theory into measurable performance gains for CRS competition. You will work across setup, data acquisition, CAD, simulation, and subsystem development—supporting everything from spring changes and aero balance to powertrain reliability. Strong analytical habits and clear documentation are as important as raw technical skill.",
+    responsibilities: [
+      "Develop and iterate vehicle setup sheets for practice, qualifying, and race conditions",
+      "Analyze logged telemetry, temperatures, pressures, and lap metrics to identify performance trends",
+      "Support CAD, CFD, or simulation workflows for aero, chassis, and component validation",
+      "Collaborate on powertrain, suspension, braking, and electronics subsystems through design and test cycles",
+      "Prepare pre-event checklists and post-event engineering reports for continuous improvement",
+      "Coordinate with drivers on feedback loops to correlate subjective feel with objective data",
+      "Maintain accurate build documentation, part inventories, and compliance with CRS technical rules",
+    ],
+    idealFor:
+      "Mechanical, aerospace, electrical, computer science, or related majors who enjoy structured problem-solving and hands-on validation. Prior FSAE, robotics, CAD, MATLAB, or data analysis experience is valuable but not required if you are eager to learn.",
+    timeCommitment:
+      "Typically 10–14 hours per week, with heavier load before events and during subsystem integration pushes.",
   },
   {
     id: "pit-crew",
     title: "PIT Crew",
     image: "/images/recruitment/pit-crew.png",
     accent: "#3a2a1a",
+    tagline: "Precision stops, safety, and garage execution.",
+    overview:
+      "PIT Crew members keep the car safe, reliable, and race-ready in the garage and on pit lane. From tire changes and fueling choreography to equipment checks and event logistics at the track, this role demands calm execution under time pressure. Every second in the pit and every torque spec in the garage directly affects race outcomes.",
+    responsibilities: [
+      "Execute pit stops including tire changes, fueling support, and driver assist within team timing targets",
+      "Perform pre-session and post-session safety inspections on wheels, fluids, fasteners, and safety equipment",
+      "Organize pit lane equipment, tooling, and spare inventory for fast access during live sessions",
+      "Support garage setup, car cover, and transporter loading/unloading at test days and CRS events",
+      "Follow standardized checklists for torque specs, fire safety, and personal protective equipment",
+      "Communicate with engineers and race control during stops, penalties, and emergency procedures",
+      "Assist with trackside logistics such as timing boards, radio checks, and pit crew rotations",
+    ],
+    idealFor:
+      "Detail-oriented teammates who thrive in fast-paced, physical environments and take safety protocols seriously. Prior automotive, karting, or shop experience helps, but reliability, teamwork, and composure matter most.",
+    timeCommitment:
+      "Typically 6–10 hours per week, with full event weekends during race season and intensive prep before first track outing.",
   },
   {
     id: "media-team",
     title: "Media Team",
     image: "/images/recruitment/media-team.png",
     accent: "#2a2a4a",
+    tagline: "Capture the story. Elevate the brand.",
+    overview:
+      "Media Team members document the team’s engineering, competition, and culture through photography and video. You will cover test days, build milestones, and CRS events—creating assets for social channels, sponsor deliverables, and long-term brand archives. Strong visual instincts and reliable delivery timelines keep our partners and community engaged.",
+    responsibilities: [
+      "Photograph and film on-track action, garage work, team meetings, and sponsor activations",
+      "Edit photo and video packages for Instagram, LinkedIn, website updates, and sponsor reports",
+      "Coordinate shot lists and coverage plans with Operations and Content Creator leads before events",
+      "Manage file organization, color consistency, and rights clearance for brand and partner use",
+      "Support live or near-live event coverage when schedules and connectivity allow",
+      "Deliver sponsor-facing media assets according to partnership commitments and deadlines",
+      "Maintain equipment readiness including batteries, storage, backups, and field kits for travel",
+    ],
+    idealFor:
+      "Students with photography, videography, or visual storytelling experience who can work independently in dynamic environments. Portfolio work in sports, events, or documentary-style content is a plus.",
+    timeCommitment:
+      "Typically 6–10 hours per week, with concentrated coverage during test days, reveal moments, and CRS race weekends.",
   },
   {
     id: "content-creator",
     title: "Content Creator",
     image: "/images/recruitment/content-creator.png",
     accent: "#3a1a2a",
+    tagline: "Short-form stories that grow our audience.",
+    overview:
+      "Content Creators turn raw team moments into compelling short-form video and social narratives. You will script, shoot, edit, and publish reels and posts that explain our CRS journey to prospective members, fans, and sponsors. Growth comes from consistent publishing, strong hooks, and authentic behind-the-scenes access across engineering and race weekends.",
+    responsibilities: [
+      "Plan and produce short-form video for Instagram Reels, TikTok-style clips, and cross-platform repurposing",
+      "Edit with captions, pacing, and audio choices optimized for mobile viewing and retention",
+      "Collaborate with Media Team for footage while adding narrative framing, hooks, and calls to action",
+      "Track post performance and iterate on formats that drive reach, saves, and recruitment interest",
+      "Maintain a content calendar aligned with recruitment cycles, events, and sponsor announcements",
+      "Write on-brand captions and hashtags that reflect UCSD x CRS voice and CRS positioning",
+      "Capture quick-turn behind-the-scenes moments from garage sessions, sim training, and travel days",
+    ],
+    idealFor:
+      "Creators who live in short-form platforms, understand trends without losing brand authenticity, and can ship polished edits on tight deadlines. Basic motion graphics or caption workflow experience is helpful.",
+    timeCommitment:
+      "Typically 5–8 hours per week, with higher output around recruitment windows and event weekends.",
   },
   {
     id: "operation-team",
     title: "Operation Team",
     image: "/images/recruitment/operation-team.png",
     accent: "#1a2a3a",
+    tagline: "Schedules, budgets, and logistics that keep us racing.",
+    overview:
+      "Operations keeps UCSD x CRS organized across people, time, money, and compliance. You will coordinate travel, event planning, vendor relations, and internal scheduling so engineering and competition teams can focus on performance. Clear communication and dependable follow-through are the backbone of every successful CRS weekend.",
+    responsibilities: [
+      "Maintain master calendars for practices, meetings, build milestones, and CRS event travel",
+      "Support budget tracking, purchase requests, reimbursement workflows, and sponsor fulfillment logistics",
+      "Coordinate housing, transport, meals, and on-site schedules for away events and test trips",
+      "Manage vendor, venue, and university administrative correspondence for equipment and reservations",
+      "Track compliance tasks including waivers, roster documentation, and organizational deadlines",
+      "Run meeting agendas, action-item follow-ups, and cross-team status updates with leads",
+      "Assist recruitment operations by syncing application timelines, onboarding, and role assignments",
+    ],
+    idealFor:
+      "Highly organized students interested in project management, business, economics, or leadership roles in student organizations. You should be proactive, detail-oriented, and comfortable coordinating across technical and non-technical teammates.",
+    timeCommitment:
+      "Typically 6–10 hours per week, increasing during travel planning phases and major CRS event preparation.",
   },
 ];
 
@@ -162,6 +263,24 @@ function TeamRoleCard({
   );
 }
 
+const modalContentVariants = {
+  hidden: {
+    transition: { staggerChildren: 0.05, staggerDirection: -1 },
+  },
+  visible: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.06 },
+  },
+};
+
+const modalContentItemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
 function TeamRoleModal({
   role,
   onClose,
@@ -211,11 +330,8 @@ function TeamRoleModal({
             aria-labelledby={titleId}
             className={cn(
               "relative z-10 flex w-full flex-col overflow-hidden rounded-2xl bg-[#F2F0EF] shadow-2xl",
-              "max-h-[min(86dvh,36rem)] max-w-[min(94vw,42rem)]",
-              "sm:max-h-[min(78dvh,28rem)] sm:max-w-[min(92vw,52rem)]",
-              "md:max-h-[min(72dvh,30rem)] md:max-w-[min(90vw,58rem)]",
-              "lg:max-h-[min(68dvh,32rem)] lg:max-w-[min(88vw,64rem)]",
-              "sm:flex-row",
+              "max-h-[min(90dvh,52rem)] max-w-[min(96vw,72rem)]",
+              "lg:flex-row",
             )}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -226,12 +342,18 @@ function TeamRoleModal({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-[#F2F0EF]/90 text-[#0a1218] shadow-sm transition hover:bg-[#F2F0EF] sm:bg-black/[0.04] sm:shadow-none sm:hover:bg-black/[0.08]"
+              className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-full bg-[#F2F0EF]/90 text-[#0a1218] shadow-sm transition hover:bg-[#F2F0EF] lg:bg-black/[0.04] lg:shadow-none lg:hover:bg-black/[0.08]"
             >
               <X className="size-4" aria-hidden="true" />
             </button>
 
-            <div className="relative h-[min(38vw,11rem)] w-full shrink-0 overflow-hidden bg-[#eef1f3] sm:h-auto sm:w-[42%] sm:max-w-[20rem] lg:w-[40%]">
+            <div
+              className={cn(
+                "relative w-full shrink-0 overflow-hidden bg-[#eef1f3]",
+                "aspect-[3/4] max-h-[min(42dvh,28rem)]",
+                "lg:aspect-[3/4] lg:h-auto lg:max-h-none lg:w-[40%] lg:min-w-[14rem] lg:max-w-[42%]",
+              )}
+            >
               <div
                 className="absolute inset-0"
                 style={{
@@ -247,21 +369,69 @@ function TeamRoleModal({
               />
             </div>
 
-            <div className="flex min-h-0 min-w-0 flex-1 flex-col border-t border-black/[0.06] px-5 pb-5 pt-4 sm:border-t-0 sm:border-l sm:px-7 sm:pb-7 sm:pt-6">
-              <h2
-                id={titleId}
-                className="pr-10 text-xl font-semibold tracking-tight text-[#0a1218] sm:text-2xl"
+            <motion.div
+              key={role.id}
+              variants={modalContentVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto border-t border-black/[0.06] px-5 pb-6 pt-4 lg:border-t-0 lg:border-l lg:px-8 lg:pb-8 lg:pt-7"
+            >
+              <motion.div variants={modalContentItemVariants}>
+                <h2
+                  id={titleId}
+                  className="pr-10 text-2xl font-bold tracking-tight text-[#0a1218] lg:text-3xl"
+                >
+                  {role.title}
+                </h2>
+                <p className="mt-2 text-sm font-medium text-black/50 lg:text-base">
+                  {role.tagline}
+                </p>
+              </motion.div>
+
+              <motion.p
+                variants={modalContentItemVariants}
+                className="mt-5 text-sm leading-relaxed text-black/65 lg:text-base"
               >
-                {role.title}
-              </h2>
-              <p className="mt-1.5 text-xs text-black/40 sm:text-sm">
-                Role overview — details coming soon
-              </p>
-              <div
-                className="mt-4 min-h-[6.5rem] flex-1 rounded-xl border border-dashed border-black/10 bg-[#f7f8f9] sm:mt-5 sm:min-h-[8rem]"
-                aria-hidden="true"
-              />
-            </div>
+                {role.overview}
+              </motion.p>
+
+              <motion.div variants={modalContentItemVariants} className="mt-6">
+                <h3 className="text-xs font-semibold tracking-[0.14em] text-black/40 uppercase">
+                  Key responsibilities
+                </h3>
+                <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-black/70 lg:text-[0.95rem]">
+                  {role.responsibilities.map((item) => (
+                    <li key={item} className="flex gap-2.5">
+                      <span
+                        className="mt-2 size-1.5 shrink-0 rounded-full bg-[#182B49]/70"
+                        aria-hidden="true"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              <motion.div variants={modalContentItemVariants} className="mt-6">
+                <h3 className="text-xs font-semibold tracking-[0.14em] text-black/40 uppercase">
+                  Ideal for
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-black/70 lg:text-[0.95rem]">
+                  {role.idealFor}
+                </p>
+              </motion.div>
+
+              {role.timeCommitment ? (
+                <motion.div variants={modalContentItemVariants} className="mt-6">
+                  <h3 className="text-xs font-semibold tracking-[0.14em] text-black/40 uppercase">
+                    Time commitment
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-black/70 lg:text-[0.95rem]">
+                    {role.timeCommitment}
+                  </p>
+                </motion.div>
+              ) : null}
+            </motion.div>
           </motion.div>
         </motion.div>
       )}

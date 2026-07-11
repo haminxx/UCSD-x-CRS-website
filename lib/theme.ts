@@ -4,6 +4,8 @@ export const LIGHT_PAGE_PREFIXES = [
   "/program",
   "/sponsors",
   "/recruitment",
+  "/terms",
+  "/privacy",
 ] as const;
 
 export function normalizePath(pathname: string | null | undefined) {

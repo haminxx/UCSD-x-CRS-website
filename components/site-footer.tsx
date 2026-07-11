@@ -161,13 +161,13 @@ export function SiteFooter() {
             </p>
             <div className="flex flex-wrap gap-6">
               <Link
-                href="#"
+                href="/terms/"
                 className="transition-colors duration-200 hover:text-[#F2F0EF]"
               >
                 Terms and Conditions
               </Link>
               <Link
-                href="#"
+                href="/privacy/"
                 className="transition-colors duration-200 hover:text-[#F2F0EF]"
               >
                 Privacy Policy

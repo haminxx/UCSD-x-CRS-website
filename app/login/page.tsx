@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { BackgroundAutoplayVideo } from "@/components/background-autoplay-video";
 import { SiteHeader } from "@/components/site-header";
 import { PageEnter } from "@/components/page-motion";
@@ -12,6 +13,14 @@ import {
 } from "@/lib/staff-auth";
 
 type PortalView = "signin" | "register" | "recovery";
+
+const VIEW_ORDER: Record<PortalView, number> = {
+  signin: 0,
+  register: 1,
+  recovery: -1,
+};
+
+const easePremium = [0.22, 1, 0.36, 1] as const;
 
 const inputClass = cn(
   "mt-3 w-full border-0 border-b border-[#F2F0EF]/35 bg-transparent px-0 pb-3",
@@ -25,11 +34,97 @@ const labelClass =
 const actionLinkClass =
   "cursor-grab font-mono text-[11px] tracking-[0.16em] text-[#F2F0EF]/45 uppercase transition hover:text-[#F2F0EF]/80 active:cursor-grabbing";
 
+function getDirection(from: PortalView, to: PortalView) {
+  const delta = VIEW_ORDER[to] - VIEW_ORDER[from];
+  if (delta > 0) return 1;
+  if (delta < 0) return -1;
+  return 1;
+}
+
+const titleVariants = {
+  enter: (direction: number) => ({
+    opacity: 0,
+    y: direction > 0 ? 28 : -28,
+    scale: 0.96,
+  }),
+  center: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    y: direction > 0 ? -20 : 20,
+    scale: 0.97,
+  }),
+};
+
+const panelVariants = {
+  enter: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? 48 : -48,
+    scale: 0.98,
+  }),
+  center: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? -36 : 36,
+    scale: 0.98,
+  }),
+};
+
+const fieldVariants = {
+  hidden: { opacity: 0, y: 18, scale: 0.98 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      delay: 0.06 + i * 0.07,
+      duration: 0.38,
+      ease: easePremium,
+    },
+  }),
+  exit: (i: number) => ({
+    opacity: 0,
+    y: -10,
+    scale: 0.99,
+    transition: {
+      delay: i * 0.03,
+      duration: 0.22,
+      ease: easePremium,
+    },
+  }),
+};
+
+const titleContent: Record<PortalView, { line1: string; line2: string }> = {
+  signin: { line1: "STAFF", line2: "PORTAL" },
+  register: { line1: "CREATE", line2: "ACCOUNT" },
+  recovery: { line1: "SECURE", line2: "RECOVERY" },
+};
+
+type FormField = {
+  key: string;
+  label: string;
+  id: string;
+  name: string;
+  type: string;
+  autoComplete?: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+};
+
 /**
  * Staff Portal — sign in, create account (UCSD email + invite code), password recovery.
  */
 export default function LoginPage() {
   const [view, setView] = useState<PortalView>("signin");
+  const [direction, setDirection] = useState(1);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,6 +134,7 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const frame = useRef(0);
+  const prevView = useRef<PortalView>("signin");
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -62,6 +158,8 @@ export default function LoginPage() {
   }
 
   function switchView(next: PortalView) {
+    setDirection(getDirection(prevView.current, next));
+    prevView.current = next;
     setView(next);
     setError(null);
     setMessage(null);
@@ -98,7 +196,7 @@ export default function LoginPage() {
       return;
     }
     setMessage("Account created. You can sign in now.");
-    setView("signin");
+    switchView("signin");
     setPassword("");
     setConfirmPassword("");
     setInviteCode("");
@@ -119,18 +217,13 @@ export default function LoginPage() {
       return;
     }
     setMessage("Password updated. Sign in with your new password.");
-    setView("signin");
+    switchView("signin");
     setPassword("");
     setConfirmPassword("");
     setInviteCode("");
   }
 
-  const title =
-    view === "register"
-      ? { line1: "CREATE", line2: "ACCOUNT" }
-      : view === "recovery"
-        ? { line1: "SECURE", line2: "RECOVERY" }
-        : { line1: "STAFF", line2: "PORTAL" };
+  const title = titleContent[view];
 
   const submitLabel =
     view === "register"
@@ -138,6 +231,62 @@ export default function LoginPage() {
       : view === "recovery"
         ? "Reset password"
         : "Initialize stream";
+
+  const fields: FormField[] = [
+    {
+      key: "email",
+      label: "UCSD email",
+      id: "email",
+      name: "email",
+      type: "email",
+      autoComplete: "email",
+      value: email,
+      onChange: setEmail,
+      placeholder: "you@ucsd.edu",
+    },
+    ...(view === "register" || view === "recovery"
+      ? [
+          {
+            key: "inviteCode",
+            label: "Invite code",
+            id: "inviteCode",
+            name: "inviteCode",
+            type: "text",
+            autoComplete: "off",
+            value: inviteCode,
+            onChange: setInviteCode,
+            placeholder: "CRS-STAFF-2026",
+          } satisfies FormField,
+        ]
+      : []),
+    {
+      key: "password",
+      label: view === "recovery" ? "New sequence key" : "Sequence key",
+      id: "password",
+      name: "password",
+      type: "password",
+      autoComplete:
+        view === "signin" ? "current-password" : "new-password",
+      value: password,
+      onChange: setPassword,
+      placeholder: "••••••••••••",
+    },
+    ...(view === "register" || view === "recovery"
+      ? [
+          {
+            key: "confirmPassword",
+            label: "Confirm sequence key",
+            id: "confirmPassword",
+            name: "confirmPassword",
+            type: "password",
+            autoComplete: "new-password",
+            value: confirmPassword,
+            onChange: setConfirmPassword,
+            placeholder: "••••••••••••",
+          } satisfies FormField,
+        ]
+      : []),
+  ];
 
   return (
     <>
@@ -176,129 +325,147 @@ export default function LoginPage() {
             className="flex flex-col"
           >
             <p className={labelClass}>System node: UCSDxCRS</p>
-            <h1 className="mt-4 text-5xl font-bold leading-[0.95] tracking-tight md:text-6xl">
-              <span className="block">{title.line1}</span>
-              <span className="block">{title.line2}</span>
-            </h1>
 
-            {message ? (
-              <p className="mt-6 font-mono text-xs leading-relaxed tracking-wide text-[#78dcca]">
-                {message}
-              </p>
-            ) : null}
-            {error ? (
-              <p className="mt-6 font-mono text-xs leading-relaxed tracking-wide text-[#ff9d77]">
-                {error}
-              </p>
-            ) : null}
-
-            <div className="mt-16 space-y-10">
-              <label className="block">
-                <span className={labelClass}>UCSD email</span>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@ucsd.edu"
-                  className={inputClass}
-                />
-              </label>
-
-              {view === "register" || view === "recovery" ? (
-                <label className="block">
-                  <span className={labelClass}>Invite code</span>
-                  <input
-                    id="inviteCode"
-                    name="inviteCode"
-                    type="text"
-                    required
-                    value={inviteCode}
-                    onChange={(e) => setInviteCode(e.target.value)}
-                    placeholder="CRS-STAFF-2026"
-                    className={inputClass}
-                    autoComplete="off"
-                  />
-                </label>
-              ) : null}
-
-              <label className="block">
-                <span className={labelClass}>
-                  {view === "recovery" ? "New sequence key" : "Sequence key"}
-                </span>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete={
-                    view === "signin"
-                      ? "current-password"
-                      : "new-password"
-                  }
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className={inputClass}
-                />
-              </label>
-
-              {view === "register" || view === "recovery" ? (
-                <label className="block">
-                  <span className={labelClass}>Confirm sequence key</span>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••••••"
-                    className={inputClass}
-                  />
-                </label>
-              ) : null}
+            <div className="mt-4 overflow-hidden">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={view}
+                  custom={direction}
+                  variants={titleVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.42, ease: easePremium }}
+                >
+                  <h1 className="text-5xl font-bold leading-[0.95] tracking-tight md:text-6xl">
+                    <span className="block">{title.line1}</span>
+                    <span className="block">{title.line2}</span>
+                  </h1>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            <button
+            <AnimatePresence mode="wait">
+              {message ? (
+                <motion.p
+                  key="message"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.3, ease: easePremium }}
+                  className="mt-6 font-mono text-xs leading-relaxed tracking-wide text-[#78dcca]"
+                >
+                  {message}
+                </motion.p>
+              ) : null}
+              {error ? (
+                <motion.p
+                  key="error"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.3, ease: easePremium }}
+                  className="mt-6 font-mono text-xs leading-relaxed tracking-wide text-[#ff9d77]"
+                >
+                  {error}
+                </motion.p>
+              ) : null}
+            </AnimatePresence>
+
+            <div className="mt-16 overflow-hidden">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={view}
+                  custom={direction}
+                  variants={panelVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.4, ease: easePremium }}
+                  className="space-y-10"
+                >
+                  <AnimatePresence mode="popLayout">
+                    {fields.map((field, index) => (
+                      <motion.label
+                        key={`${view}-${field.key}`}
+                        layout
+                        custom={index}
+                        variants={fieldVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="block"
+                      >
+                        <span className={labelClass}>{field.label}</span>
+                        <input
+                          id={field.id}
+                          name={field.name}
+                          type={field.type}
+                          autoComplete={field.autoComplete}
+                          required
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          placeholder={field.placeholder}
+                          className={inputClass}
+                        />
+                      </motion.label>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <motion.button
               type="submit"
               disabled={busy}
+              layout
+              transition={{ duration: 0.35, ease: easePremium }}
               className="mt-12 w-full cursor-grab rounded-full bg-[#182B49] py-4 text-sm font-bold tracking-[0.14em] text-[#F2F0EF] uppercase transition hover:bg-[#121F38] active:cursor-grabbing disabled:opacity-60"
             >
               {busy ? "Processing…" : submitLabel}
-            </button>
+            </motion.button>
 
             <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-              {view === "signin" ? (
-                <>
-                  <button
+              <AnimatePresence mode="wait">
+                {view === "signin" ? (
+                  <motion.div
+                    key="signin-actions"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.32, ease: easePremium }}
+                    className="flex w-full flex-wrap items-center justify-between gap-4"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => switchView("recovery")}
+                      className={actionLinkClass}
+                    >
+                      Encrypted recovery
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => switchView("register")}
+                      className={actionLinkClass}
+                    >
+                      Create an account
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.button
+                    key="back-action"
                     type="button"
-                    onClick={() => switchView("recovery")}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.32, ease: easePremium }}
+                    onClick={() => switchView("signin")}
                     className={actionLinkClass}
                   >
-                    Encrypted recovery
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => switchView("register")}
-                    className={actionLinkClass}
-                  >
-                    Create an account
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => switchView("signin")}
-                  className={actionLinkClass}
-                >
-                  Back to sign in
-                </button>
-              )}
+                    Back to sign in
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
           </form>
         </PageEnter>

@@ -21,7 +21,7 @@ const emptyOrbitCard = (accent: string): OrbitStackItem => ({
   stat: "",
 });
 
-/** Index 1 = Stephanie (left-of-center), index 2 = Christian (center), index 3 = Vin (right-of-center). */
+/** Index 1 = Stephanie (left-of-center), index 2 = Christian (center), index 3 = Vinh Phong (right-of-center). */
 const orbitLeaders: OrbitStackItem[] = [
   emptyOrbitCard("#f8d66d"),
   {
@@ -46,13 +46,13 @@ const orbitLeaders: OrbitStackItem[] = [
     href: "https://www.linkedin.com/in/christian-j-l/",
   },
   {
-    name: "Vin",
-    role: "Driver Development Coach",
+    name: "Vinh Phong",
+    role: "Business Economics",
     description:
-      "Guides CRS drivers on track craft, race craft, and getting the most out of every session.",
+      "Guides CRS drivers and educates the team on racing principles, track craft, and the fundamentals of continuous learning on and off the track.",
     accent: "#b9a7ff",
-    initials: "V",
-    stat: "Warren College",
+    initials: "VP",
+    stat: "Seven College",
   },
   emptyOrbitCard("#ff9d77"),
 ];
@@ -158,7 +158,7 @@ export default function AboutUsPage() {
                 setHeadline("Founder");
               } else if (item.name === "Stephanie Kovalchuk-Lum") {
                 setHeadline("Co-founder");
-              } else if (item.name === "Vin") {
+              } else if (item.name === "Vinh Phong") {
                 setHeadline("Driver Coach");
               } else if (item.name.trim()) {
                 setHeadline(item.name);

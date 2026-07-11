@@ -665,7 +665,7 @@ export default function ContactPage() {
                         <span>
                           I have read and agree to the{" "}
                           <Link
-                            href="#"
+                            href="/privacy/"
                             className="underline underline-offset-2 hover:text-[#F2F0EF]"
                           >
                             Privacy Policy ↗
