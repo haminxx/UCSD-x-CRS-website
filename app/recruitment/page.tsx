@@ -227,7 +227,7 @@ function TeamRoleCard({
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-transparent" />
 
-          {/* Title + view more — top-left, hover / focus only (slide up + fade) */}
+          {/* Title + view more — always visible on phone; hover/focus slide-up on md+ */}
           <motion.div
             className={cn(
               "pointer-events-none absolute left-[clamp(0.55rem,1.1vw,0.85rem)] top-[clamp(0.55rem,1.1vw,0.85rem)] z-10",
@@ -239,7 +239,10 @@ function TeamRoleCard({
           >
             <motion.p
               variants={roleOverlayItemVariants}
-              className="text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-[#F2F0EF]"
+              className={cn(
+                "text-[clamp(0.95rem,1.6vw,1.35rem)] font-extrabold leading-tight tracking-tight text-[#F2F0EF]",
+                "max-md:!translate-y-0 max-md:!opacity-100",
+              )}
             >
               {role.title}
             </motion.p>
@@ -250,6 +253,7 @@ function TeamRoleCard({
                 "relative inline-block text-[clamp(0.65rem,1vw,0.75rem)] font-medium tracking-wide text-[#F2F0EF]/90",
                 "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left",
                 "after:scale-x-0 after:bg-[#F2F0EF]/90 after:transition-transform after:duration-300 after:ease-out",
+                "max-md:after:scale-x-100",
                 "group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100",
                 showOverlay && "after:scale-x-100",
               )}
