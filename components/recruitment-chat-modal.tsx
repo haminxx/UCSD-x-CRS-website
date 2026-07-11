@@ -11,7 +11,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUp, X } from "lucide-react";
 import { getCookie, setCookie } from "@/lib/cookies";
-import { CHAT_API_URL } from "@/lib/recruitment";
+import { getChatApiUrl } from "@/lib/recruitment";
 import { cn } from "@/lib/utils";
 
 export type ChatRole = "user" | "assistant";
@@ -87,7 +87,7 @@ async function fetchAssistantReplyOnce(
   let res: Response;
   try {
     res = await fetchWithTimeout(
-      CHAT_API_URL,
+      getChatApiUrl(),
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

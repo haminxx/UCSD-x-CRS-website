@@ -176,7 +176,9 @@ app.get("/", (_req, res) => {
     ok: true,
     service: "ucsdxcrs-recruitment-chat",
     provider: "openai",
-    endpoints: { chat: "POST /api/recruitment-chat" },
+    website: "https://ucsdxcrs.web.app/recruitment/",
+    chatEndpoint: "POST /api/recruitment-chat",
+    note: "API server only — visit the website URL above for the recruitment page.",
   });
 });
 
