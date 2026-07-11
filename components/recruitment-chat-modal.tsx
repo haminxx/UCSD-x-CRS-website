@@ -128,16 +128,16 @@ async function fetchAssistantReplyOnce(
 
   if (!res.ok) {
     // Billing/credits is project-level — not a cold start or missing Drive file.
-    if (data.kind === "billing" || /billing\/credits/i.test(data.error || "")) {
+    if (data.kind === "billing" || /billing|quota/i.test(data.error || "")) {
       throw new Error(
         data.error ||
-          "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later.",
+          "Chat is temporarily unavailable (OpenAI billing/quota). Please use Contact / Fall 2026 Application, or try again later.",
       );
     }
     if (data.kind === "invalid_key" || data.kind === "missing_key") {
       throw new Error(
         data.error ||
-          "Gemini API key problem. AQ… keys are supported — if you see this, Google rejected the key (401). Recreate the key in the same AI Studio project or check credits at ai.studio/projects.",
+          "OpenAI API key problem. Update OPENAI_API_KEY in Render Environment.",
       );
     }
     throw new Error(

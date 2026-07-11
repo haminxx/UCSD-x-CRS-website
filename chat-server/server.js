@@ -6,7 +6,7 @@ const cors = require("cors");
 const PORT = Number(process.env.PORT) || 10000;
 
 /** Strip quotes/newlines from copy-paste mistakes in Render Environment. */
-function normalizeGeminiApiKey(raw) {
+function normalizeApiKey(raw) {
   if (raw == null) return "";
   let key = String(raw)
     .replace(/^\uFEFF/, "")
@@ -21,44 +21,13 @@ function normalizeGeminiApiKey(raw) {
   return key;
 }
 
-/** AI Studio keys: legacy Standard (AIza…) or new Auth (AQ… / AQ.…) — both valid since mid-2026. */
-function geminiKeyType(key) {
-  if (/^AIza[\w-]{10,}$/i.test(key)) return "standard";
-  if (/^AQ[\w.-]{10,}$/i.test(key)) return "auth";
-  return "unknown";
+function openAiKeyLooksValid(key) {
+  return /^sk-[A-Za-z0-9_-]{10,}$/.test(key);
 }
 
-function keyFormatLooksValid(key) {
-  return geminiKeyType(key) !== "unknown";
-}
-
-const GEMINI_API_KEY = normalizeGeminiApiKey(process.env.GEMINI_API_KEY);
-
-/** Models shut down June 2026 — never call these. */
-const SHUT_DOWN_MODELS = new Set([
-  "gemini-2.0-flash",
-  "gemini-2.0-flash-001",
-  "gemini-2.0-flash-lite",
-  "gemini-2.0-flash-lite-001",
-]);
-
-/**
- * Free-tier-friendly defaults (2026). Prefer 2.5 Flash over 3.x when the
- * project has no prepaid credits — 2.5 Flash remains on the free tier.
- * Override with GEMINI_MODEL on Render if needed.
- */
-const DEFAULT_MODEL = "gemini-2.5-flash";
-const FALLBACK_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.5-flash-lite",
-  "gemini-flash-latest",
-  "gemini-3.1-flash-lite",
-];
-
-const requestedModel = process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL;
-const PRIMARY_MODEL = SHUT_DOWN_MODELS.has(requestedModel)
-  ? DEFAULT_MODEL
-  : requestedModel;
+const OPENAI_API_KEY = normalizeApiKey(process.env.OPENAI_API_KEY);
+const OPENAI_MODEL =
+  process.env.OPENAI_MODEL?.trim() || "gpt-4o-mini";
 
 const ALLOWED_ORIGINS = new Set([
   "https://ucsdxcrs.web.app",
@@ -96,30 +65,30 @@ function buildSystemPrompt(knowledge) {
   ].join("\n");
 }
 
-function toGeminiContents(history, message) {
-  const contents = [];
+function toOpenAiMessages(systemPrompt, history, message) {
+  const messages = [{ role: "system", content: systemPrompt }];
 
   for (const turn of (history || []).slice(-12)) {
     if (!turn?.content?.trim()) continue;
     if (turn.role !== "user" && turn.role !== "assistant") continue;
-    contents.push({
-      role: turn.role === "assistant" ? "model" : "user",
-      parts: [{ text: String(turn.content).trim().slice(0, 2000) }],
+    messages.push({
+      role: turn.role,
+      content: String(turn.content).trim().slice(0, 2000),
     });
   }
 
-  contents.push({
+  messages.push({
     role: "user",
-    parts: [{ text: String(message).trim().slice(0, 2000) }],
+    content: String(message).trim().slice(0, 2000),
   });
 
-  return contents;
+  return messages;
 }
 
-function classifyGeminiError(message, status) {
+function classifyOpenAiError(message, status) {
   const m = String(message || "");
   if (
-    /API[_ ]?key|invalid.?key|PERMISSION_DENIED|ACCESS_TOKEN_TYPE_UNSUPPORTED|401/i.test(
+    /invalid.?api.?key|incorrect api key|invalid_api_key|authentication/i.test(
       m,
     ) ||
     status === 401
@@ -127,19 +96,12 @@ function classifyGeminiError(message, status) {
     return "invalid_key";
   }
   if (
-    /prepayment|billing|credit|quota|RESOURCE_EXHAUSTED|exceeded your current quota/i.test(
-      m,
-    ) ||
+    /insufficient_quota|billing|payment|exceeded|rate.?limit|429/i.test(m) ||
     status === 429
   ) {
     return "billing";
   }
-  if (
-    /not found|NOT_FOUND|is not found|unsupported|no longer available|has been shut down|404/i.test(
-      m,
-    ) ||
-    status === 404
-  ) {
+  if (/model.*not found|does not exist|404/i.test(m) || status === 404) {
     return "model_unavailable";
   }
   return "unknown";
@@ -148,165 +110,50 @@ function classifyGeminiError(message, status) {
 function publicErrorMessage(kind) {
   switch (kind) {
     case "invalid_key":
-      return "Google rejected the Gemini API key (401). Your AQ… key format is accepted by our server — this is a Google account/project issue, not a wrong key type. In AI Studio: recreate the key in the same project, check credits at https://ai.studio/projects, or use Contact / Fall 2026 Application meanwhile.";
+      return "Chat server OpenAI API key is invalid. Update OPENAI_API_KEY in Render Environment (from https://platform.openai.com/api-keys).";
     case "billing":
-      return "Chat is temporarily unavailable (Gemini API billing/credits). Please use Contact / Fall 2026 Application, or try again later.";
+      return "Chat is temporarily unavailable (OpenAI billing/quota). Add credits at https://platform.openai.com/settings/organization/billing, or use Contact / Fall 2026 Application.";
     case "model_unavailable":
-      return "Chat model is unavailable. Please try again later, or use Contact / Fall 2026 Application.";
+      return "Chat model is unavailable. Try again later, or use Contact / Fall 2026 Application.";
     default:
       return "Chat is temporarily unavailable. Please try again, or use Contact / Fall 2026 Application.";
   }
 }
 
-function modelCandidates(primary) {
-  const list = [primary, ...FALLBACK_MODELS.filter((m) => m !== primary)];
-  return [...new Set(list.filter((m) => !SHUT_DOWN_MODELS.has(m)))];
-}
-
-/** Lazy-load official SDK — handles both AIza (standard) and AQ. (auth) keys. */
-let genAiModulePromise;
-function loadGenAI() {
-  if (!genAiModulePromise) {
-    genAiModulePromise = import("@google/genai");
-  }
-  return genAiModulePromise;
-}
-
-async function callGeminiRestOnce(apiKey, model, systemPrompt, history, message) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-
-  const res = await fetch(url, {
+async function callOpenAi(apiKey, systemPrompt, history, message) {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-goog-api-key": apiKey,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      contents: toGeminiContents(history, message),
-      generationConfig: {
-        temperature: 0.4,
-        maxOutputTokens: 512,
-      },
+      model: OPENAI_MODEL,
+      messages: toOpenAiMessages(systemPrompt, history, message),
+      temperature: 0.4,
+      max_tokens: 512,
     }),
   });
 
   const data = await res.json();
-  const errMsg = data?.error?.message || `Gemini HTTP ${res.status}`;
+  const errMsg =
+    data?.error?.message || `OpenAI HTTP ${res.status}`;
 
   if (!res.ok) {
     const err = new Error(errMsg);
     err.status = res.status;
-    err.kind = classifyGeminiError(errMsg, res.status);
-    err.model = model;
+    err.kind = classifyOpenAiError(errMsg, res.status);
     throw err;
   }
 
-  const text = data?.candidates?.[0]?.content?.parts
-    ?.map((p) => p?.text || "")
-    .join("")
-    .trim();
-
+  const text = data?.choices?.[0]?.message?.content?.trim();
   if (!text) {
-    const err = new Error("Empty Gemini response");
+    const err = new Error("Empty OpenAI response");
     err.kind = "unknown";
-    err.model = model;
     throw err;
   }
 
   return text;
-}
-
-async function callGeminiOnce(apiKey, model, systemPrompt, history, message) {
-  const attempts = [
-    async () => {
-      const { GoogleGenAI } = await loadGenAI();
-      const ai = new GoogleGenAI({ apiKey });
-      const response = await ai.models.generateContent({
-        model,
-        contents: toGeminiContents(history, message),
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.4,
-          maxOutputTokens: 512,
-        },
-      });
-      const text = response.text?.trim();
-      if (!text) throw new Error("Empty Gemini response");
-      return text;
-    },
-    () => callGeminiRestOnce(apiKey, model, systemPrompt, history, message),
-  ];
-
-  let lastErr;
-  for (const attempt of attempts) {
-    try {
-      return await attempt();
-    } catch (err) {
-      lastErr = err;
-      const errMsg = err instanceof Error ? err.message : String(err);
-      const status = err?.status ?? err?.statusCode;
-      const kind = err?.kind || classifyGeminiError(errMsg, status);
-      if (kind === "billing") throw err;
-      // invalid_key from SDK → try REST; invalid_key from REST → give up
-      if (kind === "invalid_key" && attempt === attempts[attempts.length - 1]) {
-        const wrapped = new Error(errMsg);
-        wrapped.status = status;
-        wrapped.kind = kind;
-        wrapped.model = model;
-        throw wrapped;
-      }
-    }
-  }
-
-  const errMsg = lastErr instanceof Error ? lastErr.message : String(lastErr);
-  const wrapped = new Error(errMsg);
-  wrapped.status = lastErr?.status ?? lastErr?.statusCode;
-  wrapped.kind = lastErr?.kind || classifyGeminiError(errMsg, wrapped.status);
-  wrapped.model = model;
-  throw wrapped;
-}
-
-/**
- * Try primary model, then free-tier fallbacks on model-not-found / unsupported.
- * Do not retry on billing or invalid key — those are project-level.
- */
-async function callGemini(apiKey, systemPrompt, history, message) {
-  const models = modelCandidates(PRIMARY_MODEL);
-  let lastErr;
-
-  for (let i = 0; i < models.length; i++) {
-    const model = models[i];
-    try {
-      const text = await callGeminiOnce(
-        apiKey,
-        model,
-        systemPrompt,
-        history,
-        message,
-      );
-      if (i > 0) {
-        console.warn(`recruitment-chat: fell back to model ${model}`);
-      }
-      return text;
-    } catch (err) {
-      lastErr = err;
-      const kind = err?.kind || classifyGeminiError(err?.message, err?.status);
-      console.error(
-        `recruitment-chat model=${model} kind=${kind}:`,
-        err?.message || err,
-      );
-      if (kind === "billing" || kind === "invalid_key") {
-        throw err;
-      }
-      // model_unavailable / unknown → try next fallback
-      if (i === models.length - 1) {
-        throw err;
-      }
-    }
-  }
-
-  throw lastErr || new Error("Gemini call failed");
 }
 
 const app = express();
@@ -328,6 +175,7 @@ app.get("/", (_req, res) => {
   res.json({
     ok: true,
     service: "ucsdxcrs-recruitment-chat",
+    provider: "openai",
     endpoints: { chat: "POST /api/recruitment-chat" },
   });
 });
@@ -336,21 +184,20 @@ app.get("/health", (_req, res) => {
   const knowledge = loadKnowledge();
   res.json({
     ok: true,
-    hasKey: Boolean(GEMINI_API_KEY),
-    keyFormatValid: keyFormatLooksValid(GEMINI_API_KEY),
-    keyType: geminiKeyType(GEMINI_API_KEY),
-    model: PRIMARY_MODEL,
-    // Knowledge is the bundled markdown file — not Google Drive / Firebase.
+    provider: "openai",
+    hasKey: Boolean(OPENAI_API_KEY),
+    keyFormatValid: openAiKeyLooksValid(OPENAI_API_KEY),
+    model: OPENAI_MODEL,
     knowledgeLoaded: knowledge.loaded,
     knowledgeChars: knowledge.chars,
   });
 });
 
 app.post("/api/recruitment-chat", async (req, res) => {
-  if (!GEMINI_API_KEY) {
+  if (!OPENAI_API_KEY) {
     res.status(503).json({
       error:
-        "Chat server is missing GEMINI_API_KEY. Add it in Render Environment.",
+        "Chat server is missing OPENAI_API_KEY. Add it in Render Environment.",
       kind: "missing_key",
     });
     return;
@@ -376,8 +223,8 @@ app.post("/api/recruitment-chat", async (req, res) => {
 
   try {
     const { text: knowledge } = loadKnowledge();
-    const reply = await callGemini(
-      GEMINI_API_KEY,
+    const reply = await callOpenAi(
+      OPENAI_API_KEY,
       buildSystemPrompt(knowledge),
       history,
       message,
@@ -385,31 +232,23 @@ app.post("/api/recruitment-chat", async (req, res) => {
     res.status(200).json({ reply });
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
-    const kind =
-      err?.kind || classifyGeminiError(detail, err?.status);
+    const kind = err?.kind || classifyOpenAiError(detail, err?.status);
     console.error("recruitment-chat error", kind, detail);
     res.status(502).json({
       error: publicErrorMessage(kind),
       kind,
-      // Safe diagnostic (Gemini messages never include the API key)
       detail: detail.slice(0, 240),
     });
   }
 });
 
 app.listen(PORT, () => {
-  if (GEMINI_API_KEY && !keyFormatLooksValid(GEMINI_API_KEY)) {
+  if (OPENAI_API_KEY && !openAiKeyLooksValid(OPENAI_API_KEY)) {
     console.warn(
-      "GEMINI_API_KEY is set but does not look like a Gemini key (expected AIza… or AQ… from https://aistudio.google.com/apikey).",
+      "OPENAI_API_KEY is set but does not look like an OpenAI key (expected sk-… from https://platform.openai.com/api-keys).",
     );
-  } else if (geminiKeyType(GEMINI_API_KEY) === "auth") {
-    console.log("GEMINI_API_KEY type=auth (AQ.… — Google’s new AI Studio key format)");
   }
   console.log(
-    `Recruitment chat listening on :${PORT} (model=${PRIMARY_MODEL}${
-      requestedModel !== PRIMARY_MODEL
-        ? `, remapped from ${requestedModel}`
-        : ""
-    }, fallbacks=${FALLBACK_MODELS.filter((m) => m !== PRIMARY_MODEL).join(",")})`,
+    `Recruitment chat listening on :${PORT} (provider=openai, model=${OPENAI_MODEL})`,
   );
 });
