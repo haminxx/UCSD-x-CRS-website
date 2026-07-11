@@ -304,11 +304,16 @@ export function HeroSection() {
                 >
                     <div className="group relative m-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center md:flex-row">
-                            <div className="md:max-w-44 md:border-r md:border-[#F2F0EF]/15 md:pr-6">
-                                <p className="text-end text-sm leading-snug text-[#F2F0EF]/70">
-                                    Powering by the
-                                    <br />
-                                    best teams
+                            <div className="w-full shrink-0 max-md:translate-y-[2pt] md:max-w-44 md:border-r md:border-[#F2F0EF]/15 md:pr-6">
+                                <p className="w-full text-center text-xs leading-none tracking-tight text-[#F2F0EF]/70 max-md:whitespace-nowrap md:text-end md:text-sm md:leading-snug md:tracking-normal">
+                                    <span className="md:hidden">
+                                        Powering by the best teams
+                                    </span>
+                                    <span className="hidden md:inline">
+                                        Powering by the
+                                        <br />
+                                        best teams
+                                    </span>
                                 </p>
                             </div>
                             <div className="relative py-8 md:w-[calc(100%-11rem)]">
