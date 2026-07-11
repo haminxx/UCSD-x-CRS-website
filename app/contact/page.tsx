@@ -22,6 +22,13 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
 import { cn } from "@/lib/utils";
+import {
+  playBackgroundVideo,
+  primeBackgroundVideo,
+  registerMobileBackgroundVideo,
+  unlockBackgroundVideosFromUserGesture,
+  unregisterMobileBackgroundVideo,
+} from "@/lib/mobile-video-unlock";
 
 /** Shared cream field surface — ~70% opacity over blurred video + inset depth. */
 const fieldSurface =
@@ -330,26 +337,18 @@ export default function ContactPage() {
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "");
-    video.setAttribute("webkit-playsinline", "");
-    video.setAttribute("muted", "");
+    registerMobileBackgroundVideo(video);
+    primeBackgroundVideo(video);
 
     const tryPlay = () => {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          /* Autoplay policy — muted inline usually recovers */
-        });
-      }
+      void playBackgroundVideo(video);
     };
 
     tryPlay();
     video.addEventListener("loadeddata", tryPlay);
     video.addEventListener("canplay", tryPlay);
     return () => {
+      unregisterMobileBackgroundVideo(video);
       video.removeEventListener("loadeddata", tryPlay);
       video.removeEventListener("canplay", tryPlay);
     };
@@ -358,6 +357,13 @@ export default function ContactPage() {
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
+
+    const onScrollerGesture = () => {
+      unlockBackgroundVideosFromUserGesture();
+    };
+
+    scroller.addEventListener("scroll", onScrollerGesture, { passive: true });
+    scroller.addEventListener("touchmove", onScrollerGesture, { passive: true });
 
     const sections = scroller.querySelectorAll<HTMLElement>(
       "[data-contact-section]",
@@ -377,7 +383,11 @@ export default function ContactPage() {
     );
 
     sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    return () => {
+      scroller.removeEventListener("scroll", onScrollerGesture);
+      scroller.removeEventListener("touchmove", onScrollerGesture);
+      observer.disconnect();
+    };
   }, []);
 
   return (

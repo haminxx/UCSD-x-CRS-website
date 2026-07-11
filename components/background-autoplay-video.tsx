@@ -7,6 +7,13 @@ import {
   useState,
   type VideoHTMLAttributes,
 } from "react";
+import {
+  isPhoneView,
+  playBackgroundVideo,
+  primeBackgroundVideo,
+  registerMobileBackgroundVideo,
+  unregisterMobileBackgroundVideo,
+} from "@/lib/mobile-video-unlock";
 import { cn } from "@/lib/utils";
 
 const VIDEO_UI_HIDE =
@@ -19,138 +26,9 @@ type BackgroundAutoplayVideoProps = Omit<
   src: string;
 };
 
-function isPhoneView() {
-  if (typeof window === "undefined") return false;
-  return (
-    window.matchMedia("(max-width: 768px)").matches ||
-    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-  );
-}
-
-function primeVideo(video: HTMLVideoElement) {
-  video.muted = true;
-  video.defaultMuted = true;
-  video.playsInline = true;
-  video.autoplay = true;
-  video.setAttribute("playsinline", "");
-  video.setAttribute("webkit-playsinline", "");
-  video.setAttribute("x-webkit-airplay", "deny");
-  video.setAttribute("muted", "");
-  video.setAttribute("autoplay", "");
-  video.setAttribute(
-    "controlsList",
-    "nodownload nofullscreen noremoteplayback",
-  );
-}
-
-/** Programmatic tap at the native overlay play target (center of video). */
-function simulatePlayButtonTap(video: HTMLVideoElement) {
-  const rect = video.getBoundingClientRect();
-  const clientX = rect.left + rect.width / 2;
-  const clientY = rect.top + rect.height / 2;
-
-  const pointerInit: PointerEventInit = {
-    bubbles: true,
-    cancelable: true,
-    clientX,
-    clientY,
-    pointerId: 1,
-    pointerType: "touch",
-    isPrimary: true,
-  };
-
-  const mouseInit: MouseEventInit = {
-    bubbles: true,
-    cancelable: true,
-    clientX,
-    clientY,
-    view: window,
-  };
-
-  try {
-    video.dispatchEvent(new PointerEvent("pointerdown", pointerInit));
-    video.dispatchEvent(new PointerEvent("pointerup", pointerInit));
-  } catch {
-    /* PointerEvent unsupported */
-  }
-
-  video.dispatchEvent(new MouseEvent("mousedown", mouseInit));
-  video.dispatchEvent(new MouseEvent("mouseup", mouseInit));
-  video.dispatchEvent(new MouseEvent("click", mouseInit));
-
-  try {
-    const touch = {
-      identifier: 1,
-      target: video,
-      clientX,
-      clientY,
-      pageX: clientX + window.scrollX,
-      pageY: clientY + window.scrollY,
-      screenX: clientX,
-      screenY: clientY,
-      radiusX: 1,
-      radiusY: 1,
-      rotationAngle: 0,
-      force: 1,
-    } as Touch;
-
-    video.dispatchEvent(
-      new TouchEvent("touchstart", {
-        bubbles: true,
-        cancelable: true,
-        touches: [touch],
-        targetTouches: [touch],
-        changedTouches: [touch],
-      }),
-    );
-    video.dispatchEvent(
-      new TouchEvent("touchend", {
-        bubbles: true,
-        cancelable: true,
-        touches: [],
-        targetTouches: [],
-        changedTouches: [touch],
-      }),
-    );
-  } catch {
-    /* TouchEvent unsupported */
-  }
-
-  video.click();
-}
-
-async function forceMobilePlayback(video: HTMLVideoElement) {
-  primeVideo(video);
-
-  const tryPlay = async () => {
-    primeVideo(video);
-    try {
-      await video.play();
-      return !video.paused;
-    } catch {
-      return false;
-    }
-  };
-
-  if (await tryPlay()) return true;
-
-  simulatePlayButtonTap(video);
-  if (await tryPlay()) return true;
-
-  video.controls = true;
-  simulatePlayButtonTap(video);
-  if (await tryPlay()) {
-    video.controls = false;
-    return true;
-  }
-
-  video.controls = false;
-  return !video.paused;
-}
-
 /**
- * Muted background loop — on phone view, programmatically taps the native play
- * overlay when autoplay alone does not start playback (iOS Safari).
+ * Muted background loop. On phone view, playback also unlocks on first tap or
+ * scroll anywhere on the page (user-gesture policy).
  */
 export function BackgroundAutoplayVideo({
   src,
@@ -165,8 +43,8 @@ export function BackgroundAutoplayVideo({
     const video = videoRef.current;
     if (!video) return;
 
-    const phone = isPhoneView();
-    primeVideo(video);
+    registerMobileBackgroundVideo(video);
+    primeBackgroundVideo(video);
     video.controls = false;
 
     const markPlaying = () => {
@@ -177,15 +55,7 @@ export function BackgroundAutoplayVideo({
     };
 
     const bootstrap = async () => {
-      if (phone) {
-        await forceMobilePlayback(video);
-      } else {
-        try {
-          await video.play();
-        } catch {
-          /* desktop retry via events */
-        }
-      }
+      await playBackgroundVideo(video);
       markPlaying();
     };
 
@@ -193,10 +63,8 @@ export function BackgroundAutoplayVideo({
 
     const onMediaEvent = () => {
       markPlaying();
-      if (video.paused && phone) {
-        void forceMobilePlayback(video).then(markPlaying);
-      } else if (video.paused) {
-        void video.play().catch(() => undefined);
+      if (video.paused) {
+        void playBackgroundVideo(video).then(markPlaying);
       }
     };
 
@@ -225,11 +93,7 @@ export function BackgroundAutoplayVideo({
     let attempts = 0;
     retryTimerRef.current = window.setInterval(() => {
       if (video.paused && !video.ended) {
-        if (phone) {
-          void forceMobilePlayback(video).then(markPlaying);
-        } else {
-          void video.play().catch(() => undefined);
-        }
+        void playBackgroundVideo(video).then(markPlaying);
       } else {
         markPlaying();
       }
@@ -244,6 +108,7 @@ export function BackgroundAutoplayVideo({
     }, 300);
 
     return () => {
+      unregisterMobileBackgroundVideo(video);
       for (const event of events) {
         video.removeEventListener(event, onMediaEvent);
       }
@@ -261,13 +126,9 @@ export function BackgroundAutoplayVideo({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-        if (isPhoneView()) {
-          void forceMobilePlayback(video).then(() => {
-            if (!video.paused) setIsPlaying(true);
-          });
-        } else {
-          void video.play().catch(() => undefined);
-        }
+        void playBackgroundVideo(video).then(() => {
+          if (!video.paused) setIsPlaying(true);
+        });
       },
       { threshold: 0.01 },
     );

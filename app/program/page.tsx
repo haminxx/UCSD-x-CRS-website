@@ -67,7 +67,7 @@ export default function ProgramPage() {
 
         <PageEnter>
           <section className="relative z-10 flex min-h-dvh items-center justify-center px-6 pb-24 pt-32 md:px-10 md:pb-28 md:pt-36 lg:px-16">
-            <div className="mx-auto flex max-w-4xl translate-y-[calc(2rem-20pt)] flex-col items-center text-center md:translate-y-[calc(3rem-20pt)] lg:translate-y-[calc(4rem-20pt)]">
+            <div className="mx-auto flex max-w-4xl translate-y-[calc(2rem-35pt)] flex-col items-center text-center md:translate-y-[calc(3rem-35pt)] lg:translate-y-[calc(4rem-35pt)]">
               <LetterTitle
                 title="Coming Soon"
                 className="text-[clamp(2.75rem,12vw,6.75rem)] md:text-[clamp(1.65rem,6.5vw,6.75rem)]"
