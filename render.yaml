@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: ucsd-x-crs-recruitment-chatbot
+    name: ucsd-x-crs-website
     runtime: node
     rootDir: chat-server
     buildCommand: npm install

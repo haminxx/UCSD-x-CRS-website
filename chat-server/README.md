@@ -19,7 +19,7 @@ New accounts sometimes receive starter credits — check your [Usage](https://pl
 
 ### 2. Update Render
 
-1. [Render Dashboard](https://dashboard.render.com) → **ucsd-x-crs-recruitment-chatbot**
+1. [Render Dashboard](https://dashboard.render.com) → **ucsd-x-crs-website**
 2. **Environment**:
    - **Delete** `GEMINI_API_KEY` and `GEMINI_MODEL` (no longer used)
    - **Add** `OPENAI_API_KEY` = your `sk-…` key (no quotes)
