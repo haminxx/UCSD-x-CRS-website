@@ -151,6 +151,45 @@ function SoftInput({
   );
 }
 
+
+function ContactSectionStepper({
+  activeSection,
+  onSelect,
+}: {
+  activeSection: number;
+  onSelect: (index: number) => void;
+}) {
+  return (
+    <nav
+      aria-label="Form progress"
+      className="pointer-events-none fixed right-4 top-1/2 z-40 flex -translate-y-1/2 flex-col items-center gap-3.5 md:right-6"
+    >
+      {Array.from({ length: SECTION_COUNT }, (_, index) => {
+        const isDone = index < activeSection;
+        const isCurrent = index === activeSection;
+
+        return (
+          <button
+            key={index}
+            type="button"
+            aria-label={`Go to section ${index + 1} of ${SECTION_COUNT}`}
+            aria-current={isCurrent ? "step" : undefined}
+            onClick={() => onSelect(index)}
+            className={cn(
+              "pointer-events-auto rounded-full transition-all duration-300",
+              "size-2.5 md:size-3",
+              isDone && "border border-[#182B49] bg-[#182B49]",
+              !isDone &&
+                "border-2 border-[#F2F0EF] bg-transparent",
+              isCurrent && "scale-[1.35] ring-2 ring-[#F2F0EF]/35",
+            )}
+          />
+        );
+      })}
+    </nav>
+  );
+}
+
 function ContactSection({
   active,
   children,
@@ -699,6 +738,11 @@ export default function ContactPage() {
             </ContactSection>
           </section>
         </div>
+
+        <ContactSectionStepper
+          activeSection={activeSection}
+          onSelect={goToSection}
+        />
 
         {/* Up / down section controls */}
         <div className="pointer-events-none fixed right-5 bottom-8 z-40 flex flex-col gap-2 md:right-8 md:bottom-10">

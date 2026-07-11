@@ -88,16 +88,18 @@ export function LetterTitle({ title, as: Tag = "h1", className }: LetterTitlePro
   return (
     <Tag
       className={cn(
-        "whitespace-nowrap font-bold tracking-[-0.04em] text-[#0a1218]",
+        "flex w-full flex-wrap items-center justify-center",
+        "gap-x-2 gap-y-1 md:gap-x-4",
+        "font-bold tracking-[-0.04em] text-[#0a1218]",
         "text-[clamp(1.65rem,6.5vw,6.75rem)]",
-        "leading-[1.05]",
+        "leading-[1.05] text-center",
         className,
       )}
     >
       {words.map((word, wordIndex) => (
         <span
           key={`${word}-${wordIndex}`}
-          className="mr-2 inline-block last:mr-0 md:mr-4"
+          className="inline-flex justify-center"
         >
           {word.split("").map((letter, letterIndex) => (
             <motion.span
@@ -123,6 +125,8 @@ export function LetterTitle({ title, as: Tag = "h1", className }: LetterTitlePro
 
 type BackgroundPathsProps = {
   title?: string;
+  /** Optional override for the animated title sizing/layout. */
+  titleClassName?: string;
   /** Subtitle / CTA content rendered below the letter-animated title (keeps links interactive). */
   children?: ReactNode;
   showGradientOrb?: boolean;
@@ -131,6 +135,7 @@ type BackgroundPathsProps = {
 
 export function BackgroundPaths({
   title = "Join Our Mission",
+  titleClassName,
   children,
   showGradientOrb = true,
   className,
@@ -181,16 +186,21 @@ export function BackgroundPaths({
           <div
             className={cn(
               "mx-auto w-full max-w-3xl overflow-hidden rounded-3xl",
-              "border border-white/35 bg-white/12 px-6 py-9",
-              "shadow-[0_12px_40px_rgba(10,18,24,0.08),inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(255,255,255,0.08)]",
-              "backdrop-blur-2xl backdrop-saturate-150",
+              "border border-white/20 bg-white/[0.035]",
+              "px-6 py-9",
+              "shadow-[0_8px_32px_rgba(10,18,24,0.05),inset_0_1px_0_rgba(255,255,255,0.42),inset_0_-1px_0_rgba(255,255,255,0.05)]",
+              "backdrop-blur-[32px] backdrop-saturate-[1.85]",
               "md:px-10 md:py-12",
             )}
           >
-            <div className="flex w-full flex-col items-center text-center">
+            <div className="flex w-full flex-col items-center justify-center text-center">
               <LetterTitle
                 title={title}
-                className="w-full max-w-full text-balance whitespace-normal sm:whitespace-nowrap"
+                className={cn(
+                  "max-w-full text-balance",
+                  "text-[clamp(1.35rem,5.25vw,3.75rem)]",
+                  titleClassName,
+                )}
               />
             </div>
 
