@@ -11,15 +11,18 @@ export default function SponsorsPage() {
     <>
       <SiteHeader />
       <main className="min-h-screen bg-[#F2F0EF] text-[#0a1218]">
-        <BackgroundPaths title="Join Our Mission" className="pb-24 pt-20 md:pb-28 md:pt-24">
-          <div className="mx-auto max-w-3xl space-y-3 text-center text-base leading-relaxed text-black/55 md:text-lg">
-            <p className="text-balance md:whitespace-nowrap">
+        <BackgroundPaths
+          title="Join Our Mission"
+          className="pb-[clamp(4rem,12vw,7rem)] pt-[clamp(3.5rem,10vw,6rem)]"
+        >
+          <div className="mx-auto w-full max-w-[min(92%,42rem)] space-y-[clamp(0.5rem,2vw,0.875rem)] text-center text-[clamp(0.875rem,2.8vw,1.125rem)] leading-[1.65] text-[#182B49]/60">
+            <p className="text-balance">
               We are actively looking for sponsors to help elevate our platform.
             </p>
             <p>
               <Link
                 href="/contact/"
-                className="inline-flex text-[#0a1218] transition-colors hover:text-black"
+                className="inline-flex text-[#182B49] transition-colors hover:text-[#0a1218]"
               >
                 <SpringUnderline className="pb-0.5 font-medium">
                   Interested? Let&apos;s start a conversation.

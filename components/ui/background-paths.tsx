@@ -176,24 +176,29 @@ export function BackgroundPaths({
         <FloatingPaths position={1} />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 text-center md:px-10 lg:px-16">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-[clamp(1rem,4vw,4rem)] text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.55, ease: "easeOut" }}
-          className="mx-auto max-w-4xl"
+          className="mx-auto w-full max-w-[min(92vw,56rem)]"
         >
           <div
             className={cn(
-              "mx-auto w-full max-w-3xl overflow-hidden rounded-3xl",
-              "border border-white/20 bg-white/[0.035]",
-              "px-6 py-9",
-              "shadow-[0_8px_32px_rgba(10,18,24,0.05),inset_0_1px_0_rgba(255,255,255,0.42),inset_0_-1px_0_rgba(255,255,255,0.05)]",
-              "backdrop-blur-[32px] backdrop-saturate-[1.85]",
-              "md:px-10 md:py-12",
+              "relative mx-auto w-full max-w-[min(90vw,48rem)] overflow-hidden",
+              "rounded-[clamp(1.25rem,4vw,1.75rem)]",
+              "border border-[#182B49]/[0.07] border-white/10",
+              "bg-[rgba(242,240,239,0.06)]",
+              "px-[clamp(1.25rem,5vw,2.5rem)] py-[clamp(1.75rem,6vw,3rem)]",
+              "shadow-[0_clamp(6px,1.2vw,14px)_clamp(20px,4.5vw,44px)_rgba(24,43,73,0.07),0_clamp(2px,0.4vw,4px)_clamp(8px,1.8vw,18px)_rgba(24,43,73,0.04),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.04),inset_0_0_clamp(16px,4vw,36px)_rgba(255,255,255,0.025)]",
+              "backdrop-blur-[clamp(28px,6vw,52px)] backdrop-saturate-[1.35]",
             )}
           >
-            <div className="flex w-full flex-col items-center justify-center text-center">
+            <div
+              className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/[0.05] via-transparent to-[#182B49]/[0.03]"
+              aria-hidden
+            />
+            <div className="relative z-10 flex w-full flex-col items-center justify-center text-center">
               <LetterTitle
                 title={title}
                 className={cn(
@@ -209,7 +214,7 @@ export function BackgroundPaths({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.45 }}
-                className="mt-7 text-center md:mt-8"
+                className="relative z-10 mt-[clamp(1.25rem,3.5vw,2rem)] text-center"
               >
                 {children}
               </motion.div>
@@ -217,7 +222,7 @@ export function BackgroundPaths({
           </div>
 
           <motion.div
-            className="mx-auto mt-8 h-px max-w-md bg-gradient-to-r from-transparent via-[#182B49]/35 to-transparent md:mt-10"
+            className="mx-auto mt-[clamp(1.5rem,4vw,2.5rem)] h-px max-w-md bg-gradient-to-r from-transparent via-[#182B49]/35 to-transparent"
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "100%", opacity: 1 }}
             transition={{ delay: 1, duration: 1.2, ease: "easeOut" }}
