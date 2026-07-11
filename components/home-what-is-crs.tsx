@@ -29,10 +29,20 @@ const FEATURES: {
     title: "Train across roles",
     body: (
       <>
-        Build nights, sim sessions, and crew drills stack real skills so you
-        know the car, the stop, and the weekend. You pick up industry-standard
-        knowledge through hands-on prep—car setup, pit choreography, and
-        race-day execution built for the{" "}
+        Through build nights, sim sessions, and crew drills, you develop{" "}
+        <strong className="font-semibold text-[#F2F0EF]">
+          industry-standard
+        </strong>{" "}
+        skills across{" "}
+        <strong className="font-semibold text-[#F2F0EF]">car setup</strong>,{" "}
+        <strong className="font-semibold text-[#F2F0EF]">
+          pit choreography
+        </strong>
+        , and{" "}
+        <strong className="font-semibold text-[#F2F0EF]">
+          race-day execution
+        </strong>{" "}
+        — preparation aligned with the{" "}
         <strong className="font-semibold text-[#F2F0EF]">
           Collegiate Racing Series
         </strong>
