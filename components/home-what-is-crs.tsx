@@ -30,7 +30,13 @@ const FEATURES: {
     body: (
       <>
         Build nights, sim sessions, and crew drills stack real skills so you
-        know the car, the stop, and the weekend.
+        know the car, the stop, and the weekend. You pick up industry-standard
+        knowledge through hands-on prep—car setup, pit choreography, and
+        race-day execution built for the{" "}
+        <strong className="font-semibold text-[#F2F0EF]">
+          Collegiate Racing Series
+        </strong>
+        .
       </>
     ),
   },

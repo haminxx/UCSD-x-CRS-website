@@ -162,7 +162,7 @@ function ContactSectionStepper({
   return (
     <nav
       aria-label="Form progress"
-      className="pointer-events-none fixed right-4 top-1/2 z-40 flex -translate-y-1/2 flex-col items-center gap-3.5 md:right-6"
+      className="pointer-events-none fixed right-4 top-1/2 z-40 flex -translate-y-1/2 flex-col items-center gap-3 md:right-6 md:gap-3.5"
     >
       {Array.from({ length: SECTION_COUNT }, (_, index) => {
         const isDone = index < activeSection;
@@ -176,12 +176,14 @@ function ContactSectionStepper({
             aria-current={isCurrent ? "step" : undefined}
             onClick={() => onSelect(index)}
             className={cn(
-              "pointer-events-auto rounded-full transition-all duration-300",
-              "size-2.5 md:size-3",
-              isDone && "border border-[#182B49] bg-[#182B49]",
-              !isDone &&
-                "border-2 border-[#F2F0EF] bg-transparent",
-              isCurrent && "scale-[1.35] ring-2 ring-[#F2F0EF]/35",
+              "pointer-events-auto w-[2px] rounded-full transition-all duration-300 ease-out md:w-[3px]",
+              isDone && "bg-[#182B49]",
+              !isDone && "bg-[#F2F0EF]",
+              isCurrent && "h-7 md:h-8",
+              !isCurrent && "h-5 md:h-6",
+              isCurrent && !isDone && "opacity-100 shadow-[0_0_10px_rgba(242,240,239,0.35)]",
+              !isCurrent && !isDone && "opacity-45",
+              !isCurrent && isDone && "opacity-90",
             )}
           />
         );
