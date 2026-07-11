@@ -162,7 +162,7 @@ function ContactSectionStepper({
   return (
     <nav
       aria-label="Form progress"
-      className="pointer-events-none fixed right-4 top-1/2 z-40 flex -translate-y-1/2 flex-col items-center gap-3 md:right-6 md:gap-3.5"
+      className="pointer-events-none fixed right-2 top-1/2 z-40 flex -translate-y-1/2 flex-col items-center gap-3 md:right-6 md:gap-3.5"
     >
       {Array.from({ length: SECTION_COUNT }, (_, index) => {
         const isDone = index < activeSection;
